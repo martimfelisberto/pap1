@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Authenticatable implements MustVerifyEmail
+
 {
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
@@ -25,50 +26,55 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'profile_photo',
         'is_admin',
-        'is_banned',
+        'is_banned'
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
     /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
 
-
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_admin' => 'boolean',
+        'is_banned' => 'boolean'
+    ];
     public function produtos()
     {
         return $this->hasMany(Produto::class, 'autor_id');
     }
+ public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 
-/**
-     * Get the user's favorite products.
-     */
-  
+    // Helper methods
+    public function isAdmin(): bool
+    {
+        return $this->is_admin === true;
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->is_banned === true;
+    }
 
     public function favoriteProdutos()
     {
-        return $this->belongsToMany(Produto::class, 'favorites', 'user_id', 'produtos_id')->withTimestamps();
+        return $this->belongsToMany(Produto::class, 'favorites', 'user_id', 'produto_id')
+                ->withTimestamps();
     }
 
-    public function isAdmin()
-    {
-        return $this->is_admin;
-    }
+    
 }

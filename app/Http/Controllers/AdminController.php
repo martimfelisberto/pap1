@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Produto;
-use App\Models\Categorias;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class AdminController extends Controller
 {
@@ -51,7 +52,7 @@ class AdminController extends Controller
                              ->orWhere('preco', 'like', "%{$search}%");
             })->paginate(10);
         
-        $categorias = Categorias::when($search, function($query) use ($search) {
+        $categorias = Categoria::when($search, function($query) use ($search) {
             return $query->where('nome', 'like', "%{$search}%");
         })->paginate(10);
         
@@ -91,5 +92,39 @@ class AdminController extends Controller
         
         $produto->delete();
         return redirect()->route('admin.dashboard')->with('success', 'Produto eliminado com sucesso!');
+    }
+
+    /**
+     * Display a list of users
+     */
+    public function users()
+    {
+        $users = User::latest()->paginate(15);
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * Show the form for editing a user
+     */
+    public function editUser(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    /**
+     * Update a user's information
+     */
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'is_admin' => 'boolean'
+        ]);
+
+        $user->update($validated);
+        
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Utilizador atualizado com sucesso.');
     }
 }

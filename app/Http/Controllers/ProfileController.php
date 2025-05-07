@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Produto;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProfileController extends Controller
 {
@@ -21,19 +22,10 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($userId);
         
-        $produtos = Produto::where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
-            
-        $favoritos = [];
-        if (Auth::check()) {
-            $favoritos = Auth::user()->favoriteProdutos()->pluck('produto_id')->toArray();
-        }
-
+        
         return view('profile.show', [
             'user' => $user,
-            'produtos' => $produtos,
-            'favoritos' => $favoritos
+            
         ]);
     }
 
@@ -49,6 +41,7 @@ class ProfileController extends Controller
 
         return view('profile.edit', [
             'user' => $user,
+            
             'produtos' => $produtos,
         ]);
     }
@@ -131,15 +124,20 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display user's favorite products
+     * Display user's products
      */
-    public function favorites(): View
+    public function produtos()
     {
-        $user = Auth::user();
-        $favoritos = $user->favoriteProdutos()->paginate(12);
+        $produtos = Auth::produtos()->latest()->paginate(12);
+        return view('profile.produtos', compact('produtos'));
+    }
 
-        return view('profile.favorites', [
-            'favoritos' => $favoritos
-        ]);
+    /**
+     * Display user's sales
+     */
+    public function vendas()
+    {
+        $vendas = Auth::vendas()->latest()->paginate(12);
+        return view('profile.vendas', compact('vendas'));
     }
 }

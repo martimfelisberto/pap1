@@ -240,14 +240,14 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownCrianca"
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdownCriança"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Criança</a>
-                            <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownCrianca">
-                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'casacos', 'genero' => 'crianca']) }}" class="dropdown-item item-anchor">Casacos</a></li>
-                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'camisolas', 'genero' => 'crianca']) }}" class="dropdown-item item-anchor">Camisolas</a></li>
-                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'calcas', 'genero' => 'crianca']) }}" class="dropdown-item item-anchor">Calças e Calções</a></li>
-                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'tshirts', 'genero' => 'crianca']) }}" class="dropdown-item item-anchor">Tops e T-shirts</a></li>
-                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'sapatilhas', 'genero' => 'crianca']) }}" class="dropdown-item item-anchor">Sapatilhas</a></li>
+                            <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdownCriança">
+                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'casacos', 'genero' => 'criança']) }}" class="dropdown-item item-anchor">Casacos</a></li>
+                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'camisolas', 'genero' => 'criança']) }}" class="dropdown-item item-anchor">Camisolas</a></li>
+                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'calcas', 'genero' => 'criança']) }}" class="dropdown-item item-anchor">Calças e Calções</a></li>
+                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'tshirts', 'genero' => 'criança']) }}" class="dropdown-item item-anchor">Tops e T-shirts</a></li>
+                                <li><a href="{{ route('produtos.categoria', ['categoria' => 'sapatilhas', 'genero' => 'criança']) }}" class="dropdown-item item-anchor">Sapatilhas</a></li>
                             </ul>
                         </li>
 
@@ -257,71 +257,106 @@
                             <a class="nav-link" href="/contactos">Contactos</a>
                         </li>
 
-                        <div class="ms-auto d-flex align-items-center">
-                            @auth
-                            <a href="{{ route('produtos.create') }}"
-                                class="nav-link btn btn-primary d-flex align-items-center">
-                                <i class="bi bi-plus-lg me-2"></i>
-                                Vender
-                            </a>
-                            @else
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle d-flex align-items-center"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                                    Entrar para Vender
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('login') }}">
-                                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                                            Entrar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('register') }}">
-                                            <i class="bi bi-person-plus me-2"></i>
-                                            Registrar
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            @endauth
-                        </div>
 
-                        @auth
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <li>
-                                <button type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                                    {{ __('Log Out') }}
-                                </button>
-                        </form>
-                        </li>
-                       @endauth
 
-                        <li class="search-box" style="margin: 0 0.5rem;">
-                            <a href="#search" class="search-button" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
-                                <svg width="24" height="24" viewBox="0 0 24 24" style="fill: #333;">
-                                    <path id="search" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                                </svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('carrinho.index') }}"
-                                style="text-decoration: none; color: #333; font-weight: 500; padding: 0.5rem 1rem; border-radius: 4px; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" style="fill: #333;">
-                                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-                                </svg>
-                                <span>Carrinho</span>
-                                <span class="cart-count" id="headerCartCount" style="background: #333; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">0</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                        <!-- Replace the existing auth controls with this updated version -->
+<div class="ms-auto d-flex align-items-center gap-3">
+    @guest
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle d-flex align-items-center"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Entrar para Vender
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('login') }}">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Entrar
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('register') }}">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Registrar
+                    </a>
+                </li>
+            </ul>
+        </div>
+    @else
+        <!-- Botão Vender -->
+        <a href="{{ route('produtos.create') }}" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-plus-lg me-2"></i>
+            Vender
+        </a>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none" 
+                type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false">
+                @if(Auth::user()->profile_photo)
+                    <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" 
+                         alt="Profile"
+                         class="rounded-circle me-2" 
+                         style="width: 32px; height: 32px; object-fit: cover;">
+                @else
+                    <i class="bi bi-person-circle me-2 fs-5"></i>
+                @endif
+                <span>{{ Auth::user()->name }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                        <i class="bi bi-person me-2"></i>
+                        Perfil
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('produtos.meus') }}">
+                        <i class="bi bi-bag me-2"></i>
+                        Meus Produtos
+                    </a>
+                </li>
+                @if(auth()->user()->isAdmin())
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            Painel Admin
+                        </a>
+                    </li>
+                @endif
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
+                        @csrf
+                        <button type="submit" class="btn btn-link text-danger p-0 d-flex align-items-center w-100">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    @endguest
+
+    <!-- Search Icon -->
+    <div class="search-box">
+        <a href="#search" class="search-button">
+            <i class="bi bi-search fs-5"></i>
+        </a>
+    </div>
+
+    <!-- Cart Icon -->
+    <a href="{{ route('carrinho.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+        <i class="bi bi-cart3 fs-5 me-1"></i>
+        <span class="badge bg-primary rounded-pill" id="headerCartCount">0</span>
+    </a>
+</div>
 
             </div>
 

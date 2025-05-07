@@ -17,16 +17,20 @@ class FavoriteController extends Controller
         $produto = Produto::findOrFail($produtoId);
         $user = Auth::user();
 
-        // Check if product is already favorited
-        $isFavorited = $user->favoriteProdutos()->where('produto_id', $produto->id)->exists();
+        $favorite = Favorite::where('user_id', $user->id)
+            ->where('receita_id', $produto->id)
+            ->first();
 
-        if ($isFavorited) {
-            // Remove from favorites
-            $user->favoriteProdutos()->detach($produto->id);
+        if ($favorite) {
+            // If already favorited, remove favorite
+            $favorite->delete();
             $isFavorited = false;
         } else {
-            // Add to favorites
-            $user->favoriteProdutos()->attach($produto->id);
+            // If not favorited, add favorite
+            Favorite::create([
+                'user_id' => $user->id,
+                'receita_id' => $produto->id
+            ]);
             $isFavorited = true;
         }
 
@@ -37,6 +41,7 @@ class FavoriteController extends Controller
             ]);
         }
 
+
         return redirect()->back()->with('success', $isFavorited ? 
             'Produto adicionado aos favoritos!' : 
             'Produto removido dos favoritos!');
@@ -45,12 +50,6 @@ class FavoriteController extends Controller
     /**
      * Display user's favorite products
      */
-    public function index()
-    {
-        $user = Auth::user();
-        $favorites = $user->favoriteProdutos()->paginate(12);
-
-        return view('favorites.index', compact('favorites'));
-    }
+    
 }
 

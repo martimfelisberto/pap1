@@ -104,7 +104,7 @@
                         <option value="">Todos os gêneros</option>
                         <option value="homem" {{ request()->get('genero') == 'homem' ? 'selected' : '' }}>Homem</option>
                         <option value="mulher" {{ request()->get('genero') == 'mulher' ? 'selected' : '' }}>Mulher</option>
-                        <option value="crianca" {{ request()->get('genero') == 'crianca' ? 'selected' : '' }}>Criança</option>
+                        <option value="criança" {{ request()->get('genero') == 'criança' ? 'selected' : '' }}>Criança</option>
                     </select>
                 </div>
 

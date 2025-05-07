@@ -16,13 +16,12 @@ return new class extends Migration {
 
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('nome');
-            $table->string('descricao')->nullable();
             $table->string('slug')->unique();
-            $table->boolean('ativo')->default(true);
-            $table->integer('ordem')->default(0);
-            $table->string('icone')->nullable();
+            $table->enum('genero', ['homem', 'mulher', 'crianca']);
+            $table->text('descricao')->nullable();
+            $table->foreignId('created_by')->constrained('users');
+            $table->timestamps();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produto;
+use Illuminate\Support\Facades\Auth;
 
 class ProdutoController extends Controller
 {
@@ -65,9 +66,9 @@ class ProdutoController extends Controller
         $produtos = $query->latest()->paginate(12);
     }
     
-    public function crianca($tipo = null)
+    public function criança($tipo = null)
     {
-        $query = Produto::where('genero', 'crianca');
+        $query = Produto::where('genero', 'criança');
         
         if ($tipo) {
             $query->where('tipo', $tipo);
@@ -78,7 +79,7 @@ class ProdutoController extends Controller
     
     public function produtosPorGenero($genero)
     {
-        $validGeneros = ['homem', 'mulher', 'crianca', 'unissex'];
+        $validGeneros = ['homem', 'mulher', 'criança', 'unissex'];
         
         if (!in_array($genero, $validGeneros)) {
             abort(404);
@@ -92,7 +93,7 @@ class ProdutoController extends Controller
     {
         // Validar categoria e gênero
         $validCategorias = ['casacos', 'tshirts', 'camisolas', 'calcas', 'sapatilhas'];
-        $validGeneros = ['homem', 'mulher', 'crianca'];
+        $validGeneros = ['homem', 'mulher', 'criança'];
 
         if (!in_array($categoria, $validCategorias) || !in_array($genero, $validGeneros)) {
             abort(404);
@@ -143,7 +144,7 @@ class ProdutoController extends Controller
             'preco' => 'required|numeric|min:0',
             'marca' => 'required|string',
             'categoria' => 'required|string',
-            'genero' => 'required|in:homem,mulher,crianca',
+            'genero' => 'required|in:homem,mulher,criança',
             'estado' => 'required|in:novo,usado,semi-novo',
             'tamanho' => 'required|string',
             'cores' => 'required|array',
@@ -169,7 +170,7 @@ class ProdutoController extends Controller
             'cores' => $request->cores,
             'imagem' => $imagePath,
             'especificacoes' => $especificacoes,
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
         ]);
     
         return redirect()->route('produtos.categoria', [
@@ -242,5 +243,12 @@ class ProdutoController extends Controller
             ->with('success', 'Produto criado com sucesso!');
     }
 
-
+    public function userProducts()
+    {
+        $produtos = Auth::produtos()
+            ->latest()
+            ->paginate(12);
+            
+        return view('produtos.meus', compact('produtos'));
+    }
 }

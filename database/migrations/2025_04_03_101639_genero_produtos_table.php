@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->text('descricao')->nullable();
-            $table->enum('genero', ['homem', 'mulher', 'crianca']);
+            $table->enum('genero', ['homem', 'mulher', 'criança']);
             $table->timestamps();
         });
     }

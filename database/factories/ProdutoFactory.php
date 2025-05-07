@@ -18,7 +18,7 @@ class ProdutoFactory extends Factory
     public function definition(): array
     {
         $categorias = ['casacos', 'tshirts', 'camisolas', 'calcas', 'sapatilhas'];
-        $generos = ['homem', 'mulher', 'crianca'];
+        $generos = ['homem', 'mulher', ''];
         $estados = ['novo', 'usado', 'semi-novo'];
         $marcas = ['Nike', 'Adidas', 'Puma', 'Zara', 'H&M', 'Pull&Bear'];
         

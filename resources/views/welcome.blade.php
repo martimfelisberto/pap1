@@ -215,14 +215,14 @@
                     <div class="col-md-4">
                         <div class="cat-item image-zoom-effect">
                             <div class="image-holder">
-                                <a href="/crianca">
-                                    <img src="{{ asset('/images/crianca.jpg') }}" alt="categories"
+                                <a href="/criança">
+                                    <img src="{{ asset('/images/criança.jpg') }}" alt="categories"
                                         class="product-image img-fluid">
                                 </a>
                             </div>
                             <div class="category-content">
                                 <div class="product-button">
-                                    <a href="/crianca" class="btn btn-common text-uppercase">Comprar para
+                                    <a href="/criança" class="btn btn-common text-uppercase">Comprar para
                                         criança</a>
                                 </div>
                             </div>

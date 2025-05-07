@@ -6,7 +6,7 @@
                 <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Meus Produtos Favoritos</h1>
                 <p class="text-blue-100 text-lg mb-6">A tua coleção pessoal de produtos que você salvou para comprar depois.</p>
                 <div class="flex justify-center gap-4">
-                    <a href="{{ route('produtos.index') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    <a href="{{ route('favoritos.index') }}" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
                         <i class="bi bi-search mr-2"></i>Explorar mais produtos
                     </a>
                     @if($favorites->count() > 0)
@@ -116,10 +116,6 @@
                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                                         <i class="bi bi-eye mr-2"></i>Ver produto
                                     </a>
-                                    <a href="#" onclick="shareProduto('{{ $produto->nome }}', '{{ route('Produtos.show' ,$produto->id) }}')"
-                                       class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        <i class="bi bi-share mr-2"></i>Compartilhar
-                                    </a>
                                     <form action="{{ route('produtos.favorite', $produto->id) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
@@ -160,9 +156,9 @@
 <div class="text-center py-12">
     <div class="bg-gray-50 rounded-lg p-8 max-w-2xl mx-auto">
         <i class="bi bi-heart text-4xl text-gray-400 mb-4"></i>
-        <h3 class="text-xl font-bold text-gray-900 mb-2">Nenhum artigo favorito</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Nenhum produto favorito</h3>
         <p class="text-gray-600 mb-6">
-            Explore nossa coleção de artigos e salve seus favoritos para acessá-los facilmente depois.
+            Explore nossa coleção de produtos e salve seus favoritos para acessá-los facilmente depois.
         </p>
         <a href="{{ route('produtos.index') }}" 
            class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
