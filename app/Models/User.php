@@ -44,17 +44,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @return array<string, string>
      */
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'is_admin' => 'boolean',
-        'is_banned' => 'boolean'
-    ];
     public function produtos()
     {
-        return $this->hasMany(Produto::class, 'autor_id');
+        return $this->hasMany(Produto::class, 'autor_id')->get()->toArray();
     }
- public function favorites()
+    public function favorites()
     {
         return $this->hasMany(Favorite::class);
     }
@@ -65,16 +59,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->is_admin === true;
     }
 
-    public function isBanned(): bool
-    {
-        return $this->is_banned === true;
-    }
+   
 
     public function favoriteProdutos()
     {
         return $this->belongsToMany(Produto::class, 'favorites', 'user_id', 'produto_id')
                 ->withTimestamps();
     }
+
+   
 
     
 }

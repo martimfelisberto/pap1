@@ -290,7 +290,7 @@
         <!-- Botão Vender -->
         <a href="{{ route('produtos.create') }}" class="btn btn-primary d-flex align-items-center">
             <i class="bi bi-plus-lg me-2"></i>
-            Vender
+            Anunciar um Produto
         </a>
 
         <!-- User Profile Dropdown -->

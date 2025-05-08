@@ -50,6 +50,16 @@ class FavoriteController extends Controller
     /**
      * Display user's favorite products
      */
+
+     public function index()
+    {
+        $user = Auth::user();
+        $favorites = $user->favoriteProdutos()->paginate(12);
+
+        return view('favorites.index', compact('favorites'));
+    }
+
+
     
 }
 

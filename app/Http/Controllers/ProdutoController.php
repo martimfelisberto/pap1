@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Models\Categoria;
+
+
 
 class ProdutoController extends Controller
 {
@@ -42,6 +49,99 @@ class ProdutoController extends Controller
     public function create()
     {
         return view('produtos.create');
+    }
+    public function edit(Produto $produto)
+    {
+        if (Auth::id() != $produto->autor_id) {
+            return redirect()->route('produtos.show', $produto->id)
+                ->with('error', 'Não tens permissão para editar este produto.');
+        }
+
+        return view('produtos.edit', compact('produto'));
+    }
+
+    public function update(Request $request, Produto $produto)
+    {
+        if (Auth::id() != $produto->autor_id) {
+            return redirect()->route('produtos.show', $produto->id)
+                ->with('error', 'Não tens permissão para editar este produto.');
+        }
+
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'preco' => 'required|numeric|min:0',
+            'marca' => 'required|string',
+            'categoria' => 'required|string',
+            'genero' => 'required|in:homem,mulher,criança',
+            'estado' => 'required|in:novo,usado,semi-novo',
+            'tamanho' => 'required|string',
+            'cores' => 'required|array',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'especificacoes' => 'array'
+        ]);
+
+        // Get specifications based on category
+        $especificacoes = $this->getEspecificacoesByCategoria($request);
+
+        // Update basic product info
+        $produto->nome = $validated['nome'];
+        $produto->descricao = $validated['descricao'];
+        $produto->preco = $validated['preco'];
+        $produto->marca = $validated['marca'];
+        $produto->categoria = $validated['categoria'];
+        $produto->genero = strtolower($validated['genero']);
+        $produto->estado = strtolower($validated['estado']);
+        $produto->tamanho = $validated['tamanho'];
+        $produto->cores = $validated['cores'];
+        $produto->especificacoes = $especificacoes;
+
+        // Handle image upload if new image is provided
+        if ($request->hasFile('imagem')) {
+            // Delete old image
+            if ($produto->imagem && Storage::disk('public')->exists($produto->imagem)) {
+                Storage::disk('public')->delete($produto->imagem);
+            }
+
+            // Store new image
+            $imagePath = $request->file('imagem')->store('produtos', 'public');
+            $produto->imagem = $imagePath;
+        }
+
+        $produto->save();
+
+        return redirect()->route('produtos.show', $produto->id)
+            ->with('success', 'Produto atualizado com sucesso!');
+    }
+
+    public function destroy(Produto $produto)
+    {
+        if (Auth::id() != $produto->autor_id) {
+            return redirect()->route('produtos.show', $produto->id)
+                ->with('error', 'Não tens permissão para eliminar este produto.');
+        }
+
+        // Delete product image
+        if ($produto->imagem && Storage::disk('public')->exists($produto->imagem)) {
+            Storage::disk('public')->delete($produto->imagem);
+        }
+
+        // Delete related favorites
+        DB::table('favorites')->where('produto_id', $produto->id)->delete();
+
+        // Delete the product
+        $produto->delete();
+
+        return redirect()->route('produtos.index')
+            ->with('success', 'Produto eliminado com sucesso!');
+    }
+
+    public function userFavorites($userId)
+    {
+        $user = User::findOrFail($userId);
+        $favorites = $user->favoriteProdutos()->paginate(12);
+
+        return view('produtos.favorites', compact('user', 'favorites'));
     }
 
     public function homem($tipo = null)

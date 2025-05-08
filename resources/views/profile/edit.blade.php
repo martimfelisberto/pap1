@@ -75,7 +75,7 @@
 
                         <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
                             <a href="{{ route('produtos.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-warning transition-colors">
-                                <i class="bi bi-plus-lg mr-2"></i> Vender Produto
+                                <i class="bi bi-plus-lg mr-2"></i> Anunciar Produto
                             </a>
                             <a href="{{ route('profile.show', Auth::id()) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-warning transition-colors">
                                 <i class="bi bi-person-badge mr-2"></i> Ver Perfil Público
@@ -157,60 +157,23 @@
                     @endif
                 </div>
 
-                @if ($user->favoriteProdutos->count() > 0)
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        @foreach ($user->favoriteProdutos()->latest()->take(6)->get() as $produto)
-                            <div class="overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="relative">
-                                    @if ($produto->imagem)
-                                        <img src="{{ asset('storage/' . $produto->imagem) }}" alt="{{ $produto->nome }}"
-                                            class="object-cover w-full h-48">
-                                    @else
-                                        <div class="flex items-center justify-center w-full h-48 bg-gray-200">
-                                            <span class="text-gray-400"><i class="bi bi-image"></i> Sem imagem</span>
-                                        </div>
-                                    @endif
-                                    <div class="absolute top-2 right-2">
-                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-warning bg-opacity-90 rounded">
-                                            {{ $produto->preco }}€
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="p-4">
-                                    <h4 class="mb-1 text-lg font-semibold text-gray-900 line-clamp-1">{{ $produto->nome }}</h4>
-                                    <p class="mb-2 text-sm text-gray-600">
-                                        <i class="bi bi-tag-fill"></i> {{ $produto->categoria->nome }}
-                                        <span class="mx-1">•</span>
-                                        <i class="bi bi-rulers"></i> {{ $produto->tamanho }}
-                                    </p>
-
-                                    <div class="flex justify-between items-center">
-                                        <a href="{{ route('produtos.show', $produto->id) }}"
-                                            class="inline-flex items-center px-3 py-1 text-xs text-white bg-warning rounded hover:bg-warning-dark transition-colors">
-                                            <i class="bi bi-eye mr-1"></i> Ver Produto
-                                        </a>
-                                        
-                                        <form action="{{ route('produtos.favorite', $produto->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="inline-flex items-center text-red-500 hover:text-red-700">
-                                                <i class="bi bi-heart-fill"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    @if ($user->favoriteProdutos->count() > 6)
+                        <div class="mt-4 text-center">
+                            <a href="{{ route('profile.favorites', $user->id) }}"
+                                class="inline-block px-4 py-2 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors">
+                                Ver todas as produtos favoritas
+                            </a>
+                        </div>
+                    @endif
                 @else
                     <div class="p-8 text-center bg-gray-50 rounded-lg border border-gray-100">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-warning-light text-warning mb-4">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-100 text-orange-500 mb-4">
                             <i class="bi bi-heart text-3xl"></i>
                         </div>
                         <h4 class="text-lg font-medium text-gray-900 mb-2">Nenhum produto favorito</h4>
-                        <p class="text-gray-600 mb-4">Você ainda não adicionou nenhum produto aos seus favoritos.</p>
-                        <a href="{{ route('favoritos.index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark transition-colors">
-                            <i class="bi bi-search mr-2"></i> Explorar Produtos
+                        <p class="text-gray-600 mb-4">Tu ainda não adicionaste nenhum produto aos teus favoritos.</p>
+                        <a href="{{ route('produtos.index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark transition-colors">
+                        <i class="bi bi-search mr-2"></i> Explorar Produtos
                         </a>
                     </div>
                 @endif
@@ -235,6 +198,57 @@
                             <div class="overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1">
                                 <!-- Product Card Content -->
                                 <!-- Similar to the favorite products card but with edit/delete options -->
+                                @foreach (Auth::user()->produtos()->latest()->take(3)->get() as $produto)
+                            <div class="overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1">
+                                <div class="relative">
+                                    @if ($produto->receita_foto)
+                                        <img src="{{ asset('storage/' . $produto->receita_foto) }}" alt="{{ $produto->receita_titulo }}"
+                                            class="object-cover w-full h-48">
+                                    @else
+                                        <div class="flex items-center justify-center w-full h-48 bg-gray-200">
+                                            <span class="text-gray-400"><i class="bi bi-image"></i> Sem imagem</span>
+                                        </div>
+                                    @endif
+                                    <div class="absolute top-2 right-2">
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-orange-500 bg-opacity-90 rounded">
+                                            <i class="bi bi-bookmark-fill mr-1"></i> {{ $produto->categoria }}
+                                        </span>
+                                    </div>
+                                    <div class="absolute top-2 left-2">
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-500 bg-opacity-90 rounded">
+                                            <i class="bi bi-eye-fill mr-1"></i> {{ $produto->views }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="p-4">
+                                    <h4 class="mb-1 text-lg font-semibold text-gray-900 line-clamp-1">{{ $produto->receita_titulo }}</h4>
+                                    <p class="mb-2 text-sm text-gray-600">
+                                        <i class="bi bi-alarm-fill"></i> {{ $produto->receita_duracao }} min
+                                        <span class="mx-1">•</span>
+                                        <i class="bi bi-bar-chart-fill"></i> {{ $produto->nivel_dificuldade }}
+                                    </p>
+                                    <div class="flex justify-between items-center">
+                                        <a href="{{ route('produtos.show', $produto->id) }}"
+                                            class="inline-flex items-center px-3 py-1 text-xs text-white bg-orange-500 rounded hover:bg-orange-600 transition-colors">
+                                            <i class="bi bi-eye mr-1"></i> Ver Produto
+                                        </a>
+                                        
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('produtos.edit', $produto->id) }}" class="text-blue-500 hover:text-blue-700">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            
+                                            <form action="{{ route('produtos.destroy', $produto->id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir esta produto?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-500 hover:text-red-700">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -246,7 +260,7 @@
                         <h4 class="text-lg font-medium text-gray-900 mb-2">Nenhum produto publicado</h4>
                         <p class="text-gray-600 mb-4">Você ainda não publicou nenhum produto para venda.</p>
                         <a href="{{ route('produtos.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark transition-colors">
-                            <i class="bi bi-plus-lg mr-2"></i> Vender Produto
+                            <i class="bi bi-plus-lg mr-2"></i> Anunciar Produto
                         </a>
                     </div>
                 @endif

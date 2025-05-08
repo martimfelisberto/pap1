@@ -32,18 +32,10 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit()
     {
-        $user = $request->user();
-        $produtos = Produto::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
-
-        return view('profile.edit', [
-            'user' => $user,
-            
-            'produtos' => $produtos,
-        ]);
+        $user = Auth::user();
+        return view('profile.edit', compact('user'));
     }
 
     /**

@@ -42,18 +42,85 @@
             <!-- Categories Card - keep structure but update text -->
         </div>
 
-        <!-- Tabs Navigation -->
-        <div class="list-group shadow-sm sticky-top" style="top: 20px;" id="admin-tabs" role="tablist">
-            <a href="#users" class="list-group-item list-group-item-action active">
-                <i class="bi bi-people-fill me-2 text-primary"></i>Utilizadores
-            </a>
-            <a href="#products" class="list-group-item list-group-item-action">
-                <i class="bi bi-bag-fill me-2 text-warning"></i>Produtos
-            </a>
-            <a href="#categories" class="list-group-item list-group-item-action" data-bs-toggle="list" role="tab">
-                <i class="bi bi-tags-fill me-2 text-success"></i>Categorias
-            </a>
-        
+        <div class="col-md-9">
+                <div class="tab-content">
+                    <!-- Users Tab -->
+                    <div class="tab-pane fade show active" id="users">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Gestão de Utilizadores</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nome</th>
+                                                <th>Email</th>
+                                                <th>Data de Registo</th>
+                                                <th>Estado</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($users as $user)
+                                                <tr>
+                                                    <td>{{ $user->id }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="rounded-circle bg-light d-flex justify-content-center align-items-center me-2"
+                                                                style="width: 40px; height: 40px;">
+                                                                <i class="bi bi-person-fill text-primary"></i>
+                                                            </div>
+                                                            {{ $user->name }}
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $user->email }}</td>
+                                                    <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                                                    <td>
+                                                        @if($user->is_banned)
+                                                            <span class="badge bg-danger">Banido</span>
+                                                        @else
+                                                            <span class="badge bg-success">Ativo</span>
+                                                        @endif
+                                                        
+                                                        @if($user->is_admin)
+                                                            <span class="badge bg-info">Admin</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if(!$user->is_admin)
+                                                            <form action="{{ route('admin.users.toggle-ban', $user) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-sm {{ $user->is_banned ? 'btn-success' : 'btn-danger' }}" 
+                                                                        onclick="return confirm('{{ $user->is_banned ? 'Deseja desbanir este utilizador?' : 'Deseja banir este utilizador?' }}')">
+                                                                    {{ $user->is_banned ? 'Desbanir' : 'Banir' }}
+                                                                </button>
+                                                        @else
+                                                            <button class="btn btn-sm btn-secondary" disabled>Admin</button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                @if($users->isEmpty())
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                                        <p class="mt-3">Nenhum utilizador encontrado</p>
+                                    </div>
+                                @endif
+                                
+                                <div class="d-flex justify-content-center mt-3">
+                                    {{ $users->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
             <!-- Products Tab -->
             <div class="tab-pane fade" id="products" role="tabpanel">
