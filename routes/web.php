@@ -23,7 +23,7 @@ Route::get('/contactos', function () {
     return view('contactos');
 })->name('contactos');
 
-Route::get('/welcome', function () {
+Route::get('/dashboard', function () {
     if (Auth::check() && Auth::user()->is_banned) {
         return redirect()->route('banned');
     }
@@ -63,6 +63,8 @@ Route::middleware(['auth'])->prefix('carrinho')->name('carrinho.')->group(functi
     Route::delete('/limpar', [CarrinhoController::class, 'limpar'])->name('limpar');
 });
 
+
+
 // Profile routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
@@ -75,11 +77,20 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::resource('categorias', CategoriaController::class)->except(['index', 'show']);
-    Route::get('/produtos', [AdminController::class, 'produtos'])->name('produtos.index');
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/products', [AdminController::class, 'products'])->name('products');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () { 
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
+    Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::patch('/users/{user}/toggle-ban', [AdminController::class, 'toggleUserBan'])->name('users.toggle-ban');
     Route::delete('/produtos/{produto}', [AdminController::class, 'deleteProduto'])->name('produtos.delete');
+    Route::delete('/categorias/{categoria}', [CategoriaController::class, 'destroy'])->name('categorias.delete');
     
     // User management
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
@@ -87,11 +98,41 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::patch('/users/{user}/toggle-ban', [AdminController::class, 'toggleUserBan'])->name('users.toggle-ban');
     
-    // Reports
-    Route::get('/relatorios/vendas', [AdminController::class, 'relatorioVendas'])->name('relatorios.vendas');
+
+    
+    // Categories management
+    Route::get('/categorias/criar', [CategoriaController::class, 'create'])->name('categorias.create');
+    Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
+    Route::get('/categorias/{categoria}/editar', [CategoriaController::class, 'edit'])->name('categorias.edit');
+    Route::put('/categorias/{categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
+    Route::delete('/categorias/{categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
 });
 
 // Género routes
 Route::get('/genero/{slug}', [GeneroController::class, 'show'])->name('genero.show');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Category routes
+    Route::prefix('categorias')->name('categorias.')->group(function () {
+        Route::get('/', [AdminController::class, 'indexCategorias'])->name('index');
+        Route::get('/criar', [AdminController::class, 'createCategoria'])->name('create');
+        Route::post('/', [AdminController::class, 'storeCategoria'])->name('store');
+        Route::get('/{categoria}/editar', [AdminController::class, 'editCategoria'])->name('edit');
+        Route::put('/{categoria}', [AdminController::class, 'updateCategoria'])->name('update');
+        Route::delete('/{categoria}', [AdminController::class, 'deleteCategoria'])->name('delete');
+    });
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Categories routes
+    Route::prefix('categorias')->name('categorias.')->group(function () {
+        Route::get('/', [AdminController::class, 'indexCategorias'])->name('index');
+        Route::get('/criar', [AdminController::class, 'createCategoria'])->name('create');
+    });
+});
 
 require __DIR__ . '/auth.php';

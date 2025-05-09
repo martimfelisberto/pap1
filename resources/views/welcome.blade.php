@@ -179,56 +179,62 @@
     <section class="overflow-hidden categories">
         <div class="container">
             <div class="open-up" data-aos="zoom-out">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="cat-item image-zoom-effect">
-                            <div class="image-holder">
-                                <a href="/homem/casacos">
-                                    <img src="{{ asset('/images/homem.jpg') }}" alt="categories"
-                                        class="product-image img-fluid">
-                                </a>
-                            </div>
-                            <div class="category-content">
-                                <div class="product-button">
-                                    <a href="/homem/casacos" class="btn btn-common text-uppercase">Comprar casacos para
-                                        homem</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="cat-item image-zoom-effect">
-                            <div class="image-holder">
-                                <a href="/mulher">
-                                    <img src="{{ asset('/images/mulher.jpg') }}" alt="categories"
-                                        class="product-image img-fluid">
-                                </a>
-                            </div>
-                            <div class="category-content">
-                                <div class="product-button">
-                                    <a href="/mulher" class="btn btn-common text-uppercase">Comprar para
-                                        mulher</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="cat-item image-zoom-effect">
-                            <div class="image-holder">
-                                <a href="/criança">
-                                    <img src="{{ asset('/images/criança.jpg') }}" alt="categories"
-                                        class="product-image img-fluid">
-                                </a>
-                            </div>
-                            <div class="category-content">
-                                <div class="product-button">
-                                    <a href="/criança" class="btn btn-common text-uppercase">Comprar para
-                                        criança</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row">
+    <div class="col-md-4">
+        <div class="cat-item image-zoom-effect">
+            <div class="image-holder">
+                <a href="{{ route('produtos.categoria', ['categoria' => 'casacos', 'genero' => 'homem']) }}">
+                    <img src="{{ asset('/images/homem.jpg') }}" alt="produtos"
+                        class="product-image img-fluid">
+                </a>
+            </div>
+            <div class="category-content">
+                <div class="product-button">
+                    <a href="{{ route('produtos.categoria', ['categoria' => 'casacos', 'genero' => 'homem']) }}" 
+                       class="btn btn-common text-uppercase">
+                        Comprar casacos para homem
+                    </a>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="cat-item image-zoom-effect">
+            <div class="image-holder">
+                <a href="{{ route('produtos.categoria', ['categoria' => 'sapatilhas', 'genero' => 'mulher']) }}">
+                    <img src="{{ asset('/images/mulher.jpg') }}" alt="produtos"
+                        class="product-image img-fluid">
+                </a>
+            </div>
+            <div class="category-content">
+                <div class="product-button">
+                    <a href="{{ route('produtos.categoria', ['categoria' => 'sapatilhas', 'genero' => 'mulher']) }}" 
+                       class="btn btn-common text-uppercase">
+                        Comprar sapatilhas para mulher
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="cat-item image-zoom-effect">
+            <div class="image-holder">
+                <a href="{{ route('produtos.categoria', ['categoria' => 'calcas', 'genero' => 'criança']) }}">
+                    <img src="{{ asset('/images/criança.jpg') }}" alt="produtos"
+                        class="product-image img-fluid">
+                </a>
+            </div>
+            <div class="category-content">
+                <div class="product-button">
+                    <a href="{{ route('produtos.categoria', ['categoria' => 'calcas', 'genero' => 'criança']) }}" 
+                       class="btn btn-common text-uppercase">
+                        Comprar calças para criança
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </section>

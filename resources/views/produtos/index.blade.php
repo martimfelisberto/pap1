@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-icons.css') }}">
-        <title>Vender Produto</title>
+        <title>Anunciar Produto</title>
         <style>
             .form-container {
                 max-width: 800px;
@@ -38,11 +38,11 @@
 
     <body class="flex items-center justify-center min-h-screen p-4 bg-gray-100">
         <div class="w-full overflow-hidden bg-white rounded-lg shadow-md form-container">
-            <h1 class="py-6 text-3xl font-bold text-center text-blue-600">Vender um Produto</h1>
+            <h1 class="py-6 text-3xl font-bold text-center text-blue-600">Anunciar um Produto</h1>
 
            <!-- Expanded Filter Section -->
 <div class="container mx-auto mt-8">
-    <div class="p-6 bg-white rounded-lg shadow-md">
+    <div class="p-6 bg-white rounded-2xl shadow-md">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-xl font-bold text-blue-600">
                 <i class="bi bi-funnel-fill mr-2"></i>Filtros
@@ -56,21 +56,21 @@
 
         <form method="GET" action="{{ route('produtos.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Pesquisar -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-search mr-1"></i>Pesquisar
                     </label>
-                    <input type="text" name="search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                    <input type="text" name="search" 
+                           class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
                            placeholder="Nome do produto" value="{{ request()->get('search') }}">
                 </div>
 
-                <!-- Marca -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-tag-fill mr-1"></i>Marca
                     </label>
-                    <select name="marca" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select name="marca" 
+                            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Todas as marcas</option>
                         <option value="Nike" {{ request()->get('marca') == 'Nike' ? 'selected' : '' }}>Nike</option>
                         <option value="Adidas" {{ request()->get('marca') == 'Adidas' ? 'selected' : '' }}>Adidas</option>
@@ -80,12 +80,11 @@
                     </select>
                 </div>
 
-                <!-- Categoria -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-collection-fill mr-1"></i>Categoria
                     </label>
-                    <select name="categoria" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select name="categoria" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Todas as categorias</option>
                         <option value="Casacos" {{ request()->get('categoria') == 'Casacos' ? 'selected' : '' }}>Casacos</option>
                         <option value="Camisolas" {{ request()->get('categoria') == 'Camisolas' ? 'selected' : '' }}>Camisolas</option>
@@ -95,12 +94,11 @@
                     </select>
                 </div>
 
-                <!-- Gênero -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-gender-ambiguous mr-1"></i>Gênero
                     </label>
-                    <select name="genero" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select name="genero" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Todos os gêneros</option>
                         <option value="homem" {{ request()->get('genero') == 'homem' ? 'selected' : '' }}>Homem</option>
                         <option value="mulher" {{ request()->get('genero') == 'mulher' ? 'selected' : '' }}>Mulher</option>
@@ -108,12 +106,11 @@
                     </select>
                 </div>
 
-                <!-- Estado -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-stars mr-1"></i>Estado
                     </label>
-                    <select name="estado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <select name="estado" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                         <option value="">Todos os estados</option>
                         <option value="Novo" {{ request()->get('estado') == 'Novo' ? 'selected' : '' }}>Novo</option>
                         <option value="Usado" {{ request()->get('estado') == 'Usado' ? 'selected' : '' }}>Usado</option>
@@ -121,25 +118,25 @@
                     </select>
                 </div>
 
-                <!-- Faixa de Preço -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">
                         <i class="bi bi-currency-euro mr-1"></i>Faixa de Preço
                     </label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="number" name="preco_min" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                        <input type="number" name="preco_min" 
+                               class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
                                placeholder="Min" value="{{ request()->get('preco_min') }}" min="0" step="0.01">
-                        <input type="number" name="preco_max" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
+                        <input type="number" name="preco_max" 
+                               class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
                                placeholder="Max" value="{{ request()->get('preco_max') }}" min="0" step="0.01">
                     </div>
                 </div>
-
             </div>
 
-            <!-- Botão Aplicar -->
             <div class="flex justify-end mt-4">
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    <i class="bi bi-funnel mr-2"></i>Aplicar Filtros
+                <button type="submit" 
+                        class="px-3 py-1.5 text-sm bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                    <i class="bi bi-funnel mr-1"></i>Aplicar Filtros
                 </button>
             </div>
         </form>
@@ -226,7 +223,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-container">
         @forelse ($produtos as $produto)
         <div class="product-item">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col">
+            <div class="bg-white rounded-2xl shadow-md overflow-hidden h-full flex flex-col">
                 <div class="relative">
                     <img src="{{ asset('storage/' . $produto->imagem) }}" 
                          class="w-full h-48 object-cover"
@@ -298,7 +295,7 @@
         </div>
         @empty
         <div class="col-span-full">
-            <div class="bg-blue-50 text-center p-8 rounded-lg">
+            <div class="bg-blue-50 text-center p-8 rounded-2xl">
                 <i class="bi bi-info-circle text-4xl text-blue-500 mb-4"></i>
                 <h4 class="text-xl font-bold text-gray-900 mb-2">Nenhum produto encontrado</h4>
                 <p class="text-gray-600 mb-4">Tente ajustar os filtros ou pesquise por outro termo.</p>

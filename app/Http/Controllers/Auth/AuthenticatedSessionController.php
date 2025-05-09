@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+// Removed duplicate import of RouteServiceProvider
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\View\View;
+use App\Providers\RouteServiceProvider;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,24 +27,27 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        if (Auth::user()->is_banned) {
-            Auth::logout();
-            
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            
-            return redirect()->route('login')
-                ->withErrors(['email' => 'A sua conta foi suspensa. Por favor, contacte o administrador.']);
+        // First attempt authentication
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            return back()->withErrors([
+                'email' => trans('auth.failed'),
+            ])->onlyInput('email');
         }
 
-        $request->authenticate();
+        // After successful authentication, check if user is banned
+        $user = Auth::user();
+        if ($user && $user->is_banned) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        
+            return back()->withErrors([
+                'email' => 'Esta conta foi suspensa. Por favor, contacte o administrador.',
+            ])->onlyInput('email');
+        }
 
         $request->session()->regenerate();
-
-        return redirect()->route('check.banned');
-
+        return redirect()->intended('/');  // Direct path instead of RouteServiceProvider::HOME
     }
 
     /**
@@ -57,6 +63,4 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('welcome');
     }
-
-    
 }

@@ -14,6 +14,14 @@ use Illuminate\Routing\Controller as BaseController;
 
 class CategoriaController extends BaseController
 {
+    public function porGenero($genero)
+    {
+        $categorias = Categoria::where('genero', $genero)
+                             ->orWhere('genero', 'unissex')
+                             ->get(['id', 'nome']);
+                             
+        return response()->json($categorias);
+    }
     public function __construct()
     {
         $this->middleware('admin')->except(['index', 'show']);

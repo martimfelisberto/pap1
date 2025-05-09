@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Http\Controllers\ProdutoController;
 use Illuminate\Database\Seeder;
 use App\Models\Produto;
 use App\Models\User;
@@ -14,7 +13,10 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {// User::factory(10)->create();
+    {
+        $this->call([
+            AdminSeeder::class,
+        ]);
 
         User::factory()->create([
            'name' => 'Admin',
@@ -24,6 +26,5 @@ class DatabaseSeeder extends Seeder
         Produto::factory(2)->create();
 
         Categoria::factory(5)->create();
-
     }
 }

@@ -7,17 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 class Categoria extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoriasFactory> */
     use HasFactory; 
 
-    protected $fillable = [
-        'nome',
-        'slug',
-        'genero',
-        'descricao',
-        'created_by'
+    protected $fillable = ['nome', 'genero', 'ativo'];
+
+    protected $casts = [
+        'ativo' => 'boolean',
     ];
 
     /**
@@ -31,8 +30,5 @@ class Categoria extends Model
     /**
      * Get the user that created the categoria.
      */
-    public function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
+   
 }

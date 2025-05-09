@@ -38,6 +38,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -53,8 +63,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Favorite::class);
     }
 
+      /**
+         * Check if the user is an admin.
+         *
+         * @return bool
+         */
     // Helper methods
-    public function isAdmin(): bool
+    public function isAdmin()
     {
         return $this->is_admin === true;
     }
@@ -66,8 +81,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Produto::class, 'favorites', 'user_id', 'produto_id')
                 ->withTimestamps();
     }
-
-   
 
     
 }

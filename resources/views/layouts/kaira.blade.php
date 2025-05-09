@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <title>Reshopping</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Reshopping</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="author" content="TemplatesJungle">
@@ -156,39 +157,6 @@
 
     <div class="overflow-hidden text-white preloader fs-6 text-uppercase"></div>
 
-    <div class="search-popup">
-        <div class="search-popup-container">
-
-            <form role="search" method="get" class="form-group" action="">
-                <input type="search" id="search-form" class="border-0 form-control border-bottom"
-                    placeholder="Type and press enter" value="" name="s" />
-                <button type="submit" class="bg-white border-0 search-submit position-absolute"
-                    style="top: 15px;right: 15px;"><svg class="search" width="24" height="24">
-                        <use xlink:href="#search"></use>
-                    </svg></button>
-            </form>
-
-
-
-            <ul class="cat-list">
-                <li class="cat-list-item">
-                    <a href="/homem/casacos" title="Jackets">Casacos</a>
-                </li>
-                <li class="cat-list-item">
-                    <a href="/homem/tshirts" title="T-shirts">T-shirts</a>
-                </li>
-                <li class="cat-list-item">
-                    <a href="/homem/camisolas" title="Dresses">Camisolas</a>
-                </li>
-                <li class="cat-list-item">
-                    <a href="/homem/calcas" title="Jumpsuits">Calças e Calções</a>
-                </li>
-            </ul>
-
-        </div>
-    </div>
-
-
 
     {{-- NavBar --}}
     <nav class="p-3 navbar navbar-expand-lg bg-light fs-6 border-bottom align-items-center">
@@ -257,110 +225,143 @@
                             <a class="nav-link" href="/contactos">Contactos</a>
                         </li>
 
+                        @if(auth()->check() && auth()->user()->isAdmin())
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-tags me-2"></i>Categorias
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.categorias.create') }}">
+                                        <i class="bi bi-plus-circle me-2"></i>Nova Categoria
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('admin.categorias.index') }}">
+                                        <i class="bi bi-list me-2"></i>Listar Categorias
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        @auth
+                            @if(auth()->user()->isAdmin())
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.dashboard') }}" class="nav-link btn btn-warning text-white">
+                                        <i class="bi bi-speedometer2 me-2"></i>
+                                        Painel Admin
+                                    </a>
+                                </li>
+                            @endif
+                        @endauth
+
+                    
 
 
-
-                        <!-- Replace the existing auth controls with this updated version -->
-<div class="ms-auto d-flex align-items-center gap-3">
-    @guest
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle d-flex align-items-center"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="bi bi-box-arrow-in-right me-2"></i>
-                Entrar para Vender
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('login') }}">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>
-                        Entrar
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('register') }}">
-                        <i class="bi bi-person-plus me-2"></i>
-                        Registrar
-                    </a>
-                </li>
-            </ul>
-        </div>
-    @else
-        <!-- Botão Vender -->
-        <a href="{{ route('produtos.create') }}" class="btn btn-primary d-flex align-items-center">
-            <i class="bi bi-plus-lg me-2"></i>
-            Anunciar um Produto
-        </a>
-
-        <!-- User Profile Dropdown -->
-        <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none" 
-                type="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false">
-                @if(Auth::user()->profile_photo)
-                    <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" 
-                         alt="Profile"
-                         class="rounded-circle me-2" 
-                         style="width: 32px; height: 32px; object-fit: cover;">
-                @else
-                    <i class="bi bi-person-circle me-2 fs-5"></i>
-                @endif
-                <span>{{ Auth::user()->name }}</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
-                        <i class="bi bi-person me-2"></i>
-                        Perfil
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" href="{{ route('produtos.meus') }}">
-                        <i class="bi bi-bag me-2"></i>
-                        Meus Produtos
-                    </a>
-                </li>
-                @if(auth()->user()->isAdmin())
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}">
-                            <i class="bi bi-speedometer2 me-2"></i>
-                            Painel Admin
+                    <!-- Replace the existing auth controls with this updated version -->
+                    <div class="ms-auto d-flex align-items-center gap-3">
+                        @guest
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle d-flex align-items-center"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Anunciar um Produto
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                                        Entrar
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('register') }}">
+                                        <i class="bi bi-person-plus me-2"></i>
+                                        Registrar
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        @else
+                        <!-- Botão Vender -->
+                        <a href="{{ route('produtos.create') }}" class="btn btn-primary d-flex align-items-center">
+                            <i class="bi bi-plus-lg me-2"></i>
+                            Anunciar um Produto
                         </a>
-                    </li>
-                @endif
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form method="POST" action="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
-                        @csrf
-                        <button type="submit" class="btn btn-link text-danger p-0 d-flex align-items-center w-100">
-                            <i class="bi bi-box-arrow-right me-2"></i>
-                            Sair
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    @endguest
 
-    <!-- Search Icon -->
-    <div class="search-box">
-        <a href="#search" class="search-button">
-            <i class="bi bi-search fs-5"></i>
-        </a>
-    </div>
+                        <!-- User Profile Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                @if(Auth::user()->profile_photo)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}"
+                                    alt="Profile"
+                                    class="rounded-circle me-2"
+                                    style="width: 32px; height: 32px; object-fit: cover;">
+                                @else
+                                <i class="bi bi-person-circle me-2 fs-5"></i>
+                                @endif
+                                <span>{{ Auth::user()->name }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                                        <i class="bi bi-person me-2"></i>
+                                        Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('produtos.meus') }}">
+                                        <i class="bi bi-bag me-2"></i>
+                                        Meus Produtos
+                                    </a>
+                                </li>
+                                @if(auth()->user()->isAdmin())
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}">
+                                        <i class="bi bi-speedometer2 me-2"></i>
+                                        Painel Admin
+                                    </a>
+                                </li>
+                                @endif
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
+                                        @csrf
+                                        <button type="submit" class="btn btn-link text-danger p-0 d-flex align-items-center w-100">
+                                            <i class="bi bi-box-arrow-right me-2"></i>
+                                            Sair
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        @endguest
 
-    <!-- Cart Icon -->
-    <a href="{{ route('carrinho.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
-        <i class="bi bi-cart3 fs-5 me-1"></i>
-        <span class="badge bg-primary rounded-pill" id="headerCartCount">0</span>
-    </a>
-</div>
+                        <!-- Search Icon -->
+                        <div class="search-box">
+                            <a href="#search" class="search-button">
+                                <i class="bi bi-search fs-5"></i>
+                            </a>
+                        </div>
 
+                        <!-- Cart Icon -->
+                        <a href="{{ route('carrinho.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
+                            <i class="bi bi-cart3 fs-5 me-1"></i>
+                            <span class="badge bg-primary rounded-pill" id="headerCartCount">0</span>
+                        </a>
+                    </div>
+
+                </div>
+                </ul>
             </div>
-
-        </div>
     </nav>
 
     {{ $slot }}
