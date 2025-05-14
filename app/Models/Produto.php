@@ -34,16 +34,14 @@ class Produto extends Model
      */
     protected $fillable = [
         'nome',
-        'descricao',
-        'preco',
         'marca',
-        'categoria',
+        'preco',
         'estado',
         'tamanho',
-        'cores',
-        'imagem',
-        'destaque',
         'genero',
+        'categoria',
+        'imagem',
+        'descricao',
         'user_id'
     ];
 
@@ -53,11 +51,7 @@ class Produto extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'preco' => 'float',
-        'destaque' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'cores' => 'array',
+        'preco' => 'decimal:2'
     ];
 
     /**

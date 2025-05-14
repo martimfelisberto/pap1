@@ -1,53 +1,47 @@
 <x-kaira-layout>
-    <div class="container py-4">
-        <!-- Progress Bar -->
-        <div class="mb-4">
-            <div class="d-flex justify-content-between mb-2">
-                <span class="small fw-medium">Progresso do formulário</span>
-                <span class="small fw-medium" id="formProgress">0%</span>
-            </div>
-            <div class="progress">
-                <div class="progress-bar bg-warning" id="progressBar" role="progressbar" style="width: 0%"></div>
-            </div>
-        </div>
+    <div style="padding: 1.5rem 0; background-color: #F9FAFB;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
+            <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.75rem; font-weight: 600; text-align: center; margin-bottom: 1rem; color: #333;">
+                    Novo Produto
+                </h2>
+                <form method="POST" action="{{ route('produtos.store') }}" enctype="multipart/form-data" id="productForm">
+                    @csrf
 
-        <form method="POST" action="{{ route('produtos.store') }}" enctype="multipart/form-data" id="productForm">
-            @csrf
-            
-            <!-- Section 1: Basic Information -->
-            <div class="card mb-4" id="section1">
-                <div class="card-header bg-warning text-white">
-                    <h5 class="mb-0">
-                        <span class="badge bg-white text-warning me-2">1</span>
-                        Informações Básicas
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="nome" class="form-label">
-                            Nome do Produto <span class="text-danger">*</span>
+                    <!-- Nome do Produto -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="nome" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Nome do Produto <span style="color: #e63946;">*</span>
                         </label>
-                        <input type="text" class="form-control" id="nome" name="nome" required
-                               placeholder="Ex: Camisola Nike Vintage" value="{{ old('nome') }}">
+                        <input type="text" id="nome" name="nome" required
+                            placeholder="Ex: Camisola Nike Vintage"
+                            value="{{ old('nome') }}"
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                         @error('nome')
-                            <div class="text-danger small">{{ $message }}</div>
+                        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="descricao" class="form-label">
-                            Descrição <span class="text-danger">*</span>
+                    <!-- Descrição -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="descricao" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Descrição <span style="color: #e63946;">*</span>
                         </label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required
-                                  placeholder="Descreva o estado, material, medidas e outros detalhes relevantes do produto...">{{ old('descricao') }}</textarea>
+                        <textarea id="descricao" name="descricao" rows="3" required
+                            placeholder="Descreva o estado, material, medidas e outros detalhes relevantes do produto..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('descricao') }}</textarea>
                         @error('descricao')
-                            <div class="text-danger small">{{ $message }}</div>
+                        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="form-group">
-                        <label for="marca">Marca</label>
-                        <select class="form-control" id="marca" name="marca" required>
+                    <!-- Marca -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="marca" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Marca
+                        </label>
+                        <select id="marca" name="marca" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                             <option value="">Selecione a marca</option>
                             <optgroup label="Marcas de Sapatilhas">
                                 <option value="Nike">Nike</option>
@@ -66,9 +60,13 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="genero">Gênero</label>
-                        <select class="form-control" id="genero" name="genero" required>
+                    <!-- Gênero -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="genero" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Gênero
+                        </label>
+                        <select id="genero" name="genero" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                             <option value="">Selecione o gênero</option>
                             <option value="homem">Homem</option>
                             <option value="mulher">Mulher</option>
@@ -76,25 +74,44 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="categoria">Categoria</label>
-                        <select class="form-control" id="categoria" name="categoria" required disabled>
-                            <option value="">Selecione primeiro o gênero</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tamanho">Tamanho</label>
-                        <select class="form-control" id="tamanho" name="tamanho" required>
+                   <!-- Categoria -->
+<div style="margin-bottom: 1rem;">
+    <label for="categoria" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+        Categoria <span style="color: #e63946;">*</span>
+    </label>
+    <select id="categoria" name="categoria" required
+            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+        <option value="">Selecione uma categoria</option>
+        @foreach($categorias as $categoria)
+            <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
+        @endforeach
+    </select>
+    @error('categoria')
+        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+    @enderror
+</div>
+                    <!-- Tamanho -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="tamanho" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Tamanho
+                        </label>
+                        <select id="tamanho" name="tamanho" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                             <option value="">Selecione o tamanho</option>
                         </select>
                     </div>
 
-                    <div id="especificacoes-sapatilhas" style="display: none;">
-                        <h4>Especificações de Sapatilhas</h4>
-                        <div class="form-group">
-                            <label for="tipo_sola">Tipo de Sola</label>
-                            <select class="form-control" id="tipo_sola" name="tipo_sola">
+                    <!-- Especificações de Sapatilhas -->
+                    <div id="especificacoes-sapatilhas" style="display: none; margin-bottom: 1rem;">
+                        <h4 style="font-size: 1.25rem; color: #333; margin-bottom: 0.75rem;">
+                            Especificações de Sapatilhas
+                        </h4>
+                        <div style="margin-bottom: 1rem;">
+                            <label for="tipo_sola" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Tipo de Sola
+                            </label>
+                            <select id="tipo_sola" name="tipo_sola"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                                 <option value="">Selecione o tipo de sola</option>
                                 <option value="borracha">Borracha</option>
                                 <option value="eva">EVA</option>
@@ -102,9 +119,13 @@
                                 <option value="tpu">TPU</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="material">Material</label>
-                            <select class="form-control" id="material" name="material">
+                        <div style="margin-bottom: 1rem;">
+                            <label for="material" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Material
+                            </label>
+                            <select id="material" name="material"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="">Selecione o material</option>
                                 <option value="couro">Couro</option>
                                 <option value="tecido">Tecido</option>
                                 <option value="sintetico">Sintético</option>
@@ -113,31 +134,47 @@
                         </div>
                     </div>
 
-                    <div id="especificacoes-roupas" class="especificacoes" style="display: none;">
-                        <h4>Especificações de Roupas</h4>
-                        <div class="form-group">
-                            <label for="material">Material</label>
-                            <input type="text" class="form-control" id="material" name="material">
+                    <!-- Especificações de Roupas -->
+                    <div id="especificacoes-roupas" style="display: none; margin-bottom: 1rem;">
+                        <h4 style="font-size: 1.25rem; color: #333; margin-bottom: 0.75rem;">
+                            Especificações de Roupas
+                        </h4>
+                        <div style="margin-bottom: 1rem;">
+                            <label for="material" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Material
+                            </label>
+                            <input type="text" id="material" name="material"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                         </div>
-                        <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <input type="text" class="form-control" id="tipo" name="tipo">
+                        <div style="margin-bottom: 1rem;">
+                            <label for="tipo" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Tipo
+                            </label>
+                            <input type="text" id="tipo" name="tipo"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                         </div>
-                        <div class="form-group">
-                            <label for="forro">Forro</label>
-                            <input type="text" class="form-control" id="forro" name="forro">
+                        <div style="margin-bottom: 1rem;">
+                            <label for="forro" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Forro
+                            </label>
+                            <input type="text" id="forro" name="forro"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                         </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="capuz" name="capuz">
-                                <label class="form-check-label" for="capuz">Tem Capuz?</label>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center;">
+                                <input type="checkbox" id="capuz" name="capuz" style="margin-right: 0.5rem;">
+                                <label for="capuz" style="font-size: 1rem; color:#333;">Tem Capuz?</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="estado">Estado</label>
-                        <select class="form-control" id="estado" name="estado" required>
+                    <!-- Estado -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="estado" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Estado
+                        </label>
+                        <select id="estado" name="estado" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                             <option value="">Selecione o estado</option>
                             <option value="novo">Novo</option>
                             <option value="semi-novo">Semi-novo</option>
@@ -145,133 +182,102 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label>Cores</label><br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="cores[]" value="preto" id="cor-preto">
-                            <label class="form-check-label" for="cor-preto">Preto</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="cores[]" value="branco" id="cor-branco">
-                            <label class="form-check-label" for="cor-branco">Branco</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="cores[]" value="azul" id="cor-azul">
-                            <label class="form-check-label" for="cor-azul">Azul</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="cores[]" value="vermelho" id="cor-vermelho">
-                            <label class="form-check-label" for="cor-vermelho">Vermelho</label>
+                    <!-- Cores -->
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Cores</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <div>
+                                <input type="checkbox" name="cores[]" value="preto" id="cor-preto" style="margin-right: 0.25rem;">
+                                <label for="cor-preto" style="font-size: 0.875rem; color:#333;">Preto</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="branco" id="cor-branco" style="margin-right: 0.25rem;">
+                                <label for="cor-branco" style="font-size: 0.875rem; color:#333;">Branco</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="azul" id="cor-azul" style="margin-right: 0.25rem;">
+                                <label for="cor-azul" style="font-size: 0.875rem; color:#333;">Azul</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="vermelho" id="cor-vermelho" style="margin-right: 0.25rem;">
+                                <label for="cor-vermelho" style="font-size: 0.875rem; color:#333;">Vermelho</label>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Image Upload -->
-                    <div class="mb-3">
-                        <label for="imagem" class="form-label">
-                            Foto do Produto <span class="text-danger">*</span>
+                    <!-- Upload da Imagem -->
+                    <div style="margin-bottom: 1rem;">
+                        <label for="imagem" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                            Foto do Produto <span style="color: #e63946;">*</span>
                         </label>
-                        <div class="drop-zone border rounded p-4 text-center" id="dropzone">
-                            <i class="bi bi-image fs-1 text-muted"></i>
-                            <div class="mt-3">
-                                <label for="imagem" class="text-warning fw-medium cursor-pointer">
+                        <div id="dropzone" style="border: 2px dashed #ccc; border-radius: 8px; padding: 1.5rem; text-align: center;">
+                            <i class="bi bi-image" style="font-size: 2.5rem; color: #ccc;"></i>
+                            <div style="margin-top: 0.75rem;">
+                                <label for="imagem" style="cursor: pointer; color: rgb(36, 104, 250); font-weight: 600;">
                                     Carregar imagem
-                                    <input type="file" id="imagem" name="imagem" class="d-none" 
-                                           accept="image/*" onchange="previewImage(event)">
+                                    <input type="file" id="imagem" name="imagem" style="display: none;" accept="image/*" onchange="previewImage(event)">
                                 </label>
-                                <span class="text-muted ms-2">ou arraste e solte</span>
+                                <span style="color: #6c757d; margin-left: 0.5rem;">ou arraste e solte</span>
                             </div>
-                            <p class="small text-muted mt-2">PNG, JPG, GIF até 10MB</p>
+                            <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem;">PNG, JPG, GIF até 10MB</p>
                         </div>
                         @error('imagem')
-                            <div class="text-danger small">{{ $message }}</div>
+                        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-            </div>
 
-            <!-- Product Conditions -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span class="fw-medium">Detalhes do Estado</span>
-                    <button type="button" class="btn btn-sm text-muted" id="clearDetailsBtn">
-                        <i class="bi bi-trash me-1"></i> Limpar
-                    </button>
-                </div>
-                <div class="card-body">
-                    <textarea name="condicoes" id="condicoes" rows="6" class="form-control" required
-                              placeholder="- Sem manchas ou defeitos&#10;- Todas as costuras intactas&#10;- Usado apenas 2 vezes&#10;- Lavado e passado">{{ old('condicoes') }}</textarea>
-                    @error('condicoes')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Measurements -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Medidas (opcional)</h5>
-                </div>
-                <div class="card-body">
-                    <textarea name="medidas" id="medidas" rows="4" class="form-control"
-                              placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm">{{ old('medidas') }}</textarea>
-                    @error('medidas')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <!-- Review Section -->
-            <div class="card mb-4" id="section4">
-                <div class="card-header bg-warning text-white">
-                    <h5 class="mb-0">
-                        <span class="badge bg-white text-warning me-2">4</span>
-                        Revisar e Publicar
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <!-- Product Preview -->
-                    <div class="product-preview mb-4">
-                        <h4 id="preview-title">Nome do Produto</h4>
-                        <p class="text-muted" id="preview-description">Descrição do produto...</p>
-                        
-                        <div class="d-flex flex-wrap gap-3 mb-3">
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-tag text-warning me-1"></i>
-                                <span id="preview-price">0.00€</span>
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-box text-warning me-1"></i>
-                                <span id="preview-size">Tamanho</span>
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-stars text-warning me-1"></i>
-                                <span id="preview-condition">Estado</span>
-                            </span>
+                    <!-- Detalhes do Estado -->
+                    <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
+                            <span style="font-weight: 500; color: #333;">Detalhes do Estado</span>
+                            <button type="button" id="clearDetailsBtn" style="background: none; border: none; color: #6c757d; font-size: 0.875rem; cursor: pointer;">
+                                <i class="bi bi-trash" style="margin-right: 0.25rem;"></i> Limpar
+                            </button>
                         </div>
-                        
-                        <div class="preview-image-container mb-3">
-                            <img id="preview-image" class="img-fluid rounded shadow-sm" src="" alt="Preview">
+                        <div style="padding: 1rem;">
+                            <textarea name="condicoes" id="condicoes" rows="6" required
+                                placeholder="- Sem manchas ou defeitos&#10;- Todas as costuras intactas&#10;- Usado apenas 2 vezes&#10;- Lavado e passado"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('condicoes') }}</textarea>
+                            @error('condicoes')
+                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Ao publicar, você confirma que este produto é seu e as informações fornecidas são verdadeiras.
+                    <!-- Medidas (opcional) -->
+                    <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
+                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
+                        </div>
+                        <div style="padding: 1rem;">
+                            <textarea name="medidas" id="medidas" rows="4"
+                                placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
+                            @error('medidas')
+                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-secondary" onclick="prevSection(4)">
-                            <i class="bi bi-arrow-left me-1"></i> Anterior
+
+                    <!-- Rodapé com Botões -->
+                    <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
+                        <button type="button" onclick="prevSection(4)" style="padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #6c757d; border-radius: 5px; color: #6c757d; font-size: 0.875rem; cursor: pointer;">
+                            <i class="bi bi-arrow-left" style="margin-right: 0.25rem;"></i> Anterior
                         </button>
-                        <button type="submit" class="btn btn-warning">
-                            <i class="bi bi-send me-1"></i> Publicar Produto
+                        <button type="submit" style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
+                            <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
                         </button>
                     </div>
-                </div>
+
+                </form>
             </div>
-        </form>
+        </div>
     </div>
+
+
+
+
+
 
     @push('scripts')
     <script>
@@ -281,7 +287,7 @@
             const totalFields = form.querySelectorAll('input:required, select:required, textarea:required').length;
             const filledFields = form.querySelectorAll('input:required:valid, select:required:valid, textarea:required:valid').length;
             const progress = Math.round((filledFields / totalFields) * 100);
-            
+
             document.getElementById('formProgress').textContent = `${progress}%`;
             document.getElementById('progressBar').style.width = `${progress}%`;
         }
@@ -346,35 +352,6 @@
                 }
             }
         });
-
-        // Categoria dinamica baseada no gênero
-        document.getElementById('genero').addEventListener('change', function() {
-            const genero = this.value;
-            const categoriaSelect = document.getElementById('categoria');
-            
-            if (!genero) {
-                categoriaSelect.disabled = true;
-                categoriaSelect.innerHTML = '<option value="">Selecione primeiro o gênero</option>';
-                return;
-            }
-
-            // Fazer requisição AJAX para buscar categorias
-            fetch(`/api/categorias/${genero}`)
-                .then(response => response.json())
-                .then(categorias => {
-                    categoriaSelect.disabled = false;
-                    categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
-                    
-                    categorias.forEach(categoria => {
-                        const option = document.createElement('option');
-                        option.value = categoria.id;
-                        option.textContent = categoria.nome;
-                        categoriaSelect.appendChild(option);
-                    });
-                });
-        });
     </script>
     @endpush
 </x-kaira-layout>
-
-

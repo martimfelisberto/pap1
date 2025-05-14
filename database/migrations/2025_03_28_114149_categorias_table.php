@@ -8,24 +8,19 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('category_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('gender'); // homem, mulher, crianca
-            $table->timestamps();
-        });
-
-        Schema::create('category_products', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('category_type_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->timestamps();
-        });
+        Schema::create('categorias', function (Blueprint $table) {
+        $table->id();
+        $table->string('categoria');
+        $table->string('nome');
+        $table->string('genero');
+        $table->timestamps();
+    });
     }
 
     public function down()
     {
-        Schema::dropIfExists('category_products');
-        Schema::dropIfExists('category_types');
+        Schema::table('categorias', function (Blueprint $table) {
+            $table->dropColumn('categoria');
+        });
     }
 };

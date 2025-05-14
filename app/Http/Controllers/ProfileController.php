@@ -79,6 +79,36 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user's profile photo.
+     */
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'profile_photo' => ['required', 'image', 'max:2048']
+        ]);
+
+        $user = $request->user();
+        
+        if (!$user) {
+            return back()->with('error', 'You must be logged in to update your profile photo.');
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo) {
+                Storage::delete('public/' . $user->profile_photo);
+            }
+
+            // Store new photo
+            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            $user->profile_photo = $path;
+            $user->save();
+        }
+
+        return back()->with('success', 'Foto de perfil atualizada com sucesso.');
+    }
+
+    /**
      * Delete the user's account and associated products.
      */
     public function destroy(Request $request): RedirectResponse
@@ -118,18 +148,37 @@ class ProfileController extends Controller
     /**
      * Display user's products
      */
-    public function produtos()
+    public function produtos(Request $request)
     {
-        $produtos = Auth::produtos()->latest()->paginate(12);
+        $user = $request->user();
+        $produtos = $user->produtos()->latest()->paginate(12);
         return view('profile.produtos', compact('produtos'));
     }
 
     /**
      * Display user's sales
      */
-    public function vendas()
+    public function vendas(Request $request)
     {
-        $vendas = Auth::vendas()->latest()->paginate(12);
+        $user = $request->user();
+        $vendas = $user->vendas()->latest()->paginate(12);
         return view('profile.vendas', compact('vendas'));
     }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = $request->user();
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return back()->with('status', 'Senha atualizada com sucesso.');
+    }
+    /**
+     * Display user's favorite products
+     */
 }

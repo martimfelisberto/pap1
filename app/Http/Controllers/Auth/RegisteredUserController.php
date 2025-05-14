@@ -47,14 +47,6 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
 
-        if (Auth::user()->is_banned) {
-            Auth::logout();
-
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return redirect()->route('login')
-                ->withErrors(['email' => 'A sua conta foi suspensa. Por favor, contacte o administrador.']);
-        }
+       
     }
 }

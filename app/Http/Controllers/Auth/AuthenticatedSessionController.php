@@ -34,17 +34,8 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
-        // After successful authentication, check if user is banned
-        $user = Auth::user();
-        if ($user && $user->is_banned) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return back()->withErrors([
-                'email' => 'Esta conta foi suspensa. Por favor, contacte o administrador.',
-            ])->onlyInput('email');
-        }
+        
+        
 
         $request->session()->regenerate();
         return redirect()->intended('/');  // Direct path instead of RouteServiceProvider::HOME

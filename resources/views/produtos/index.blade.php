@@ -1,323 +1,282 @@
 <x-kaira-layout>
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-icons.css') }}">
-        <title>Anunciar Produto</title>
-        <style>
-            .form-container {
-                max-width: 800px;
-                margin: auto;
-            }
-
-            .image-preview {
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-                border-radius: 0.5rem;
-            }
-
-            .image-placeholder {
-                width: 100%;
-                height: 200px;
-                background-color: #f3f4f6;
-                border-radius: 0.5rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        </style>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
-
-
-    <body class="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-        <div class="w-full overflow-hidden bg-white rounded-lg shadow-md form-container">
-            <h1 class="py-6 text-3xl font-bold text-center text-blue-600">Anunciar um Produto</h1>
-
-           <!-- Expanded Filter Section -->
-<div class="container mx-auto mt-8">
-    <div class="p-6 bg-white rounded-2xl shadow-md">
-        <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xl font-bold text-blue-600">
-                <i class="bi bi-funnel-fill mr-2"></i>Filtros
-            </h4>
-            @if(request()->anyFilled(['search', 'marca', 'categoria', 'genero', 'estado', 'preco_min', 'preco_max']))
-            <a href="{{ route('produtos.index') }}" class="text-sm text-gray-600 hover:text-gray-800 flex items-center">
-                <i class="bi bi-x-circle mr-1"></i>Limpar filtros
-            </a>
-            @endif
-        </div>
-
-        <form method="GET" action="{{ route('produtos.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-search mr-1"></i>Pesquisar
-                    </label>
-                    <input type="text" name="search" 
-                           class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
-                           placeholder="Nome do produto" value="{{ request()->get('search') }}">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-tag-fill mr-1"></i>Marca
-                    </label>
-                    <select name="marca" 
-                            class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Todas as marcas</option>
-                        <option value="Nike" {{ request()->get('marca') == 'Nike' ? 'selected' : '' }}>Nike</option>
-                        <option value="Adidas" {{ request()->get('marca') == 'Adidas' ? 'selected' : '' }}>Adidas</option>
-                        <option value="Puma" {{ request()->get('marca') == 'Puma' ? 'selected' : '' }}>Puma</option>
-                        <option value="Reebok" {{ request()->get('marca') == 'Reebok' ? 'selected' : '' }}>Reebok</option>
-                        <option value="Outros" {{ request()->get('marca') == 'Outros' ? 'selected' : '' }}>Outros</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-collection-fill mr-1"></i>Categoria
-                    </label>
-                    <select name="categoria" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Todas as categorias</option>
-                        <option value="Casacos" {{ request()->get('categoria') == 'Casacos' ? 'selected' : '' }}>Casacos</option>
-                        <option value="Camisolas" {{ request()->get('categoria') == 'Camisolas' ? 'selected' : '' }}>Camisolas</option>
-                        <option value="Calças e Calções" {{ request()->get('categoria') == 'Calças e Calções' ? 'selected' : '' }}>Calças e Calções</option>
-                        <option value="Tops e T-shirts" {{ request()->get('categoria') == 'Tops e T-shirts' ? 'selected' : '' }}>Tops e T-shirts</option>
-                        <option value="Sapatilhas" {{ request()->get('categoria') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-gender-ambiguous mr-1"></i>Gênero
-                    </label>
-                    <select name="genero" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Todos os gêneros</option>
-                        <option value="homem" {{ request()->get('genero') == 'homem' ? 'selected' : '' }}>Homem</option>
-                        <option value="mulher" {{ request()->get('genero') == 'mulher' ? 'selected' : '' }}>Mulher</option>
-                        <option value="criança" {{ request()->get('genero') == 'criança' ? 'selected' : '' }}>Criança</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-stars mr-1"></i>Estado
-                    </label>
-                    <select name="estado" class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Todos os estados</option>
-                        <option value="Novo" {{ request()->get('estado') == 'Novo' ? 'selected' : '' }}>Novo</option>
-                        <option value="Usado" {{ request()->get('estado') == 'Usado' ? 'selected' : '' }}>Usado</option>
-                        <option value="Semi-novo" {{ request()->get('estado') == 'Semi-novo' ? 'selected' : '' }}>Semi-novo</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">
-                        <i class="bi bi-currency-euro mr-1"></i>Faixa de Preço
-                    </label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="number" name="preco_min" 
-                               class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
-                               placeholder="Min" value="{{ request()->get('preco_min') }}" min="0" step="0.01">
-                        <input type="number" name="preco_max" 
-                               class="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" 
-                               placeholder="Max" value="{{ request()->get('preco_max') }}" min="0" step="0.01">
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-end mt-4">
-                <button type="submit" 
-                        class="px-3 py-1.5 text-sm bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                    <i class="bi bi-funnel mr-1"></i>Aplicar Filtros
+    <div style="padding: 2rem 0; background-color: #F9FAFB;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;">
+            <!-- Cabeçalho com título e botão de filtros -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 2rem; font-weight: bold; color: #333; margin: 0;">
+                    Página de Produtos
+                </h2>
+                <button id="toggleFiltersBtn" 
+                        style="padding: 0.75rem 1.25rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer;">
+                    <i class="bi bi-funnel-fill" style="margin-right: 0.5rem;"></i>Filtros
                 </button>
             </div>
-        </form>
-    </div>
+          
+            <!-- Painel de Filtros Oculto (dentro do mesmo container) -->
+            <div id="filtersPanel" 
+                 style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background-color: #FFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <form method="GET" action="{{ route('produtos.index') }}" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Pesquisar -->
+                    <div>
+                        <label style="font-size: 0.875rem; color: #333;">Pesquisar</label>
+                        <input type="text" name="search" 
+                               placeholder="Nome do produto" 
+                               value="{{ request()->get('search') }}"
+                               style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                    </div>
+                    <!-- Marca -->
+                    <div>
+                        <label style="font-size: 0.875rem; color: #333;">Marca</label>
+                        <select name="marca" 
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                            <option value="">Todas as marcas</option>
+                            <option value="Nike" {{ request()->get('marca') == 'Nike' ? 'selected' : '' }}>Nike</option>
+                            <option value="Adidas" {{ request()->get('marca') == 'Adidas' ? 'selected' : '' }}>Adidas</option>
+                            <option value="Puma" {{ request()->get('marca') == 'Puma' ? 'selected' : '' }}>Puma</option>
+                            <option value="Reebok" {{ request()->get('marca') == 'Reebok' ? 'selected' : '' }}>Reebok</option>
+                            <option value="Outros" {{ request()->get('marca') == 'Outros' ? 'selected' : '' }}>Outros</option>
+                        </select>
+                    </div>
+                    <!-- Categoria -->
+                    <div>
+    <label style="font-size: 0.875rem; color: #333;">Categoria</label>
+    <select name="categoria" 
+            style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+        <option value="">Todas as categorias</option>
+        @foreach($categorias as $categoria)
+            <option value="{{ $categoria->nome }}" {{ request()->get('categoria') == $categoria->nome ? 'selected' : '' }}>
+                {{ $categoria->nome }}
+            </option>
+        @endforeach
+    </select>
 </div>
-<!-- End Filter Section -->
- 
-<!-- Results Summary -->
-<div class="container mx-auto px-4 mt-8">
-    <div class="flex flex-wrap justify-between items-center mb-4">
-        <div class="w-full lg:w-auto">
-            @if(request()->anyFilled(['search', 'marca', 'categoria', 'genero', 'estado', 'preco_min', 'preco_max']))
-                <h5 class="text-gray-600 text-lg">
-                    <i class="bi bi-list-ul mr-2"></i>Resultados da pesquisa:
-                    <span class="text-blue-600 font-bold">{{ $produtos->count() }} produtos encontrados</span>
-                </h5>
-                <div class="flex flex-wrap gap-2 mt-2">
-                    @if(request('search'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-search mr-1"></i>{{ request('search') }}
-                        </span>
-                    @endif
-
-                    @if(request('marca'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-tag-fill mr-1"></i>{{ request('marca') }}
-                        </span>
-                    @endif
-
-                    @if(request('categoria'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-collection-fill mr-1"></i>{{ request('categoria') }}
-                        </span>
-                    @endif
-
-                    @if(request('genero'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-gender-ambiguous mr-1"></i>{{ ucfirst(request('genero')) }}
-                        </span>
-                    @endif
-
-                    @if(request('estado'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-stars mr-1"></i>{{ request('estado') }}
-                        </span>
-                    @endif
-
-                    @if(request('preco_min') || request('preco_max'))
-                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full border flex items-center">
-                            <i class="bi bi-currency-euro mr-1"></i>
-                            @if(request('preco_min') && request('preco_max'))
-                                {{ request('preco_min') }}€ - {{ request('preco_max') }}€
-                            @elseif(request('preco_min'))
-                                Min: {{ request('preco_min') }}€
-                            @else
-                                Max: {{ request('preco_max') }}€
-                            @endif
-                        </span>
-                    @endif
-                </div>
-            @else
-                <h5 class="text-gray-600 text-lg">
-                    <i class="bi bi-list-ul mr-2"></i>Mostrando todos os produtos:
-                    <span class="text-blue-600 font-bold">{{ $produtos->count() }} produtos</span>
-                </h5>
-            @endif
-        </div>
-
-        <div class="mt-4 lg:mt-0">
-            <div class="inline-flex rounded-md shadow-sm" role="group">
-                <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 active:bg-gray-200 focus:outline-none" id="grid-view">
-                    <i class="bi bi-grid-3x3-gap-fill"></i>
-                </button>
-                <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-l-0 border-gray-200 rounded-r-lg hover:bg-gray-100 active:bg-gray-200 focus:outline-none" id="list-view">
-                    <i class="bi bi-list"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-            <!-- Products List Section -->
-<div class="container mx-auto px-4 mt-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-container">
-        @forelse ($produtos as $produto)
-        <div class="product-item">
-            <div class="bg-white rounded-2xl shadow-md overflow-hidden h-full flex flex-col">
-                <div class="relative">
-                    <img src="{{ asset('storage/' . $produto->imagem) }}" 
-                         class="w-full h-48 object-cover"
-                         alt="{{ $produto->nome }}">
-                    <div class="absolute top-2 right-2">
-                        <span class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">
-                            <i class="bi bi-tag-fill mr-1"></i>{{ $produto->marca }}
-                        </span>
+                    <!-- Gênero -->
+                    <div>
+                        <label style="font-size: 0.875rem; color: #333;">Gênero</label>
+                        <select name="genero" 
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                            <option value="">Todos os gêneros</option>
+                            <option value="homem" {{ request()->get('genero') == 'homem' ? 'selected' : '' }}>Homem</option>
+                            <option value="mulher" {{ request()->get('genero') == 'mulher' ? 'selected' : '' }}>Mulher</option>
+                            <option value="criança" {{ request()->get('genero') == 'criança' ? 'selected' : '' }}>Criança</option>
+                        </select>
                     </div>
-                    @if($produto->estado)
-                    <div class="absolute bottom-2 left-2">
-                        <span class="px-2 py-1 text-xs font-semibold 
-                            {{ $produto->estado == 'Novo' ? 'bg-green-100 text-green-800' : 
-                               ($produto->estado == 'Semi-novo' ? 'bg-yellow-100 text-yellow-800' : 
-                               'bg-gray-100 text-gray-800') }} rounded-full">
-                            {{ $produto->estado }}
-                        </span>
+                    <!-- Estado -->
+                    <div>
+                        <label style="font-size: 0.875rem; color: #333;">Estado</label>
+                        <select name="estado" 
+                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                            <option value="">Todos os estados</option>
+                            <option value="Novo" {{ request()->get('estado') == 'Novo' ? 'selected' : '' }}>Novo</option>
+                            <option value="Usado" {{ request()->get('estado') == 'Usado' ? 'selected' : '' }}>Usado</option>
+                            <option value="Semi-novo" {{ request()->get('estado') == 'Semi-novo' ? 'selected' : '' }}>Semi-novo</option>
+                        </select>
                     </div>
-                    @endif
-                </div>
-
-                <div class="p-4 flex-grow flex flex-col">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800 rounded-full">
-                            <i class="bi bi-collection-fill mr-1"></i>{{ $produto->categoria }}
-                        </span>
-                        <span class="text-sm text-gray-600">
-                            <i class="bi bi-gender-ambiguous mr-1"></i>{{ ucfirst($produto->genero) }}
-                        </span>
+                    <!-- Faixa de Preço -->
+                    <div>
+                        <label style="font-size: 0.875rem; color: #333;">Faixa de Preço</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                            <input type="number" name="preco_min" placeholder="Min" 
+                                   value="{{ request()->get('preco_min') }}" min="0" step="0.01" 
+                                   style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                            <input type="number" name="preco_max" placeholder="Max" 
+                                   value="{{ request()->get('preco_max') }}" min="0" step="0.01" 
+                                   style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
+                        </div>
                     </div>
-
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $produto->nome }}</h3>
-
-                    <div class="mb-3">
-                        <span class="text-sm text-gray-600">
-                            <i class="bi bi-person-fill mr-1"></i>Vendedor: 
-                            <strong>{{ $produto->user->name }}</strong>
-                        </span>
-                    </div>
-
-                    <p class="text-gray-600 text-sm flex-grow mb-4">
-                        {{ Str::limit($produto->descricao, 100) }}
-                    </p>
-
-                    <div class="flex justify-between items-center mb-4">
-                        @if($produto->tamanho)
-                        <span class="text-sm text-gray-600">
-                            <i class="bi bi-rulers mr-1"></i>Tamanho: {{ $produto->tamanho }}
-                        </span>
-                        @endif
-
-                        <span class="text-xl font-bold text-blue-600">
-                            {{ number_format($produto->preco, 2) }}€
-                        </span>
-                    </div>
-
-                    <div class="flex justify-between gap-2">
-                        <a href="{{ route('produtos.show', $produto->id) }}" 
-                           class="flex-1 px-4 py-2 bg-blue-600 text-white text-center font-semibold rounded-md hover:bg-blue-700 transition-colors">
-                            Ver Detalhes <i class="bi bi-arrow-right-short ml-1"></i>
-                        </a>
-                        <button type="button" 
-                                class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition-colors">
-                            <i class="bi bi-heart"></i>
+                    <!-- Botão de Aplicar Filtros -->
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" 
+                                style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                            <i class="bi bi-funnel" style="margin-right: 0.5rem;"></i>Aplicar Filtros
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
-        </div>
-        @empty
-        <div class="col-span-full">
-            <div class="bg-blue-50 text-center p-8 rounded-2xl">
-                <i class="bi bi-info-circle text-4xl text-blue-500 mb-4"></i>
-                <h4 class="text-xl font-bold text-gray-900 mb-2">Nenhum produto encontrado</h4>
-                <p class="text-gray-600 mb-4">Tente ajustar os filtros ou pesquise por outro termo.</p>
-                <a href="{{ route('produtos.index') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">
-                    <i class="bi bi-arrow-repeat mr-2"></i>Ver todos os produtos
-                </a>
-            </div>
-        </div>
-        @endforelse
-    </div>
-</div>
 
-            <!-- Pagination -->
-            <div class="container mx-auto px-4 mt-8">
-                <div class="flex justify-center">
-                    {{ $produtos->links() }}
+    <!-- Container Principal -->
+    <div style="max-width: 1280px; margin: 0 auto; padding: 1rem;">
+        <!-- Resumo da Pesquisa e Botões de Alternância -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <!-- Resumo da Pesquisa -->
+            <div style="flex: 1; min-width: 280px;">
+                @if(request()->anyFilled(['search', 'marca', 'categoria', 'genero', 'estado', 'preco_min', 'preco_max']))
+                    <h5 style="font-size: 1.125rem; color: #666; margin: 0 0 0.5rem 0;">
+                        <i class="bi bi-list-ul" style="margin-right: 0.5rem;"></i>Resultados da pesquisa:
+                        <span style="color: #2563EB; font-weight: bold;">{{ $produtos->count() }} produtos encontrados</span>
+                    </h5>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                        @if(request('search'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-search" style="margin-right: 0.25rem;"></i>{{ request('search') }}
+                            </span>
+                        @endif
+                        @if(request('marca'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-tag-fill" style="margin-right: 0.25rem;"></i>{{ request('marca') }}
+                            </span>
+                        @endif
+                        @if(request('categoria'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-collection-fill" style="margin-right: 0.25rem;"></i>{{ request('categoria') }}
+                            </span>
+                        @endif
+                        @if(request('genero'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-gender-ambiguous" style="margin-right: 0.25rem;"></i>{{ ucfirst(request('genero')) }}
+                            </span>
+                        @endif
+                        @if(request('estado'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-stars" style="margin-right: 0.25rem;"></i>{{ request('estado') }}
+                            </span>
+                        @endif
+                        @if(request('preco_min') || request('preco_max'))
+                            <span style="padding: 0.25rem 0.75rem; background-color: #f3f4f6; color: #374151; border: 1px solid #ccc; border-radius: 999px; display: flex; align-items: center;">
+                                <i class="bi bi-currency-euro" style="margin-right: 0.25rem;"></i>
+                                @if(request('preco_min') && request('preco_max'))
+                                    {{ request('preco_min') }}€ - {{ request('preco_max') }}€
+                                @elseif(request('preco_min'))
+                                    Min: {{ request('preco_min') }}€
+                                @else
+                                    Max: {{ request('preco_max') }}€
+                                @endif
+                            </span>
+                        @endif
+                    </div>
+                @else
+                    <h5 style="font-size: 1.125rem; color: #666;">
+                        <i class="bi bi-list-ul" style="margin-right: 0.5rem;"></i>Mostrando todos os produtos:
+                        <span style="color: #2563EB; font-weight: bold;">{{ $produtos->count() }} produtos</span>
+                    </h5>
+                @endif
+            </div>
+            <!-- Botões de Alternar Visualização -->
+            <div style="margin-top: 1rem;">
+                <div style="display: inline-flex; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" role="group">
+                    <button type="button" id="grid-view" 
+                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #FFF; border: 1px solid #ccc; border-right: 0; border-top-left-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer;">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </button>
+                    <button type="button" id="list-view" 
+                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #FFF; border: 1px solid #ccc; border-top-right-radius: 4px; border-bottom-right-radius: 4px; cursor: pointer;">
+                        <i class="bi bi-list"></i>
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Products List Section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;" id="products-container">
+            @forelse ($produtos as $produto)
+                <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;">
+                    <!-- Imagem e Marcas/Estado -->
+                    <div style="position: relative;">
+                        <img src="{{ asset('storage/' . $produto->imagem) }}" 
+                             style="width: 100%; height: 12rem; object-fit: cover;"
+                             alt="{{ $produto->nome }}">
+                        <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
+                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #DBEAFE; color: #1D4ED8; border-radius: 999px;">
+                                <i class="bi bi-tag-fill" style="margin-right: 0.25rem;"></i>{{ $produto->marca }}
+                            </span>
+                        </div>
+                        @if($produto->estado)
+                            <div style="position: absolute; bottom: 0.5rem; left: 0.5rem;">
+                                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; 
+                                    @if($produto->estado == 'Novo') background-color: #DCFCE7; color: #16A34A;
+                                       @elseif($produto->estado == 'Semi-novo') background-color: #FEF3C7; color: #CA8A04;
+                                       @else background-color: #F3F4F6; color: #6B7280; @endif
+                                    border-radius: 999px;">
+                                    {{ $produto->estado }}
+                                </span>
+                            </div>
+                        @endif
+                    </div>
+                    <!-- Informações do Produto -->
+                    <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #F3F4F6; color: #374151; border-radius: 999px;">
+                                <i class="bi bi-collection-fill" style="margin-right: 0.25rem;"></i>{{ $produto->categoria }}
+                            </span>
+                            <span style="font-size: 0.875rem; color: #6B7280;">
+                                <i class="bi bi-gender-ambiguous" style="margin-right: 0.25rem;"></i>{{ ucfirst($produto->genero) }}
+                            </span>
+                        </div>
+                        <h3 style="font-size: 1.125rem; font-weight: bold; color: #333; margin: 0 0 0.5rem 0;">{{ $produto->nome }}</h3>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="font-size: 0.875rem; color: #6B7280;">
+                                <i class="bi bi-person-fill" style="margin-right: 0.25rem;"></i>Vendedor: 
+                                <strong>{{ $produto->user->name }}</strong>
+                            </span>
+                        </div>
+                        <p style="font-size: 0.875rem; color: #6B7280; flex-grow: 1; margin-bottom: 1rem;">
+                            {{ Str::limit($produto->descricao, 100) }}
+                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            @if($produto->tamanho)
+                                <span style="font-size: 0.875rem; color: #6B7280;">
+                                    <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho: {{ $produto->tamanho }}
+                                </span>
+                            @endif
+                            <span style="font-size: 1.25rem; font-weight: bold; color: #2563EB;">
+                                {{ number_format($produto->preco, 2) }}€
+                            </span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{{ route('produtos.show', $produto->id) }}" 
+                               style="flex: 1; padding: 0.75rem; background-color: #2563EB; color: #FFF; text-align: center; font-weight: 600; border-radius: 8px; text-decoration: none; transition: background-color 0.3s;">
+                                Ver Detalhes <i class="bi bi-arrow-right-short" style="margin-left: 0.25rem;"></i>
+                            </a>
+                            <button type="button" 
+                                    style="padding: 0.75rem; background-color: #F3F4F6; color: #374151; border: none; border-radius: 8px; transition: background-color 0.3s;">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div style="grid-column: 1 / -1;">
+                    <div style="background-color: #DBEAFE; text-align: center; padding: 2rem; border-radius: 16px;">
+                        <i class="bi bi-info-circle" style="font-size: 2.5rem; color: #2563EB;"></i>
+                        <h4 style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 1rem 0;">Nenhum produto encontrado</h4>
+                        <p style="font-size: 1rem; color: #374151; margin-bottom: 1rem;">Tente ajustar os filtros ou pesquise por outro termo.</p>
+                        <a href="{{ route('produtos.index') }}" 
+                           style="display: inline-flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid #2563EB; color: #2563EB; border-radius: 8px; text-decoration: none;">
+                            <i class="bi bi-arrow-repeat" style="margin-right: 0.5rem;"></i>Ver todos os produtos
+                        </a>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div style="max-width: 1280px; margin: 0 auto; padding: 1rem;">
+        <div style="display: flex; justify-content: center;">
+            {{ $produtos->links() }}
+        </div>
+    </div>
+
+
 
         <!-- Scripts -->
         <script>
+
+            // Toggle filters panel
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
+        const filtersPanel = document.getElementById('filtersPanel');
+        
+        toggleFiltersBtn.addEventListener('click', function() {
+            const isHidden = filtersPanel.style.display === 'none';
+            filtersPanel.style.display = isHidden ? 'block' : 'none';
+            
+            // Update button text and icon
+            toggleFiltersBtn.innerHTML = isHidden 
+                ? '<i class="bi bi-x-lg" style="margin-right: 0.5rem;"></i>Fechar Filtros'
+                : '<i class="bi bi-funnel-fill" style="margin-right: 0.5rem;"></i>Filtros';
+        });
+    });
             function toggleDropdown(id) {
                 document.getElementById(id).classList.toggle('hidden');
             }

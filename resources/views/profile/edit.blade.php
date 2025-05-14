@@ -1,285 +1,282 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-            <h1 class="text-2xl font-bold leading-tight text-white mb-2 md:mb-0">
-                <i class="bi bi-person-circle me-2"></i>{{ __('Meu Perfil') }}
-            </h1>
-            <a href="/"
-                class="flex items-center px-4 py-2 text-sm font-medium text-white transition-colors bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                <i class="bi bi-house-door me-2"></i>Voltar
-            </a>
-        </div>
-    </x-slot>
+<x-kaira-layout>
+    <!-- Header de Perfil (Display) -->
+    <div style="padding: 2rem 0; background-color: #F9FAFB;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;">
+            <!-- Card do Perfil -->
+            <div style="background-color: #FFF; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; position: relative;">
+                <div style="display: flex; align-items: center;">
 
-    <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <!-- Alerts Section -->
-            @if(session('status'))
-            <div class="mb-6 overflow-hidden bg-white rounded-lg shadow-sm">
-                <div class="p-4 text-green-700 bg-green-100 border-l-4 border-green-500" role="alert">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="bi bi-check-circle-fill text-xl"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm font-medium">{{ session('status') }}</p>
-                        </div>
+                    <div style="margin-left: 1.5rem;">
+                        <h1 style="font-size: 2rem; font-weight: bold; color: #333; margin: 0;">{{ $user->name }}</h1>
                     </div>
                 </div>
-            </div>
-            @endif
 
-            <!-- Profile Overview Card -->
-            <div class="overflow-hidden bg-white rounded-lg shadow-sm">
-                <div class="p-6">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                        <div class="flex items-center space-x-5">
-                            <!-- Avatar with Upload Option -->
-                            <div class="relative group">
-                                <div class="flex items-center justify-center w-24 h-24 text-2xl text-white bg-warning rounded-full overflow-hidden border-4 border-white shadow-md">
-                                    @if(Auth::user()->profile_photo)
-                                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile"
-                                            class="h-full w-full object-cover">
-                                    @else
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    @endif
-                                </div>
-                                <label for="profile_photo_upload" class="absolute bottom-0 right-0 flex items-center justify-center w-8 h-8 bg-warning rounded-full cursor-pointer shadow-md hover:bg-warning-dark transition-colors">
-                                    <i class="bi bi-camera text-white"></i>
-                                    <input id="profile_photo_upload" type="file" class="hidden" form="update-profile-form" name="profile_photo">
-                                </label>
-                            </div>
-
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800">{{ Auth::user()->name }}</h2>
-                                <div class="flex flex-col sm:flex-row sm:items-center text-sm text-gray-600 mt-1 space-y-1 sm:space-y-0 sm:space-x-4">
-                                    <p><i class="bi bi-envelope-fill mr-1"></i> {{ Auth::user()->email }}</p>
-                                    <p><i class="bi bi-calendar3 mr-1"></i> Membro desde {{ Auth::user()->created_at->format('d/m/Y') }}</p>
-                                </div>
-                                <div class="mt-2 flex items-center space-x-4">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning text-white">
-                                        <i class="bi bi-bag mr-1"></i> 
-                                        {{ Auth::user()->produtos()->count() }} produtos
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        <i class="bi bi-heart-fill mr-1"></i> 
-                                        {{ Auth::user()->favoriteProdutos()->count() }} favoritos
-                                    </span>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="bi bi-star-fill mr-1"></i> 
-                                        {{ Auth::user()->vendas()->count() }} vendas
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
-                            <a href="{{ route('produtos.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-warning transition-colors">
-                                <i class="bi bi-plus-lg mr-2"></i> Anunciar Produto
-                            </a>
-                            <a href="{{ route('profile.show', Auth::id()) }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-warning transition-colors">
-                                <i class="bi bi-person-badge mr-2"></i> Ver Perfil Público
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabs Navigation -->
-            <div class="mt-6 bg-white rounded-lg shadow-sm overflow-hidden">
-                <div class="border-b border-gray-200">
-                    <nav class="flex -mb-px" aria-label="Tabs">
-                        <button class="tab-button active w-1/3 py-4 px-1 text-center border-b-2 border-warning font-medium text-sm text-warning" data-target="profile-info">
-                            <i class="bi bi-person-fill mr-2"></i>Informações do Perfil
-                        </button>
-                        <button class="tab-button w-1/3 py-4 px-1 text-center border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="security">
-                            <i class="bi bi-shield-lock-fill mr-2"></i>Segurança
-                        </button>
-                        <button class="tab-button w-1/3 py-4 px-1 text-center border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-target="danger-zone">
-                            <i class="bi bi-exclamation-triangle-fill mr-2"></i>Zona de Perigo
-                        </button>
-                    </nav>
+                <!-- "Membro desde" no canto inferior direito -->
+                <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.875rem; color: #666;">
+                    Membro desde {{ $user->created_at->format('d/m/Y') }}
                 </div>
 
-                <!-- Tab Content -->
-                <div class="p-6">
-                    <!-- Profile Information Tab -->
-                    <div id="profile-info" class="tab-content">
-                        <div class="max-w-xl">
-                            <h3 class="text-lg font-bold text-warning mb-4">
-                                <i class="bi bi-person-fill mr-2"></i>Informações do Perfil
-                            </h3>
-                            <p class="text-sm text-gray-600 mb-6">
-                                Atualiza as informações do perfil e do teu endereço de e-mail.
-                            </p>
-                            @include('profile.partials.update-profile-information-form')
-                        </div>
-                    </div>
+                <!-- Seções de Atualização do Perfil (sem repetir a função de alteração da foto) -->
+                <div style="padding: 2rem 0; background-color: #F9FAFB;">
+                    <div style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
 
-                    <!-- Security Tab -->
-                    <div id="security" class="tab-content hidden">
-                        <div class="max-w-xl">
-                            <h3 class="text-lg font-bold text-warning mb-4">
-                                <i class="bi bi-shield-lock-fill mr-2"></i>Segurança
-                            </h3>
-                            <p class="text-sm text-gray-600 mb-6">
-                                Atualiza a tua senha para manteres a tua conta segura.
-                            </p>
-                            @include('profile.partials.update-password-form')
-                        </div>
-                    </div>
+                        <!-- Seções de Atualização do Perfil -->
+                        <div style="padding: 3rem 0; background-color: #F9FAFB;">
+                            <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
+                                <!-- Profile Photo Section -->
+                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                                    <!-- Member since text -->
+                                    <!-- Member since text -->
+                                    <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.875rem; color: #666;">
+                                        Membro desde {{ $user->created_at->format('d/m/Y') }}
+                                    </div>
 
-                    <!-- Danger Zone Tab -->
-                    <div id="danger-zone" class="tab-content hidden">
-                        <div class="max-w-xl">
-                            <h3 class="text-lg font-bold text-red-600 mb-4">
-                                <i class="bi bi-exclamation-triangle-fill mr-2"></i>Zona de Perigo
-                            </h3>
-                            <p class="text-sm text-gray-600 mb-6">
-                                Uma vez que a tua conta é excluída, todos os teus recursos e dados são apagados permanentemente.
-                            </p>
-                            @include('profile.partials.delete-user-form')
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Produtos Favoritos -->
-            <div class="mt-8">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-warning">
-                        <i class="bi bi-heart-fill mr-2"></i>Produtos Favoritos
-                    </h3>
-                    @if ($user->favoriteProdutos->count() > 6)
-                    <a href="{{ route('profile.favorites', $user->id) }}" class="text-sm text-warning hover:text-warning-dark">
-                        Ver todos <i class="bi bi-arrow-right ml-1"></i>
-                    </a>
-                    @endif
-                </div>
+                                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Foto de Perfil</h2>
+                                    <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1rem;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                                            <!-- Current Photo -->
+                                            <div style="position: relative;">
+                                                @if($user->profile_photo)
+                                                <div style="width: 96px; height: 96px; border-radius: 50%; border: 4px solid #cce5ff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+                                                    <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                                                        alt="Profile photo"
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                </div>
+                                                @else
+                                                <div style="width: 96px; height: 96px; border-radius: 50%; 
+                                            background: linear-gradient(to right, #3b82f6, #1e40af); 
+                                            border: 4px solid #cce5ff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+                                            display: flex; align-items: center; justify-content: center;">
+                                                    <span style="font-size: 1.5rem; font-weight: bold; color: #FFF;">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                                </div>
+                                                @endif
+                                            </div>
 
-                    @if ($user->favoriteProdutos->count() > 6)
-                        <div class="mt-4 text-center">
-                            <a href="{{ route('profile.favorites', $user->id) }}"
-                                class="inline-block px-4 py-2 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors">
-                                Ver todas as produtos favoritas
-                            </a>
-                        </div>
-                    @endif
-                @else
-                    <div class="p-8 text-center bg-gray-50 rounded-lg border border-gray-100">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-100 text-orange-500 mb-4">
-                            <i class="bi bi-heart text-3xl"></i>
-                        </div>
-                        <h4 class="text-lg font-medium text-gray-900 mb-2">Nenhum produto favorito</h4>
-                        <p class="text-gray-600 mb-4">Tu ainda não adicionaste nenhum produto aos teus favoritos.</p>
-                        <a href="{{ route('produtos.index') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark transition-colors">
-                        <i class="bi bi-search mr-2"></i> Explorar Produtos
-                        </a>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Meus Produtos -->
-            <div class="mt-8 mb-8">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-warning">
-                        <i class="bi bi-bag mr-2"></i>Os meus Produtos
-                    </h3>
-                    @if ($user->produtos->count() > 3)
-                    <a href="{{ route('profile.show', $user->id) }}" class="text-sm text-warning hover:text-warning-dark">
-                        Ver todos <i class="bi bi-arrow-right ml-1"></i>
-                    </a>
-                    @endif
-                </div>
-
-                @if ($user->produtos->count() > 0)
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        @foreach ($user->produtos()->latest()->take(3)->get() as $produto)
-                            <div class="overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <!-- Product Card Content -->
-                                <!-- Similar to the favorite products card but with edit/delete options -->
-                                @foreach (Auth::user()->produtos()->latest()->take(3)->get() as $produto)
-                            <div class="overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-1">
-                                <div class="relative">
-                                    @if ($produto->receita_foto)
-                                        <img src="{{ asset('storage/' . $produto->receita_foto) }}" alt="{{ $produto->receita_titulo }}"
-                                            class="object-cover w-full h-48">
-                                    @else
-                                        <div class="flex items-center justify-center w-full h-48 bg-gray-200">
-                                            <span class="text-gray-400"><i class="bi bi-image"></i> Sem imagem</span>
+                                            <!-- Upload New Photo -->
+                                            <div style="flex: 1;">
+                                                <input type="file"
+                                                    name="profile_photo"
+                                                    id="profile_photo"
+                                                    accept="image/*"
+                                                    style="width: 100%; padding: 0.5rem; font-size: 0.875rem; border: 1px solid #ccc; border-radius: 4px;">
+                                                <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #6c757d;">PNG, JPG até 2MB</p>
+                                            </div>
                                         </div>
-                                    @endif
-                                    <div class="absolute top-2 right-2">
-                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-orange-500 bg-opacity-90 rounded">
-                                            <i class="bi bi-bookmark-fill mr-1"></i> {{ $produto->categoria }}
-                                        </span>
-                                    </div>
-                                    <div class="absolute top-2 left-2">
-                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-500 bg-opacity-90 rounded">
-                                            <i class="bi bi-eye-fill mr-1"></i> {{ $produto->views }}
-                                        </span>
-                                    </div>
+                                        @error('profile_photo')
+                                        <p style="color: #e63946; font-size: 0.875rem;">{{ $message }}</p>
+                                        @enderror
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: #3b82f6; color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                                Atualizar Foto
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
-                                <div class="p-4">
-                                    <h4 class="mb-1 text-lg font-semibold text-gray-900 line-clamp-1">{{ $produto->receita_titulo }}</h4>
-                                    <p class="mb-2 text-sm text-gray-600">
-                                        <i class="bi bi-alarm-fill"></i> {{ $produto->receita_duracao }} min
-                                        <span class="mx-1">•</span>
-                                        <i class="bi bi-bar-chart-fill"></i> {{ $produto->nivel_dificuldade }}
-                                    </p>
-                                    <div class="flex justify-between items-center">
-                                        <a href="{{ route('produtos.show', $produto->id) }}"
-                                            class="inline-flex items-center px-3 py-1 text-xs text-white bg-orange-500 rounded hover:bg-orange-600 transition-colors">
-                                            <i class="bi bi-eye mr-1"></i> Ver Produto
-                                        </a>
-                                        
-                                        <div class="flex space-x-2">
-                                            <a href="{{ route('produtos.edit', $produto->id) }}" class="text-blue-500 hover:text-blue-700">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            
-                                            <form action="{{ route('produtos.destroy', $produto->id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir esta produto?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-700">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+
+                                <!-- Informações do Perfil -->
+                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Informações do Perfil</h2>
+                                    <form action="{{ route('profile.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <div>
+                                            <label for="name" style="display: block; font-size: 0.875rem; color: #333; margin-bottom: 0.5rem;">Nome</label>
+                                            <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+                                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                                            @error('name')
+                                            <p style="color: #e63946; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div>
+                                            <label for="email" style="display: block; font-size: 0.875rem; color: #333; margin-bottom: 0.5rem;">Email</label>
+                                            <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                                            @error('email')
+                                            <p style="color: #e63946; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                                Atualizar Informações
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Alterar Password -->
+                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                    <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Alterar Password</h2>
+                                    <form action="{{ route('profile.password') }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                                        @csrf
+                                        @method('PUT')
+                                        <div>
+                                            <label for="current_password" style="display: block; font-size: 0.875rem; color: #333; margin-bottom: 0.5rem;">Password Atual</label>
+                                            <input type="password"
+                                                name="current_password"
+                                                id="current_password"
+                                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                                            @error('current_password')
+                                            <p style="color: #e63946; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <!-- New Password -->
+                                        <div>
+                                            <label for="password" style="display: block; font-size: 0.875rem; color: #333; margin-bottom: 0.5rem;">Nova Password</label>
+                                            <input type="password"
+                                                name="password"
+                                                id="password"
+                                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                                            @error('password')
+                                            <p style="color: #e63946; font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <!-- Confirm New Password -->
+                                        <div>
+                                            <label for="password_confirmation" style="display: block; font-size: 0.875rem; color: #333; margin-bottom: 0.5rem;">Confirmar Nova Password</label>
+                                            <input type="password" name="password_confirmation" id="password_confirmation"
+                                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-end;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                                Atualizar Password
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Row com 3 cols para Produtos, Favoritos e Vendas -->
+                                <div style="display: flex; justify-content: space-between;">
+                                    <!-- Coluna 1: Produtos -->
+                                    <div style="flex: 1; text-align: center; margin: 0 0.5rem;">
+                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                            <i class="bi bi-bag" style="color: rgb(36, 104, 250); font-size: 1.5rem;"></i>
+                                            <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
+                                                {{ optional($user->produtos)->count() ?? 0 }}
+                                            </div>
+                                            <div style="color: #666;">Produtos</div>
                                         </div>
                                     </div>
+                                    <!-- Coluna 2: Favoritos -->
+                                    <div style="flex: 1; text-align: center; margin: 0 0.5rem;">
+                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                            <i class="bi bi-heart-fill" style="color: #d9534f; font-size: 1.5rem;"></i>
+                                            <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
+                                                {{ optional($user->favoriteProdutos)->count() ?? 0 }}
+                                            </div>
+                                            <div style="color: #666;">Favoritos</div>
+                                        </div>
+                                    </div>
+                                    <!-- Coluna 3: Vendas -->
+                                    <di style="flex: 1; text-align: center; margin: 0 0.5rem;">
+                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                            <i class="bi bi-cart-check" style="color: #5cb85c; font-size: 1.5rem;"></i>
+                                            <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
+                                                {{ optional($user->vendas)->count() ?? 0 }}
+                                            </div>
+                                            <div style="color: #666;">Vendas</div>
+                                        </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="p-8 text-center bg-gray-50 rounded-lg border border-gray-100">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-warning-light text-warning mb-4">
-                            <i class="bi bi-bag-plus text-3xl"></i>
                         </div>
-                        <h4 class="text-lg font-medium text-gray-900 mb-2">Nenhum produto publicado</h4>
-                        <p class="text-gray-600 mb-4">Você ainda não publicou nenhum produto para venda.</p>
-                        <a href="{{ route('produtos.create') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning-dark transition-colors">
-                            <i class="bi bi-plus-lg mr-2"></i> Anunciar Produto
-                        </a>
                     </div>
-                @endif
-            </div>
-        </div>
-    </div>
 
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab functionality
-            // ...existing tab code...
 
-            // Profile photo preview
-            // ...existing photo preview code...
+                    <!-- Script para preview da imagem (caso implemente atualização via outro componente) -->
+                    @push('scripts')
+                    <script>
+                        // Caso seja necessário prever a nova imagem de perfil (exemplo para outro input)
+                        document.getElementById('profile_photo')?.addEventListener('change', function(e) {
+                            if (e.target.files && e.target.files[0]) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const img = document.querySelector('[style*="border-radius: 50%"] img');
+                                    if (img) {
+                                        img.src = e.target.result;
+                                    }
+                                }
+                                reader.readAsDataURL(e.target.files[0]);
+                            }
+                        });
 
-            // Animation for cards
-            // ...existing animation code...
-        });
-    </script>
-    @endpush
-</x-app-layout>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Tab functionality
+                            const tabButtons = document.querySelectorAll('.tab-button');
+                            const tabContents = document.querySelectorAll('.tab-content');
+
+                            tabButtons.forEach(button => {
+                                button.addEventListener('click', () => {
+                                    // Remove active classes
+                                    tabButtons.forEach(btn => {
+                                        btn.classList.remove('active');
+                                        btn.classList.remove('text-warning');
+                                        btn.classList.remove('border-warning');
+                                        btn.classList.add('text-gray-500');
+                                        btn.classList.add('border-transparent');
+                                    });
+
+                                    // Hide all tab contents
+                                    tabContents.forEach(content => {
+                                        content.classList.add('hidden');
+                                    });
+
+                                    // Show active tab
+                                    button.classList.add('active');
+                                    button.classList.add('text-warning');
+                                    button.classList.add('border-warning');
+                                    button.classList.remove('text-gray-500');
+                                    button.classList.remove('border-transparent');
+
+                                    const targetId = button.dataset.target;
+                                    document.getElementById(targetId).classList.remove('hidden');
+                                });
+                            });
+
+                            // Profile photo preview
+                            const photoInput = document.getElementById('profile_photo_upload');
+                            const photoPreview = document.querySelector('.profile-photo-preview');
+
+                            if (photoInput) {
+                                photoInput.addEventListener('change', function(e) {
+                                    if (this.files && this.files[0]) {
+                                        const reader = new FileReader();
+
+                                        reader.onload = function(e) {
+                                            if (photoPreview) {
+                                                photoPreview.style.backgroundImage = `url('${e.target.result}')`;
+                                            }
+                                        }
+
+                                        reader.readAsDataURL(this.files[0]);
+                                    }
+                                });
+                            }
+
+                            // Animation for cards
+                            const animateCards = () => {
+                                const cards = document.querySelectorAll('.card-animate');
+                                cards.forEach(card => {
+                                    const rect = card.getBoundingClientRect();
+                                    const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
+
+                                    if (isVisible) {
+                                        card.classList.add('animate-fade-in');
+                                    }
+                                });
+                            };
+
+                            // Initial animation check
+                            animateCards();
+
+                            // Animate on scroll
+                            window.addEventListener('scroll', animateCards);
+                        });
+                    </script>
+                    @endpush
+
+
+                    <!-- Add this in the head section or in your layout file -->
+                    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</x-kaira-layout>

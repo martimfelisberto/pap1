@@ -11,45 +11,26 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Categoria;
 
-
-
 class ProdutoController extends Controller
 {
     // No ProdutoController.php
     public function index(Request $request)
     {
-        $query = Produto::query();
+        $categorias = Categoria::orderBy('nome')->get();
+        $produtos = Produto::query()
+            // ...existing query filters...
+            ->paginate(12);
 
-        if ($request->filled('categoria')) {
-            $query->where('categoria', $request->categoria);
-        }
-
-        if ($request->filled('preco_min')) {
-            $query->where('preco', '>=', $request->preco_min);
-        }
-
-        if ($request->filled('preco_max')) {
-            $query->where('preco', '<=', $request->preco_max);
-        }
-
-        $genero = $request->genero;
-
-        $query = Produto::query();
-
-        if ($genero) {
-            $query->where('genero', $genero);
-        }
-
-        $produtos = $query->latest()->paginate(12);
-
-        return view('produtos.index', compact('produtos', 'genero'));
+        return view('produtos.index', compact('produtos', 'categorias'));
     }
-
-    // Método para mostrar o formulário de criação
+   
     public function create()
     {
-        return view('produtos.create');
+        $categorias = Categoria::orderBy('nome')->get();
+        return view('produtos.create', compact('categorias'));
     }
+    // Método para mostrar o formulário de criação
+    
     public function edit(Produto $produto)
     {
         if (Auth::id() != $produto->autor_id) {
@@ -116,24 +97,16 @@ class ProdutoController extends Controller
 
     public function destroy(Produto $produto)
     {
-        if (Auth::id() != $produto->autor_id) {
-            return redirect()->route('produtos.show', $produto->id)
-                ->with('error', 'Não tens permissão para eliminar este produto.');
+        // Check if user is owner or admin
+        if (Auth::user()->id !== $produto->user_id && !Auth::user()->is_admin) {
+            return back()->with('error', 'Não tem permissão para eliminar este produto.');
         }
-
-        // Delete product image
-        if ($produto->imagem && Storage::disk('public')->exists($produto->imagem)) {
-            Storage::disk('public')->delete($produto->imagem);
-        }
-
-        // Delete related favorites
-        DB::table('favorites')->where('produto_id', $produto->id)->delete();
 
         // Delete the product
         $produto->delete();
 
         return redirect()->route('produtos.index')
-            ->with('success', 'Produto eliminado com sucesso!');
+            ->with('success', 'Produto eliminado com sucesso.');
     }
 
     public function userFavorites($userId)
@@ -345,10 +318,11 @@ class ProdutoController extends Controller
 
     public function userProducts()
     {
-        $produtos = Auth::produtos()
+        $produtos = Produto::where('user_id', Auth::id())
+            ->with('categoria', 'favoritos')
             ->latest()
             ->paginate(12);
-            
+
         return view('produtos.meus', compact('produtos'));
     }
 }

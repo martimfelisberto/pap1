@@ -1,30 +1,14 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Http;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-use Closure;
-use Illuminate\Http\Request;
-
-
-class Kernel
+class Kernel extends HttpKernel
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next)
-    {
-        if (!$request->user() || !$request->user()->isAdmin()) {
-            return redirect('home');
-        }
 
-        return $next($request);
-    }
-
-    protected $routeMiddleware = [
+    protected $middlewareAliases = [
+    
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 }
