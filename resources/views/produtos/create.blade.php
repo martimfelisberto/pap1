@@ -60,36 +60,44 @@
                         </select>
                     </div>
 
-                    <!-- Gênero -->
+                    <!-- Gênero e Categoria -->
                     <div style="margin-bottom: 1rem;">
-                        <label for="genero" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                            Gênero
-                        </label>
-                        <select id="genero" name="genero" required
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Selecione o gênero</option>
-                            <option value="homem">Homem</option>
-                            <option value="mulher">Mulher</option>
-                            <option value="crianca">Criança</option>
-                        </select>
+                        <!-- Gênero -->
+                        <div style="margin-bottom: 1rem;">
+                            <label for="genero" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Gênero <span style="color: #e63946;">*</span>
+                            </label>
+                            <select id="genero" name="genero" required onchange="filterCategorias()"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="">Selecione o género</option>
+                                @php
+                                $generos = \App\Models\Categoria::select('genero')->distinct()->pluck('genero');
+                                @endphp
+                                @foreach($generos as $genero)
+                                <option value="{{ $genero }}" {{ old('genero') == $genero ? 'selected' : '' }}>
+                                    {{ ucfirst($genero) }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <!-- Categoria -->
+                        <div style="margin-bottom: 1rem;">
+                            <label for="categoria" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Categoria <span style="color: #e63946;">*</span>
+                            </label>
+                            <select id="categoria" name="categoria" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="">Selecione uma categoria</option>
+                                @foreach($categorias as $categoria)
+                                <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
+                                @endforeach
+                            </select>
+                            @error('categoria')
+                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
-                   <!-- Categoria -->
-<div style="margin-bottom: 1rem;">
-    <label for="categoria" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-        Categoria <span style="color: #e63946;">*</span>
-    </label>
-    <select id="categoria" name="categoria" required
-            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-        <option value="">Selecione uma categoria</option>
-        @foreach($categorias as $categoria)
-            <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
-        @endforeach
-    </select>
-    @error('categoria')
-        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
-    @enderror
-</div>
                     <!-- Tamanho -->
                     <div style="margin-bottom: 1rem;">
                         <label for="tamanho" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
@@ -98,74 +106,43 @@
                         <select id="tamanho" name="tamanho" required
                             style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                             <option value="">Selecione o tamanho</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="3XL">3XL</option>
                         </select>
                     </div>
+                    <!-- Tipo de sola -->
 
-                    <!-- Especificações de Sapatilhas -->
-                    <div id="especificacoes-sapatilhas" style="display: none; margin-bottom: 1rem;">
-                        <h4 style="font-size: 1.25rem; color: #333; margin-bottom: 0.75rem;">
-                            Especificações de Sapatilhas
-                        </h4>
-                        <div style="margin-bottom: 1rem;">
-                            <label for="tipo_sola" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Tipo de Sola
-                            </label>
-                            <select id="tipo_sola" name="tipo_sola"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Selecione o tipo de sola</option>
-                                <option value="borracha">Borracha</option>
-                                <option value="eva">EVA</option>
-                                <option value="pu">PU</option>
-                                <option value="tpu">TPU</option>
-                            </select>
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <label for="material" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Material
-                            </label>
-                            <select id="material" name="material"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Selecione o material</option>
-                                <option value="couro">Couro</option>
-                                <option value="tecido">Tecido</option>
-                                <option value="sintetico">Sintético</option>
-                                <option value="mesh">Mesh</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Tipo de sola</label>
+                        <select name="tipo_sola"
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                            <option value="">Todos os tipos de sola</option>
+                            <option value="Borracha" {{ request()->get('tipo_sola') == 'Borracha' ? 'selected' : '' }}>Borracha</option>
+                            <option value="EVA" {{ request()->get('tipo_sola') == 'EVA' ? 'selected' : '' }}>EVA</option>
+                            <option value="PU" {{ request()->get('tipo_sola') == 'PU' ? 'selected' : '' }}>PU</option>
+                            <option value="TPU" {{ request()->get('tipo_sola') == 'TPU' ? 'selected' : '' }}>TPU</option>
+                            <option value="Phylon" {{ request()->get('tipo_sola') == 'Phylon' ? 'selected' : '' }}>Phylon</option>
+                            <option value="Espuma" {{ request()->get('tipo_sola') == 'Espuma' ? 'selected' : '' }}>Espuma</option>
+                            <option value="Outros" {{ request()->get('tipo_sola') == 'Outros' ? 'selected' : '' }}>Outros</option>
+                            <option value="Nenhum" {{ request()->get('tipo_sola') == 'Nenhum' ? 'selected' : '' }}>Nenhum</option>
+
+                        </select>
                     </div>
+                    <!-- Tipo de produto -->
 
-                    <!-- Especificações de Roupas -->
-                    <div id="especificacoes-roupas" style="display: none; margin-bottom: 1rem;">
-                        <h4 style="font-size: 1.25rem; color: #333; margin-bottom: 0.75rem;">
-                            Especificações de Roupas
-                        </h4>
-                        <div style="margin-bottom: 1rem;">
-                            <label for="material" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Material
-                            </label>
-                            <input type="text" id="material" name="material"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <label for="tipo" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Tipo
-                            </label>
-                            <input type="text" id="tipo" name="tipo"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <label for="forro" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Forro
-                            </label>
-                            <input type="text" id="forro" name="forro"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <div style="display: flex; align-items: center;">
-                                <input type="checkbox" id="capuz" name="capuz" style="margin-right: 0.5rem;">
-                                <label for="capuz" style="font-size: 1rem; color:#333;">Tem Capuz?</label>
-                            </div>
-                        </div>
+                    <div>
+                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Tipo de produto</label>
+                        <select name="tipo_produto"
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                            <option value="">Todos os tipos de produto</option>
+                            <option value="Sapatilhas" {{ request()->get('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
+                            <option value="Roupas" {{ request()->get('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
+                        </select>
                     </div>
 
                     <!-- Estado -->
@@ -202,6 +179,34 @@
                                 <input type="checkbox" name="cores[]" value="vermelho" id="cor-vermelho" style="margin-right: 0.25rem;">
                                 <label for="cor-vermelho" style="font-size: 0.875rem; color:#333;">Vermelho</label>
                             </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="verde" id="cor-verde" style="margin-right: 0.25rem;">
+                                <label for="cor-verde" style="font-size: 0.875rem; color:#333;">Verde</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="amarelo" id="cor-amarelo" style="margin-right: 0.25rem;">
+                                <label for="cor-amarelo" style="font-size: 0.875rem; color:#333;">Amarelo</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="laranja" id="cor-laranja" style="margin-right: 0.25rem;">
+                                <label for="cor-laranja" style="font-size: 0.875rem; color:#333;">Laranja</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="roxo" id="cor-roxo" style="margin-right: 0.25rem;">
+                                <label for="cor-roxo" style="font-size: 0.875rem; color:#333;">Roxo</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="rosa" id="cor-rosa" style="margin-right: 0.25rem;">
+                                <label for="cor-rosa" style="font-size: 0.875rem; color:#333;">Rosa</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="cinza" id="cor-cinza" style="margin-right: 0.25rem;">
+                                <label for="cor-cinza" style="font-size: 0.875rem; color:#333;">Cinza</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="cores[]" value="castanho" id="cor-castanho" style="margin-right: 0.25rem;">
+                                <label for="cor-castanho" style="font-size: 0.875rem; color:#333;">Castanho</label>
+                            </div>
                         </div>
                     </div>
 
@@ -217,32 +222,17 @@
                                     Carregar imagem
                                     <input type="file" id="imagem" name="imagem" style="display: none;" accept="image/*" onchange="previewImage(event)">
                                 </label>
+
                                 <span style="color: #6c757d; margin-left: 0.5rem;">ou arraste e solte</span>
                             </div>
                             <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem;">PNG, JPG, GIF até 10MB</p>
                         </div>
+
                         @error('imagem')
                         <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Detalhes do Estado -->
-                    <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
-                            <span style="font-weight: 500; color: #333;">Detalhes do Estado</span>
-                            <button type="button" id="clearDetailsBtn" style="background: none; border: none; color: #6c757d; font-size: 0.875rem; cursor: pointer;">
-                                <i class="bi bi-trash" style="margin-right: 0.25rem;"></i> Limpar
-                            </button>
-                        </div>
-                        <div style="padding: 1rem;">
-                            <textarea name="condicoes" id="condicoes" rows="6" required
-                                placeholder="- Sem manchas ou defeitos&#10;- Todas as costuras intactas&#10;- Usado apenas 2 vezes&#10;- Lavado e passado"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('condicoes') }}</textarea>
-                            @error('condicoes')
-                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
 
                     <!-- Medidas (opcional) -->
                     <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
@@ -261,10 +251,8 @@
 
                     <!-- Rodapé com Botões -->
                     <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
-                        <button type="button" onclick="prevSection(4)" style="padding: 0.5rem 1rem; background-color: transparent; border: 1px solid #6c757d; border-radius: 5px; color: #6c757d; font-size: 0.875rem; cursor: pointer;">
-                            <i class="bi bi-arrow-left" style="margin-right: 0.25rem;"></i> Anterior
-                        </button>
-                        <button type="submit" style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
+                        <button type="submit" 
+                                style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
                             <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
                         </button>
                     </div>
@@ -273,9 +261,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
 
@@ -303,11 +288,6 @@
                 reader.readAsDataURL(file);
             }
         }
-
-        // Clear Details Button
-        document.getElementById('clearDetailsBtn').addEventListener('click', function() {
-            document.getElementById('condicoes').value = '';
-        });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -350,6 +330,34 @@
                 if (conditionElement && conditionInput) {
                     conditionElement.textContent = conditionInput.value || 'Estado';
                 }
+            }
+        });
+
+        // Filter categorias based on genero
+        function filterCategorias() {
+            const generoSelect = document.getElementById('genero');
+            const categoriaSelect = document.getElementById('categoria');
+            const selectedGenero = generoSelect.value;
+
+            // Reset categoria selection
+            categoriaSelect.value = '';
+
+            // Show/hide categoria options based on selected género
+            Array.from(categoriaSelect.options).forEach(option => {
+                if (option.value === '') {
+                    option.style.display = ''; // Always show placeholder
+                    return;
+                }
+
+                const generoMatch = option.getAttribute('data-genero') === selectedGenero;
+                option.style.display = generoMatch ? '' : 'none';
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('genero').value) {
+                filterCategorias();
             }
         });
     </script>

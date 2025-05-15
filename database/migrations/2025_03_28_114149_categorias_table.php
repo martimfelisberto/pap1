@@ -9,18 +9,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('categorias', function (Blueprint $table) {
-        $table->id();
-        $table->string('categoria');
-        $table->string('nome');
-        $table->string('genero');
-        $table->timestamps();
-    });
+            $table->id();
+            $table->string('titulo');
+            $table->string('genero');
+            $table->timestamps();
+            
+        });
     }
 
     public function down()
     {
-        Schema::table('categorias', function (Blueprint $table) {
-            $table->dropColumn('categoria');
+        Schema::table('categoria', function (Blueprint $table) {
+            $table->dropColumn('titulo'); // Remove a coluna ao reverter
+
         });
     }
 };

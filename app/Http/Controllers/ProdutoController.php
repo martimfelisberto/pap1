@@ -13,6 +13,7 @@ use App\Models\Categoria;
 
 class ProdutoController extends Controller
 {
+    
     // No ProdutoController.php
     public function index(Request $request)
     {
@@ -117,38 +118,6 @@ class ProdutoController extends Controller
         return view('produtos.favorites', compact('user', 'favorites'));
     }
 
-    public function homem($tipo = null)
-    {
-        $query = Produto::where('genero', 'homem');
-        
-        if ($tipo) {
-            $query->where('tipo', $tipo);
-        }
-        
-        $produtos = $query->latest()->paginate(12);
-    }
-    
-    public function mulher($tipo = null)
-    {
-        $query = Produto::where('genero', 'mulher');
-        
-        if ($tipo) {
-            $query->where('tipo', $tipo);
-        }
-        
-        $produtos = $query->latest()->paginate(12);
-    }
-    
-    public function criança($tipo = null)
-    {
-        $query = Produto::where('genero', 'criança');
-        
-        if ($tipo) {
-            $query->where('tipo', $tipo);
-        }
-        
-        $produtos = $query->latest()->paginate(12);
-    }
     
     public function produtosPorGenero($genero)
     {
@@ -164,7 +133,7 @@ class ProdutoController extends Controller
 
     public function categoria($categoria, $genero)
     {
-        // Validar categoria e gênero
+        // Validar categoria e género
         $validCategorias = ['casacos', 'tshirts', 'camisolas', 'calcas', 'sapatilhas'];
         $validGeneros = ['homem', 'mulher', 'criança'];
 
@@ -200,7 +169,7 @@ class ProdutoController extends Controller
         // Buscar produtos com paginação
         $produtos = $query->latest()->paginate(12);
         
-        // Buscar marcas disponíveis para esta categoria/gênero
+        // Buscar marcas disponíveis para esta categoria/género
         $marcas = Produto::where('categoria', $categoria)
                         ->where('genero', $genero)
                         ->distinct('marca')
@@ -211,45 +180,53 @@ class ProdutoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
-            'preco' => 'required|numeric|min:0',
             'marca' => 'required|string',
-            'categoria' => 'required|string',
-            'genero' => 'required|in:homem,mulher,criança',
-            'estado' => 'required|in:novo,usado,semi-novo',
+            'genero' => 'required|string',
+            'categoria' => 'required|exists:categorias,id',
             'tamanho' => 'required|string',
+            'tipo_sola' => 'nullable|string',
+            'tipo_produto' => 'required|string',
+            'estado' => 'required|string',
             'cores' => 'required|array',
-            'imagem' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'especificacoes' => 'array'
+            'imagem' => 'required|image|max:10240',
+            'medidas' => 'nullable|string',
         ]);
-    
-        // Handle image upload
-        $imagePath = $request->file('imagem')->store('produtos', 'public');
-    
-        // Get specifications based on category
-        $especificacoes = $this->getEspecificacoesByCategoria($request);
-    
-        $produto = Produto::create([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'preco' => $request->preco,
-            'marca' => $request->marca,
-            'categoria' => $request->categoria,
-            'genero' => strtolower($request->genero),
-            'estado' => strtolower($request->estado),
-            'tamanho' => $request->tamanho,
-            'cores' => $request->cores,
-            'imagem' => $imagePath,
-            'especificacoes' => $especificacoes,
-            'user_id' => Auth::id(),
-        ]);
-    
-        return redirect()->route('produtos.categoria', [
-            'categoria' => strtolower($produto->categoria),
-            'genero' => strtolower($produto->genero)
-        ])->with('success', 'Produto adicionado com sucesso!');
+
+        try {
+            $produto = new Produto();
+            $produto->nome = $validated['nome'];
+            $produto->descricao = $validated['descricao'];
+            $produto->marca = $validated['marca'];
+            $produto->genero = $validated['genero'];
+            $produto->categoria_id = $validated['categoria'];
+            $produto->tamanho = $validated['tamanho'];
+            $produto->tipo_sola = $validated['tipo_sola'];
+            $produto->tipo_produto = $validated['tipo_produto'];
+            $produto->estado = $validated['estado'];
+            $produto->cores = json_encode($validated['cores']);
+            $produto->medidas = $validated['medidas'];
+            $produto->user_id = Auth::id();
+
+            if ($request->hasFile('imagem')) {
+                $imagem = $request->file('imagem');
+                $nomeImagem = time() . '_' . $imagem->getClientOriginalName();
+                $imagem->storeAs('produtos', $nomeImagem, 'public');
+                $produto->imagem = $nomeImagem;
+            }
+
+            $produto->save();
+
+            return redirect()->route('produtos.show', $produto->id)
+                ->with('success', 'Produto criado com sucesso!');
+                
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Erro ao criar produto: ' . $e->getMessage());
+        }
     }
     
     private function getEspecificacoesByCategoria(Request $request)
@@ -324,5 +301,16 @@ class ProdutoController extends Controller
             ->paginate(12);
 
         return view('produtos.meus', compact('produtos'));
+    }
+
+    public function welcome()
+    {
+        $produtosDestaque = Produto::withCount('favorites')
+            ->where('disponivel', true)
+            ->orderByDesc('favorites_count')
+            ->limit(5)
+            ->get();
+
+        return view('welcome', compact('produtosDestaque'));
     }
 }

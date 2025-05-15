@@ -18,7 +18,7 @@ class FavoriteController extends Controller
         $user = Auth::user();
 
         $favorite = Favorite::where('user_id', $user->id)
-            ->where('receita_id', $produto->id)
+            ->where('produto_id', $produto->id)
             ->first();
 
         if ($favorite) {
@@ -29,7 +29,7 @@ class FavoriteController extends Controller
             // If not favorited, add favorite
             Favorite::create([
                 'user_id' => $user->id,
-                'receita_id' => $produto->id
+                'produto_id' => $produto->id
             ]);
             $isFavorited = true;
         }

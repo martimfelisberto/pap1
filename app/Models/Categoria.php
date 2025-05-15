@@ -10,17 +10,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Categoria extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoriasFactory> */
-    use HasFactory; 
+    use HasFactory;
 
-    protected $fillable = [
-        'nome',
-        'genero'
-    ];
+    protected $fillable = ['titulo', 'slug', 'genero', 'created_by'];
 
-    protected $casts = [
-        'ativo' => 'boolean',
-    ];
-
+    /**
+     * Get the user that created the categoria.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    
+    /**
+     * Set the slug attribute.
+     */
+    public function setSlugAttribute(string $value): void
+    {
+        $this->attributes['slug'] = \Illuminate\Support\Str::slug($value);
+    }
     /**
      * Get the produtos for the categoria.
      */
@@ -28,4 +36,5 @@ class Categoria extends Model
     {
         return $this->hasMany(Produto::class);
     }
+    
 }

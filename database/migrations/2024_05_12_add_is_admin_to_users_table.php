@@ -9,9 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'is_admin')) {
-                $table->boolean('is_admin')->default(false);
-            }
+            $table->boolean('is_admin')->default(false);
         });
     }
 

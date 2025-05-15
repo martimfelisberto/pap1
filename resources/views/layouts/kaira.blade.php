@@ -163,124 +163,100 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             </symbol>
         </defs>
     </svg>
-    {{-- NavBar --}}
-    <nav class="p-3 navbar navbar-expand-lg bg-light fs-6 border-bottom align-items-center">
-        <div class="container-fluid">
+    
+    <nav style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <!-- Logo e Título -->
+        <div style="display: flex; align-items: center;">
+            <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+                <img src="{{ asset('kaira/images/logo.png') }}" alt="Reshopping" 
+                     style="width: 80px; height: auto; margin-right: 1rem;">
+                <h2 style="font-size: 1.75rem; font-weight: bold; color: #333; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                    Reshopping
+                </h2>
+            </a>
+        </div>
 
-            <div class="row justify-content-between align-items-center w-100">
-
-                <!-- Logo e texto alinhados à esquerda -->
-                <div class="col-auto d-flex align-items-center">
-                    <!-- Logo -->
-                    <a class="text-white navbar-brand me-3">
-                        <img src="{{ asset('kaira/images/logo.png') }}" alt="product" width="100"
-                            height="80">
-                    </a>
-                    <!-- Texto "Reshopping" com letra normal e alinhamento ajustado -->
-                    <h2 class="mb-0 d-flex align-items-center"
-                        style="text-transform: none; margin-bottom: 5px; font-size: xx-large; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
-                        Reshopping</h2>
-                </div>
-
-                <!-- Navbar centralizado -->
-                <div class="col-auto mx-auto">
-                    <ul class="navbar-nav gap-md-5">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
-                        </li>
-                        @foreach($categorias as $genero => $categoriasGenero)
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#"
-                                id="dropdown{{ ucfirst($genero) }}"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                {{ ucfirst($genero) }}
-                            </a>
-                            <ul class="dropdown-menu list-unstyled" aria-labelledby="dropdown{{ ucfirst($genero) }}">
-                                @foreach($categoriasGenero as $categoria)
-                                <li>
-                                    <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->nome]) }}"
-                                        class="dropdown-item item-anchor">
-                                        {{ ucfirst($categoria->nome) }}
-                                    </a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                        @endforeach
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contactos">Contactos</a>
-                        </li>
-
-                        @if(auth()->check() && auth()->user()->isAdmin())
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-tags me-2"></i>Categorias
-                            </a>
-                            <ul class="dropdown-menu">
-                                <a class="dropdown-item" href="{{ route('admin.categorias.create') }}">
-                                    <i class="bi bi-plus-circle me-2"></i>Nova Categoria
+        <!-- Links Centrais da Navbar -->
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <a href="/" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Home</a>
+            @foreach($categorias as $genero => $categoriasGenero)
+                <div style="position: relative;">
+                    <button onclick="toggleDropdown('dropdown{{ ucfirst($genero) }}')" 
+                            style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
+                        {{ ucfirst($genero) }} <i class="bi bi-chevron-down" style="margin-left: 0.5rem;"></i>
+                    </button>
+                    <ul id="dropdown{{ ucfirst($genero) }}" 
+                        style="display: none; position: absolute; top: 2rem; left: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
+                        @foreach($categoriasGenero as $categoria)
+                            <li style="margin: 0.5rem 0;">
+                                <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->titulo]) }}"
+                                    style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
+                                    {{ ucfirst($categoria->titulo) }}
                                 </a>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('categorias.index') }}">
-                                        <i class="bi bi-list me-2"></i>Listar Categorias
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
+            <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contactos</a>
 
-                        @auth
-                        @if(auth()->user()->isAdmin())
-                        <li class="nav-item">
-                            <a href="{{ route('dashboard') }}" class="nav-link btn btn-warning text-white">
-                                <i class="bi bi-speedometer2 me-2"></i>
-                                Painel Admin
+            @if(auth()->check() && auth()->user()->isAdmin())
+                <div style="position: relative;">
+                    <button onclick="toggleDropdown('dropdownadminCategorias')" 
+                            style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
+                        <i class="bi bi-tags" style="margin-right: 0.5rem;"></i>Categorias
+                    </button>
+                    <ul id="dropdownadminCategorias" 
+                        style="display: none; position: absolute; top: 2rem; left: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
+                        <li style="margin: 0.5rem 0;">
+                            <a href="{{ route('categorias.create') }}"
+                                style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
+                                <i class="bi bi-plus-circle" style="margin-right: 0.5rem;"></i>Nova Categoria
                             </a>
                         </li>
-                        @endif
-                        @endauth
-
-
-
-
-                        <!-- Replace the existing auth controls with this updated version -->
-                        <div class="ms-auto d-flex align-items-center gap-3">
-                            @guest
-                            <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle d-flex align-items-center"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                                    Anunciar um Produto
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('login') }}">
-                                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                                            Entrar
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('register') }}">
-                                            <i class="bi bi-person-plus me-2"></i>
-                                            Registrar
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            @else
-                            <!-- Botão Vender -->
-                            <a href="{{ route('produtos.create') }}" class="btn btn-primary d-flex align-items-center">
-                                <i class="bi bi-plus-lg me-2"></i>
-                                Anunciar um Produto
+                        <li style="margin: 0.5rem 0;">
+                            <a href="{{ route('categorias.index') }}"
+                                style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
+                                <i class="bi bi-list" style="margin-right: 0.5rem;"></i>Listar Categorias
                             </a>
+                        </li>
+                    </ul>
+                </div>
+            @endif
+        </div>
 
-                            <!-- User Profile Dropdown -->
-                            <div class="dropdown">
+        <!-- Seção de Autenticação, Busca e Carrinho -->
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            @guest
+                <div style="position: relative;">
+                    <button onclick="toggleDropdown('dropdownauthOptions')" 
+                            style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
+                        <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>Entra ou Regista te já
+                    </button>
+                    <ul id="dropdownauthOptions" 
+                        style="display: none; position: absolute; top: 2.5rem; right: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
+                        <li style="margin: 0.5rem 0;">
+                            <a href="{{ route('login') }}" 
+                               style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
+                                <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>Entrar
+                            </a>
+                        </li>
+                        <li style="margin: 0.5rem 0;">
+                            <a href="{{ route('register') }}" 
+                               style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
+                                <i class="bi bi-person-plus" style="margin-right: 0.5rem;"></i>Registrar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            @else
+                <a href="{{ route('produtos.create') }}" 
+                   style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; text-decoration: none; cursor: pointer;">
+                    <i class="bi bi-plus-lg" style="margin-right: 0.5rem;"></i>Anunciar um Produto
+                </a>
+                 <!-- User Profile Dropdown -->
+                 <div class="dropdown">
                                 <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -331,125 +307,165 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                                 </ul>
                             </div>
                             @endguest
-
-                            <!-- Search Icon -->
-                            <div class="search-box">
-                                <a href="#search" class="search-button">
-                                    <i class="bi bi-search fs-5"></i>
-                                </a>
-                            </div>
-
-                            <!-- Cart Icon -->
-                            <a href="{{ route('carrinho.index') }}" class="d-flex align-items-center text-dark text-decoration-none">
-                                <i class="bi bi-cart3 fs-5 me-1"></i>
-                                <span class="badge bg-primary rounded-pill" id="headerCartCount">0</span>
-                            </a>
-                        </div>
-
-                </div>
-                </ul>
+            <!-- Search Icon -->
+            <div>
+                <a href="#search" style="color: #374151; text-decoration: none;">
+                    <i class="bi bi-search" style="font-size: 1.25rem;"></i>
+                </a>
             </div>
-    </nav>
+
+            <!-- Cart Icon -->
+            <div>
+                <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
+                    <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
+                    <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Faz com que os dropdowns se escondamao clicar fora deles -->
+<script>
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        // Fecha todos os outros dropdowns primeiro
+        const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
+        allDropdowns.forEach(d => {
+            if (d.id !== id && d.style.display === "block") {
+                d.style.display = "none";
+            }
+        });
+        // Toggle do dropdown atual
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Fecha dropdowns quando clicar fora
+    document.addEventListener('click', function(event) {
+        const isDropdownButton = event.target.closest('[onclick^="toggleDropdown"]');
+        const isDropdownContent = event.target.closest('[id^="dropdown"]');
+        
+        if (!isDropdownButton && !isDropdownContent) {
+            const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
+            allDropdowns.forEach(dropdown => {
+                dropdown.style.display = "none";
+            });
+        }
+    });
+</script>
+
 
     {{ $slot }}
 
-    <footer id="footer" class="mt-5">
-        <div class="container">
-            <div class="flex-wrap py-5 row d-flex justify-content-between">
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu footer-menu-001">
-                        <div class="mb-4 footer-intro">
-                            <a href="#">
-                                <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo">
-                            </a>
-                        </div>
-                        <p>Na Reshopping.pt, acreditamos que a moda pode ser sustentável, acessível e solidária.
-                            Ao escolher roupas em segunda mão, não só encontra peças únicas e cheias de história,
-                            como também contribui para um planeta mais verde,
-                            reduzindo o desperdício e promovendo o consumo consciente.</p>
-                        <div class="social-links">
-                            <ul class="flex-wrap gap-3 list-unstyled d-flex">
-                                <li>
-                                    <a href="#" class="text-secondary">
-                                        <svg width="24" height="24" viewBox="0 0 24 24">
-                                            <use xlink:href="#instagram"></use>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu footer-menu-002">
-                        <h5 class="mb-4 widget-title text-uppercase">Atalhos</h5>
-                        <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Página inicial</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Sobre</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Contacte-nos</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu footer-menu-003">
-                        <h5 class="mb-4 widget-title text-uppercase">Ajuda & informações</h5>
-                        <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Onde está a minha encomenda?</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Devoluções + Reembolsos</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Envio + Entrega</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Contacte-nos</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="item-anchor">Faqs</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-menu footer-menu-004 border-animation-left">
-                        <h5 class="mb-4 widget-title text-uppercase">Contacte-nos</h5>
+   
+  <footer id="footer" style="background-color: #FFF; margin-top: 2rem;">
+    <!-- Primeira Parte – Conteúdo do Footer -->
+    <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+        <!-- Bloco 1: Introdução -->
+        <div style="flex: 1 1 250px;">
+          <div style="margin-bottom: 1rem;">
+            <a href="#">
+              <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
+            </a>
+          </div>
+          <p style="font-size: 0.875rem; color: #666; line-height: 1.5;">
+            Na Reshopping.pt, acreditamos que a moda pode ser sustentável, acessível e solidária.
+            Ao escolher roupas em segunda mão, não só encontra peças únicas e cheias de história,
+            como também contribui para um planeta mais verde, reduzindo o desperdício e promovendo o consumo consciente.
+          </p>
+          <div style="margin-top: 1rem;">
+            <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
+              <li>
+                <a href="#" style="color: #666; text-decoration: none;">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <use xlink:href="#instagram"></use>
+                  </svg>
+                </a>
+              </li>
+              <!-- Insira outros ícones sociais, se necessário -->
+            </ul>
+          </div>
+        </div>
 
-                        <p> <a href="mailto:contact@yourcompany.com" class="item-anchor">ajuda@reshopping.pt</a>
-                        </p>
-                        <p> <a href="tel:+43 720 11 52 78" class="item-anchor">+351 965 221 732</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <!-- Bloco 2: Atalhos -->
+        <div style="flex: 1 1 250px;">
+          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Atalhos</h5>
+          <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+            <li style="margin-bottom: 0.5rem;">
+              <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Sobre</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+            </li>
+          </ul>
         </div>
-        <div class="py-4 border-top">
-            <div class="container">
-                <div class="row">
-                    <div class="flex-wrap col-md-6 d-flex">
-                        <div class="payment-option">
-                            <span>Payment Option:</span>
-                            <img src="{{ asset('kaira/images/visa-card.png') }}" alt="card">
-                            <img src="{{ asset('kaira/images/paypal-card.png') }}" alt="card">
-                            <img src="{{ asset('kaira/images/master-card.png') }}" alt="card">
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <p>© Copyright 2022 Kaira. All rights reserved. Design by <a href="https://templatesjungle.com"
-                                target="_blank">TemplatesJungle</a> Distribution
-                            By <a href="https://themewagon.com" target="blank">ThemeWagon</a></p>
-                    </div>
-                </div>
-            </div>
+
+        <!-- Bloco 3: Ajuda & Informações -->
+        <div style="flex: 1 1 250px;">
+          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
+          <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Onde está a minha encomenda?</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Devoluções + Reembolsos</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Envio + Entrega</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <a href="#" style="color: #333; text-decoration: none;">Faqs</a>
+            </li>
+          </ul>
         </div>
-    </footer>
+
+        <!-- Bloco 4: Contacte-nos -->
+        <div style="flex: 1 1 250px;">
+          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Contacte-nos</h5>
+          <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">
+            <a href="mailto:ajuda@reshopping.pt" style="color: rgb(4, 23, 85); text-decoration: none;">ajuda@reshopping.pt</a>
+          </p>
+          <p style="font-size: 0.875rem;">
+            <a href="tel:+351965221732" style="color: rgb(4, 23, 85); text-decoration: none;">+351 965 221 732</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segunda Parte – Rodapé Inferior -->
+    <div style="padding: 1rem; border-top: 1px solid #E5E7EB; background-color: #FFF;">
+      <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+        <!-- Opções de Pagamento -->
+        <div style="flex: 1 1 300px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #666;">
+          <span>Payment Option:</span>
+          <img src="{{ asset('kaira/images/visa-card.png') }}" alt="Visa" style="height: 24px;">
+          <img src="{{ asset('kaira/images/paypal-card.png') }}" alt="Paypal" style="height: 24px;">
+          <img src="{{ asset('kaira/images/master-card.png') }}" alt="MasterCard" style="height: 24px;">
+        </div>
+        <!-- Copyright -->
+        <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
+          <p style="margin: 0;">
+            © Copyright 2022 Kaira. All rights reserved.
+            Design by 
+            <a href="https://templatesjungle.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">TemplatesJungle</a>
+            Distribution By 
+            <a href="https://themewagon.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">ThemeWagon</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+
+
     <script src="{{ asset('kaira/js/jquery.min.js') }}"></script>
     <script src="{{ asset('kaira/js/plugins.js') }}"></script>
     <script src="{{ asset('kaira/js/SmoothScroll.js') }}"></script>

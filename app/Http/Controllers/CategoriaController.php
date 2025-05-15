@@ -14,7 +14,7 @@ class CategoriaController extends BaseController
 {
     public function __construct()
     {
-        $this->middleware('admin')->except(['index', 'show', 'porGenero']);
+       
     }
 
     public function index()
@@ -22,37 +22,36 @@ class CategoriaController extends BaseController
         $categorias = Categoria::withCount('produtos')
             ->orderBy('genero')
             ->orderBy('categoria')
+            
             ->get();
+            
 
         return view('categorias.index', compact('categorias'));
     }
 
     public function create()
     {
-        return view('admin.categorias.create');
+        return view('categorias.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'titulo' => 'required|string|min:3|max:255|unique:categorias,titulo',
-            'genero' => 'required|in:homem,mulher,crianca',
-            'categoria' => 'required|string|max:255',
-            'descricao' => 'nullable|string|max:500',
+            'titulo' => 'required|string|max:255',
+            'genero' => 'required|string|max:50',
+            
         ]);
 
-        $categoria = Categoria::create([
+        Categoria::create([
             'titulo' => $request->titulo,
             'slug' => Str::slug($request->titulo),
             'genero' => $request->genero,
-            'categoria' => $request->categoria,
-            'descricao' => $request->descricao,
             'created_by' => Auth::id(),
         ]);
 
-        return redirect()->route('categorias.index')
-            ->with('success', 'Categoria criada com sucesso!');
+        return redirect()->route('categorias.index')->with('success', 'Categoria criada com sucesso!');
     }
+
 
     public function edit(Categoria $categoria)
     {

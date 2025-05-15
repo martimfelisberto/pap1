@@ -31,14 +31,14 @@
                                          alt="{{ $produto->nome }}"
                                          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                                 @else
-                                    <div style="display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left:0; width: 100%; height: 100%; background-color: #F3F4F6;">
+                                    <div style="display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #F3F4F6;">
                                         <i class="bi bi-image" style="color: #9CA3AF; font-size: 2rem;"></i>
                                     </div>
                                 @endif
 
                                 <!-- Status Badge -->
                                 <div style="position: absolute; top: 8px; right: 8px;">
-                                    <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; {{ $produto->disponivel ? 'background-color: #D1FAE5; color: #065F46;' : 'background-color: #FEE2E2; color: #991B1B;' }}">
+                                    <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; background-color: {{ $produto->disponivel ? '#D1FAE5' : '#FEE2E2' }}; color: {{ $produto->disponivel ? '#065F46' : '#991B1B' }};">
                                         {{ $produto->disponivel ? 'Disponível' : 'Vendido' }}
                                     </span>
                                 </div>

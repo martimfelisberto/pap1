@@ -34,14 +34,17 @@ class Produto extends Model
      */
     protected $fillable = [
         'nome',
-        'marca',
-        'preco',
-        'estado',
-        'tamanho',
-        'genero',
-        'categoria',
-        'imagem',
         'descricao',
+        'marca',
+        'genero',
+        'categoria_id',
+        'tamanho',
+        'tipo_sola',
+        'tipo_produto',
+        'estado',
+        'cores',
+        'imagem',
+        'medidas',
         'user_id'
     ];
 
@@ -116,5 +119,13 @@ class Produto extends Model
     public function getFormattedPriceAttribute()
     {
         return number_format($this->preco, 2) . ' €';
+    }
+
+    /**
+     * Get the favoritos for the produto.
+     */
+    public function favoritos()
+    {
+        return $this->hasMany(Favorite::class);
     }
 }

@@ -43,6 +43,7 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        
         $stats = [
             'users' => User::count(),
             'produtos' => Produto::count() ?? 0,
@@ -89,11 +90,86 @@ class AdminController extends Controller
         $this->checkAdmin();
         
         // Delete the recipe image if exists
-        if ($produto->receita_foto && file_exists(storage_path('app/public/' . $produto->receita_foto))) {
-            unlink(storage_path('app/public/' . $produto->receita_foto));
+        if ($produto->produto_foto && file_exists(storage_path('app/public/' . $produto->produto_foto))) {
+            unlink(storage_path('app/public/' . $produto->produto_foto));
         }
         
         $produto->delete();
         return redirect()->route('dashboard')->with('success', 'Produto eliminada com sucesso!');
+    }
+
+    /**
+     * Show the form for creating a new category
+     */
+    public function createCategoria()
+    {
+        $this->checkAdmin();
+        return view('categorias.create');
+    }
+
+    /**
+     * Store a newly created category
+     */
+    public function storeCategoria(Request $request)
+    {
+        $this->checkAdmin();
+        
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255|unique:categorias',
+            'genero' => 'required|in:homem,mulher,criança'
+        ]);
+        
+        Categoria::create($validated);
+        
+        return redirect()->route('admin.categorias.index')
+            ->with('success', 'Categoria criada com sucesso!');
+    }
+
+    /**
+     * Show the form for editing a user
+     */
+    public function editUser(User $user)
+    {
+        $this->checkAdmin();
+        return view('admin.users.edit', compact('user'));
+    }
+
+    /**
+     * Update the specified user
+     */
+    public function updateUser(Request $request, User $user)
+    {
+        $this->checkAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'is_admin' => 'boolean'
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Utilizador atualizado com sucesso.');
+    }
+    
+    /**
+     * Remove a user from the system
+     */
+    public function destroy(User $user)
+    {
+        $this->checkAdmin();
+
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'Não pode eliminar o seu próprio utilizador.');
+        }
+
+        try {
+            $user->delete();
+            return back()->with('success', 'Utilizador eliminado com sucesso.');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao eliminar utilizador: ' . $e->getMessage());
+            return back()->with('error', 'Erro ao eliminar utilizador.');
+        }
     }
 }
