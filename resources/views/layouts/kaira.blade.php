@@ -327,18 +327,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 
 <!-- Faz com que os dropdowns se escondamao clicar fora deles -->
 <script>
-    function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        // Fecha todos os outros dropdowns primeiro
-        const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
-        allDropdowns.forEach(d => {
-            if (d.id !== id && d.style.display === "block") {
-                d.style.display = "none";
-            }
-        });
-        // Toggle do dropdown atual
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    }
+    
 
     // Fecha dropdowns quando clicar fora
     document.addEventListener('click', function(event) {
@@ -352,6 +341,14 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             });
         }
     });
+
+   
+  function toggleDropdown(id) {
+      var dropdown = document.getElementById(id);
+      dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
+  }
+
+
 </script>
 
 

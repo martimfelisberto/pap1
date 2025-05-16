@@ -2,180 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Produto;
+use App\Models\Categoria;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
-use App\Models\Categoria;
+use Illuminate\Support\Facades\Log;
+
 
 class ProdutoController extends Controller
 {
-    
-    // No ProdutoController.php
     public function index(Request $request)
     {
-        $categorias = Categoria::orderBy('nome')->get();
-        $produtos = Produto::query()
-            // ...existing query filters...
-            ->paginate(12);
+        $query = Produto::query()->with('categoria');
+
+        // Apply filters if they exist
+        if ($request->filled('genero')) {
+            $query->where('genero', $request->genero);
+        }
+        if ($request->filled('categoria')) {
+            $query->where('categoria_id', $request->categoria);
+        }
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $produtos = $query->latest()->paginate(12);
+        $categorias = Categoria::orderBy('titulo')->get();
 
         return view('produtos.index', compact('produtos', 'categorias'));
     }
-   
+
     public function create()
     {
-        $categorias = Categoria::orderBy('nome')->get();
+        $categorias = Categoria::orderBy('titulo')->get();
         return view('produtos.create', compact('categorias'));
-    }
-    // Método para mostrar o formulário de criação
-    
-    public function edit(Produto $produto)
-    {
-        if (Auth::id() != $produto->autor_id) {
-            return redirect()->route('produtos.show', $produto->id)
-                ->with('error', 'Não tens permissão para editar este produto.');
-        }
-
-        return view('produtos.edit', compact('produto'));
-    }
-
-    public function update(Request $request, Produto $produto)
-    {
-        if (Auth::id() != $produto->autor_id) {
-            return redirect()->route('produtos.show', $produto->id)
-                ->with('error', 'Não tens permissão para editar este produto.');
-        }
-
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'required|string',
-            'preco' => 'required|numeric|min:0',
-            'marca' => 'required|string',
-            'categoria' => 'required|string',
-            'genero' => 'required|in:homem,mulher,criança',
-            'estado' => 'required|in:novo,usado,semi-novo',
-            'tamanho' => 'required|string',
-            'cores' => 'required|array',
-            'imagem' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'especificacoes' => 'array'
-        ]);
-
-        // Get specifications based on category
-        $especificacoes = $this->getEspecificacoesByCategoria($request);
-
-        // Update basic product info
-        $produto->nome = $validated['nome'];
-        $produto->descricao = $validated['descricao'];
-        $produto->preco = $validated['preco'];
-        $produto->marca = $validated['marca'];
-        $produto->categoria = $validated['categoria'];
-        $produto->genero = strtolower($validated['genero']);
-        $produto->estado = strtolower($validated['estado']);
-        $produto->tamanho = $validated['tamanho'];
-        $produto->cores = $validated['cores'];
-        $produto->especificacoes = $especificacoes;
-
-        // Handle image upload if new image is provided
-        if ($request->hasFile('imagem')) {
-            // Delete old image
-            if ($produto->imagem && Storage::disk('public')->exists($produto->imagem)) {
-                Storage::disk('public')->delete($produto->imagem);
-            }
-
-            // Store new image
-            $imagePath = $request->file('imagem')->store('produtos', 'public');
-            $produto->imagem = $imagePath;
-        }
-
-        $produto->save();
-
-        return redirect()->route('produtos.show', $produto->id)
-            ->with('success', 'Produto atualizado com sucesso!');
-    }
-
-    public function destroy(Produto $produto)
-    {
-        // Check if user is owner or admin
-        if (Auth::user()->id !== $produto->user_id && !Auth::user()->is_admin) {
-            return back()->with('error', 'Não tem permissão para eliminar este produto.');
-        }
-
-        // Delete the product
-        $produto->delete();
-
-        return redirect()->route('produtos.index')
-            ->with('success', 'Produto eliminado com sucesso.');
-    }
-
-    public function userFavorites($userId)
-    {
-        $user = User::findOrFail($userId);
-        $favorites = $user->favoriteProdutos()->paginate(12);
-
-        return view('produtos.favorites', compact('user', 'favorites'));
-    }
-
-    
-    public function produtosPorGenero($genero)
-    {
-        $validGeneros = ['homem', 'mulher', 'criança', 'unissex'];
-        
-        if (!in_array($genero, $validGeneros)) {
-            abort(404);
-        }
-
-        $produtos = Produto::where('genero', $genero)->get();
-        return view('produtos.index', compact('produtos', 'genero'));
-    }
-
-    public function categoria($categoria, $genero)
-    {
-        // Validar categoria e género
-        $validCategorias = ['casacos', 'tshirts', 'camisolas', 'calcas', 'sapatilhas'];
-        $validGeneros = ['homem', 'mulher', 'criança'];
-
-        if (!in_array($categoria, $validCategorias) || !in_array($genero, $validGeneros)) {
-            abort(404);
-        }
-
-        $query = Produto::query()
-            ->where('categoria', $categoria)
-            ->where('genero', $genero);
-
-        // Aplicar filtros se existirem
-        if (request()->filled('preco_min')) {
-            $query->where('preco', '>=', request('preco_min'));
-        }
-
-        if (request()->filled('preco_max')) {
-            $query->where('preco', '<=', request('preco_max'));
-        }
-
-        if (request()->filled('marca')) {
-            $query->where('marca', request('marca'));
-        }
-
-        if (request()->filled('estado')) {
-            $query->where('estado', request('estado'));
-        }
-
-        if (request()->filled('tamanho')) {
-            $query->where('tamanho', request('tamanho'));
-        }
-
-        // Buscar produtos com paginação
-        $produtos = $query->latest()->paginate(12);
-        
-        // Buscar marcas disponíveis para esta categoria/género
-        $marcas = Produto::where('categoria', $categoria)
-                        ->where('genero', $genero)
-                        ->distinct('marca')
-                        ->pluck('marca');
-
-        return view('produtos.categoria', compact('produtos', 'categoria', 'genero', 'marcas'));
     }
 
     public function store(Request $request)
@@ -184,30 +46,35 @@ class ProdutoController extends Controller
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
             'marca' => 'required|string',
-            'genero' => 'required|string',
-            'categoria' => 'required|exists:categorias,id',
+            'genero' => 'required|string|',
+            'preco' => 'required|numeric|min:0',
             'tamanho' => 'required|string',
+            'tamanhosapatilhas' => 'required|string',
             'tipo_sola' => 'nullable|string',
-            'tipo_produto' => 'required|string',
-            'estado' => 'required|string',
-            'cores' => 'required|array',
+            'tipo_produto' => 'required|string|in:Sapatilhas,Roupas',
+            'estado' => 'required|in:novo,usado,semi-novo',
+            'cores' => 'required|array|min:1',
+            'cores.*' => 'required|string|in:preto,branco,azul,vermelho,verde,amarelo,laranja,roxo,rosa,cinza,castanho',
+            'categoria' => 'required|exists:categorias,id',
             'imagem' => 'required|image|max:10240',
-            'medidas' => 'nullable|string',
+            'medidas' => 'nullable|string|max:500',
         ]);
 
         try {
+            $categoria = Categoria::findOrFail($validated['categoria']);
+            
             $produto = new Produto();
             $produto->nome = $validated['nome'];
             $produto->descricao = $validated['descricao'];
             $produto->marca = $validated['marca'];
-            $produto->genero = $validated['genero'];
-            $produto->categoria_id = $validated['categoria'];
+            $produto->preco = $validated['preco'];
             $produto->tamanho = $validated['tamanho'];
-            $produto->tipo_sola = $validated['tipo_sola'];
-            $produto->tipo_produto = $validated['tipo_produto'];
+            $produto->tamanhosapatilhas = $validated['tamanhosapatilhas'];
             $produto->estado = $validated['estado'];
             $produto->cores = json_encode($validated['cores']);
             $produto->medidas = $validated['medidas'];
+            $produto->categoria_id = $validated['categoria'];
+            $produto->genero = $categoria->genero;
             $produto->user_id = Auth::id();
 
             if ($request->hasFile('imagem')) {
@@ -218,91 +85,110 @@ class ProdutoController extends Controller
             }
 
             $produto->save();
+            DB::commit();
 
-            return redirect()->route('produtos.show', $produto->id)
-                ->with('success', 'Produto criado com sucesso!');
-                
+            return redirect()->route('produtos.show', $produto)
+                ->with('success', 'Produto publicado com sucesso!');
+
         } catch (\Exception $e) {
+            Log::error('Erro ao criar produto: ' . $e->getMessage());
             return back()
                 ->withInput()
-                ->with('error', 'Erro ao criar produto: ' . $e->getMessage());
+                ->with('error', 'Erro ao publicar produto. Por favor, tente novamente.');
         }
     }
-    
-    private function getEspecificacoesByCategoria(Request $request)
+
+    public function show(Produto $produto)
     {
-        $especificacoes = [];
-    
-        switch ($request->categoria) {
-            case 'casacos':
-                $especificacoes = [
-                    'tipo' => $request->tipo_casaco,
-                    'forro' => $request->forro,
-                    'capuz' => $request->has('capuz'),
-                    'fechamento' => $request->fechamento,
-                    'material' => $request->material
-                ];
-                break;
-    
-            case 'sapatilhas':
-                $especificacoes = [
-                    'tipo_sola' => $request->tipo_sola,
-                    'material' => $request->material,
-                    'fechamento' => $request->fechamento,
-                    'tecnologia' => $request->tecnologia
-                ];
-                break;
-    
-            case 'calcas':
-                $especificacoes = [
-                    'tipo' => $request->tipo_calca,
-                    'cintura' => $request->cintura,
-                    'comprimento' => $request->comprimento,
-                    'material' => $request->material
-                ];
-                break;
-    
-            case 'tshirts':
-            case 'camisolas':
-                $especificacoes = [
-                    'gola' => $request->gola,
-                    'manga' => $request->manga,
-                    'material' => $request->material,
-                    'estampa' => $request->has('estampa')
-                ];
-                break;
-        }
-    
-        return $especificacoes;
-    
+        return view('produtos.show', compact('produto'));
+    }
 
-        // Processar upload da imagem
-        if ($request->hasFile('imagem')) {
-            $path = $request->file('imagem')->store('public/produtos');
-            $validated['imagem'] = str_replace('public/', 'storage/', $path);
+    public function edit(Produto $produto)
+    {
+        if (Auth::id() !== $produto->user_id && !Auth::user()->is_admin) {
+            return back()->with('error', 'Não tem permissão para editar este produto.');
         }
 
-        // Converter array de cores para string
-        if (isset($validated['cores'])) {
-            $validated['cores'] = implode(', ', $validated['cores']);
+        $categorias = Categoria::orderBy('titulo')->get();
+        return view('produtos.edit', compact('produto', 'categorias'));
+    }
+
+    public function update(Request $request, Produto $produto)
+    {
+        if (Auth::id() !== $produto->user_id && !Auth::user()->is_admin) {
+            return back()->with('error', 'Não tem permissão para editar este produto.');
         }
 
-        Produto::create($validated);
-        
-        return redirect()->route('produtos.index', ['genero' => $request->genero])
-            ->with('success', 'Produto criado com sucesso!');
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'marca' => 'required|string',
+            'preco'=> ' required|numeric|min:0',
+            'tamanho' => 'required|string',
+            'tamanhosapatilhas' => 'required|string',
+            'tipo_sola' => 'nullable|string',
+            'tipo_produto'=> 'required|string|in:Sapatilhas,Roupas',
+            'categoria' => 'required|exists:categorias,id',
+            'genero' => 'required|string',
+            'estado' => 'required|in:novo,usado,semi-novo',
+            'cores' => 'required|array',
+            'imagem' => 'nullable|image|max:10240',
+            'medidas' => 'nullable|string',
+        ]);
+
+        try {
+            $produto->fill($validated);
+
+            if ($request->hasFile('imagem')) {
+                // Delete old image
+                if ($produto->imagem) {
+                    Storage::disk('public')->delete('produtos/' . $produto->imagem);
+                }
+
+                $imagem = $request->file('imagem');
+                $nomeImagem = time() . '_' . $imagem->getClientOriginalName();
+                $imagem->storeAs('produtos', $nomeImagem, 'public');
+                $produto->imagem = $nomeImagem;
+            }
+
+            $produto->save();
+
+            return redirect()->route('produtos.show', $produto)
+                ->with('success', 'Produto atualizado com sucesso!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Erro ao atualizar produto: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(Produto $produto)
+    {
+        if (Auth::id() !== $produto->user_id && !Auth::user()->is_admin) {
+            return back()->with('error', 'Não tem permissão para eliminar este produto.');
+        }
+
+        try {
+            if ($produto->imagem) {
+                Storage::disk('public')->delete('produtos/' . $produto->imagem);
+            }
+            
+            $produto->delete();
+            return redirect()->route('produtos.index')
+                ->with('success', 'Produto eliminado com sucesso.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erro ao eliminar produto.');
+        }
     }
 
     public function userProducts()
     {
         $produtos = Produto::where('user_id', Auth::id())
-            ->with('categoria', 'favoritos')
+            ->with('categoria')
             ->latest()
             ->paginate(12);
 
         return view('produtos.meus', compact('produtos'));
     }
-
     public function welcome()
     {
         $produtosDestaque = Produto::withCount('favorites')

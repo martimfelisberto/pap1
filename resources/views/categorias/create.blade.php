@@ -20,7 +20,7 @@
                     <input type="text" id="titulo" name="titulo"
                         style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px; font-size: 1rem;"
                         class="@error('titulo') is-invalid @enderror"
-                        placeholder="Digite ou selecione um título..."
+                        placeholder="Digite ou seleciona um título..."
                         value="{{ old('titulo') }}"
                         list="tituloOptions">
                     @error('titulo')

@@ -2,6 +2,7 @@
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Categoria;
+use App\Models\User;
 
 class CategoriaFactory extends Factory
 {
@@ -13,11 +14,14 @@ class CategoriaFactory extends Factory
 
         return [
             'titulo' => $titulo,
+            'genero' => null, 
             'slug' => Str::slug($titulo),
-            'genero' => null, // Mantido vazio, será preenchido pelo usuário no formulário
-            'created_by' => \App\Models\User::factory(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_by' => User::factory(),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => function (array $attributes) {
+                return $this->faker->dateTimeBetween($attributes['created_at'], 'now');
+            },
+            
         ];
     }
 }

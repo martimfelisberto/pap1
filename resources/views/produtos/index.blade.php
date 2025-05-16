@@ -298,7 +298,7 @@
                 function updateSelectedColors() {
                     const checkboxes = document.querySelectorAll('input[name="cores[]"]:checked');
                     const selectedColors = Array.from(checkboxes).map(cb => cb.nextElementSibling.textContent).join(', ');
-                    document.getElementById('selectedColors').textContent = selectedColors || 'Selecione as cores';
+                    document.getElementById('selectedColors').textContent = selectedColors || 'Seleciona as cores';
                 }
 
                 function updateTamanhoOptions(categoria) {

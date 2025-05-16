@@ -5,58 +5,43 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property int $id
- * @property string $nome
- * @property string $descricao
- * @property float $preco
- * @property string $marca
- * @property string $categoria
- * @property string $estado
- * @property string $tamanho
- * @property string $cores
- * @property string|null $imagem
- * @property boolean $destaque
- * @property string $genero
- * @property int $user_id
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- * @property-read User $user
- */
 class Produto extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<string>
-     */
     protected $fillable = [
         'nome',
         'descricao',
         'marca',
-        'genero',
-        'categoria_id',
+        'preco',
         'tamanho',
-        'tipo_sola',
-        'tipo_produto',
+        'tamanhosapatilhas',
+        'quantidade',
         'estado',
         'cores',
+        'cores.*',
         'imagem',
+        'tipo_produto',
+        'tipo_sola',
         'medidas',
-        'user_id'
+        'categoria',
+        'genero',
+        'created_at' ,
+        'updated_at',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
-        'preco' => 'decimal:2'
+        'cores' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
+public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+        
 
+
+    }
     /**
      * Get the user that owns the product
      */
@@ -74,58 +59,13 @@ class Produto extends Model
     }
 
     /**
-     * Get the gender category of the product
+     * Get the product's image URL
      */
-    public function generoRelation()
+    public function getImageUrlAttribute()
     {
-        return $this->belongsTo(Genero::class, 'genero_id');
-    }
-
-    /**
-     * Get the users who favorited this product
-     */
-    public function favorites()
-    {
-        return $this->belongsToMany(User::class, 'produto_favorites', 'produto_id', 'user_id')->withTimestamps();
-    }
-
-    /**
-     * Check if a product is favorited by user
-     */
-    public function isFavoritedByUser($userId)
-    {
-        return $this->favorites()->where('user_id', $userId)->exists();
-    }
-
-    /**
-     * Get all product images
-     */
-    public function getImagesAttribute()
-    {
-        return $this->imagem ? json_decode($this->imagem, true) : [];
-    }
-
-    /**
-     * Set product images
-     */
-    public function setImagesAttribute($value)
-    {
-        $this->attributes['imagem'] = json_encode($value);
-    }
-
-    /**
-     * Get formatted price
-     */
-    public function getFormattedPriceAttribute()
-    {
-        return number_format($this->preco, 2) . ' €';
-    }
-
-    /**
-     * Get the favoritos for the produto.
-     */
-    public function favoritos()
-    {
-        return $this->hasMany(Favorite::class);
+        if (!$this->imagem) {
+            return asset('images/default-product.jpg');
+        }
+        return asset('storage/produtos/' . $this->imagem);
     }
 }

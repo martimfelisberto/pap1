@@ -7,6 +7,7 @@ use App\Models\Produto;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -168,7 +169,7 @@ class AdminController extends Controller
             $user->delete();
             return back()->with('success', 'Utilizador eliminado com sucesso.');
         } catch (\Exception $e) {
-            \Log::error('Erro ao eliminar utilizador: ' . $e->getMessage());
+            Log::error('Erro ao eliminar utilizador: ' . $e->getMessage());
             return back()->with('error', 'Erro ao eliminar utilizador.');
         }
     }

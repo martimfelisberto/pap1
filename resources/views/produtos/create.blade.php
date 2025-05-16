@@ -5,7 +5,7 @@
                 <h2 style="font-size: 1.75rem; font-weight: 600; text-align: center; margin-bottom: 1rem; color: #333;">
                     Novo Produto
                 </h2>
-                <form method="POST" action="{{ route('produtos.store') }}" enctype="multipart/form-data" id="productForm">
+                <form action="{{ route('produtos.store') }}" method="POST" enctype="multipart/form-data" id="productForm">
                     @csrf
 
                     <!-- Nome do Produto -->
@@ -34,28 +34,21 @@
                         <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <!-- Marca -->
-                    <div style="margin-bottom: 1rem;">
-                        <label for="marca" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                            Marca
-                        </label>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="marca" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Marca</label>
                         <select id="marca" name="marca" required
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Selecione a marca</option>
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                            <option value="">Seleciona a marca</option>
                             <optgroup label="Marcas de Sapatilhas">
-                                <option value="Nike">Nike</option>
-                                <option value="Adidas">Adidas</option>
-                                <option value="Puma">Puma</option>
-                                <option value="New Balance">New Balance</option>
-                                <option value="Reebok">Reebok</option>
+                                @foreach(['Nike', 'Adidas', 'Puma', 'New Balance', 'Reebok'] as $marca)
+                                <option value="{{ $marca }}" {{ old('marca') == $marca ? 'selected' : '' }}>{{ $marca }}</option>
+                                @endforeach
                             </optgroup>
                             <optgroup label="Marcas de Roupas">
-                                <option value="Zara">Zara</option>
-                                <option value="H&M">H&M</option>
-                                <option value="Pull&Bear">Pull&Bear</option>
-                                <option value="Bershka">Bershka</option>
-                                <option value="Stradivarius">Stradivarius</option>
+                                @foreach(['Zara', 'H&M', 'Pull&Bear', 'Bershka', 'Stradivarius'] as $marca)
+                                <option value="{{ $marca }}" {{ old('marca') == $marca ? 'selected' : '' }}>{{ $marca }}</option>
+                                @endforeach
                             </optgroup>
                         </select>
                     </div>
@@ -69,7 +62,7 @@
                             </label>
                             <select id="genero" name="genero" required onchange="filterCategorias()"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Selecione o género</option>
+                                <option value="">Seleciona o género</option>
                                 @php
                                 $generos = \App\Models\Categoria::select('genero')->distinct()->pluck('genero');
                                 @endphp
@@ -80,182 +73,170 @@
                                 @endforeach
                             </select>
                         </div>
+
                         <!-- Categoria -->
-                        <div style="margin-bottom: 1rem;">
-                            <label for="categoria" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Categoria <span style="color: #e63946;">*</span>
-                            </label>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="categoria" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Categoria</label>
                             <select id="categoria" name="categoria" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Selecione uma categoria</option>
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                                <option value="">Seleciona uma categoria</option>
                                 @foreach($categorias as $categoria)
-                                <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
+                                <option value="{{ $categoria->id }}" {{ old('categoria') == $categoria->id ? 'selected' : '' }}>
+                                    {{ $categoria->titulo }}
+                                </option>
                                 @endforeach
                             </select>
-                            @error('categoria')
+                        </div>
+
+                        <!-- Tamanho -->
+                        <div style="margin-bottom: 1rem;">
+                            <label for="tamanho" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Tamanho do produto<span style="color: #e63946;">*</span>
+                            </label>
+                            <select id="tamanho" name="tamanho" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="">Seleciona o tamanho do teu produto</option>
+                                <option value="XS" {{ old('tamanho') == 'XS' ? 'selected' : '' }}>XS</option>
+                                <option value="S" {{ old('tamanho') == 'S' ? 'selected' : '' }}>S</option>
+                                <option value="M" {{ old('tamanho') == 'M' ? 'selected' : '' }}>M</option>
+                                <option value="L" {{ old('tamanho') == 'L' ? 'selected' : '' }}>L</option>
+                                <option value="XL" {{ old('tamanho') == 'XL' ? 'selected' : '' }}>XL</option>
+                                <option value="2XL" {{ old('tamanho') == '2XL' ? 'selected' : '' }}>2XL</option>
+                                <option value="3XL" {{ old('tamanho') == '3XL' ? 'selected' : '' }}>3XL</option>
+                            </select>
+                            @error('tamanho')
                             <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Tamanho -->
-                    <div style="margin-bottom: 1rem;">
-                        <label for="tamanho" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                            Tamanho
-                        </label>
-                        <select id="tamanho" name="tamanho" required
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Selecione o tamanho</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                            <option value="3XL">3XL</option>
-                        </select>
-                    </div>
-                    <!-- Tipo de sola -->
 
-                    <div>
-                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Tipo de sola</label>
-                        <select name="tipo_sola"
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Todos os tipos de sola</option>
-                            <option value="Borracha" {{ request()->get('tipo_sola') == 'Borracha' ? 'selected' : '' }}>Borracha</option>
-                            <option value="EVA" {{ request()->get('tipo_sola') == 'EVA' ? 'selected' : '' }}>EVA</option>
-                            <option value="PU" {{ request()->get('tipo_sola') == 'PU' ? 'selected' : '' }}>PU</option>
-                            <option value="TPU" {{ request()->get('tipo_sola') == 'TPU' ? 'selected' : '' }}>TPU</option>
-                            <option value="Phylon" {{ request()->get('tipo_sola') == 'Phylon' ? 'selected' : '' }}>Phylon</option>
-                            <option value="Espuma" {{ request()->get('tipo_sola') == 'Espuma' ? 'selected' : '' }}>Espuma</option>
-                            <option value="Outros" {{ request()->get('tipo_sola') == 'Outros' ? 'selected' : '' }}>Outros</option>
-                            <option value="Nenhum" {{ request()->get('tipo_sola') == 'Nenhum' ? 'selected' : '' }}>Nenhum</option>
 
-                        </select>
-                    </div>
-                    <!-- Tipo de produto -->
+                        <!-- Tamanho se for sapatilhas-->
 
-                    <div>
-                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Tipo de produto</label>
-                        <select name="tipo_produto"
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Todos os tipos de produto</option>
-                            <option value="Sapatilhas" {{ request()->get('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
-                            <option value="Roupas" {{ request()->get('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
-                        </select>
-                    </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label for="tamanhosapatilhas" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
+                                Tamanho das sapatilhas
+                            </label>
+                            <select id="tamanhosapatilhas" name="tamanhosapatilhas" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="">Seleciona o tamanho das suas sapatilhas</option>
+                                <option value="nenhum" {{ old('tamanhosapatilhas') == 'nenhum' ? 'selected' : '' }}>Nenhum</option>
+                                <option value="35" {{ old('tamanhosapatilhas') == '35' ? 'selected' : '' }}>35</option>
+                                <option value="36" {{ old('tamanhosapatilhas') == '36' ? 'selected' : '' }}>36</option>
+                                <option value="37" {{ old('tamanhosapatilhas') == '37' ? 'selected' : '' }}>37</option>
+                                <option value="38" {{ old('tamanhosapatilhas') == '38' ? 'selected' : '' }}>38</option>
+                                <option value="39" {{ old('tamanhosapatilhas') == '39' ? 'selected' : '' }}>39</option>
+                                <option value="40" {{ old('tamanhosapatilhas') == '40' ? 'selected' : '' }}>40</option>
+                                <option value="41" {{ old('tamanhosapatilhas') == '41' ? 'selected' : '' }}>41</option>
+                                <option value="42" {{ old('tamanhosapatilhas') == '42' ? 'selected' : '' }}>42</option>
+                                <option value="43" {{ old('tamanhosapatilhas') == '43' ? 'selected' : '' }}>43</option>
+                                <option value="44" {{ old('tamanhosapatilhas') == '44' ? 'selected' : '' }}>44</option>
+                                <option value="45" {{ old('tamanhosapatilhas') == '45' ? 'selected' : '' }}>45</option>
+                                <option value="46" {{ old('tamanhosapatilhas') == '46' ? 'selected' : '' }}>46</option>
 
-                    <!-- Estado -->
-                    <div style="margin-bottom: 1rem;">
-                        <label for="estado" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                            Estado
-                        </label>
-                        <select id="estado" name="estado" required
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                            <option value="">Selecione o estado</option>
-                            <option value="novo">Novo</option>
-                            <option value="semi-novo">Semi-novo</option>
-                            <option value="usado">Usado</option>
-                        </select>
-                    </div>
-
-                    <!-- Cores -->
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Cores</label>
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                            <div>
-                                <input type="checkbox" name="cores[]" value="preto" id="cor-preto" style="margin-right: 0.25rem;">
-                                <label for="cor-preto" style="font-size: 0.875rem; color:#333;">Preto</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="branco" id="cor-branco" style="margin-right: 0.25rem;">
-                                <label for="cor-branco" style="font-size: 0.875rem; color:#333;">Branco</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="azul" id="cor-azul" style="margin-right: 0.25rem;">
-                                <label for="cor-azul" style="font-size: 0.875rem; color:#333;">Azul</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="vermelho" id="cor-vermelho" style="margin-right: 0.25rem;">
-                                <label for="cor-vermelho" style="font-size: 0.875rem; color:#333;">Vermelho</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="verde" id="cor-verde" style="margin-right: 0.25rem;">
-                                <label for="cor-verde" style="font-size: 0.875rem; color:#333;">Verde</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="amarelo" id="cor-amarelo" style="margin-right: 0.25rem;">
-                                <label for="cor-amarelo" style="font-size: 0.875rem; color:#333;">Amarelo</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="laranja" id="cor-laranja" style="margin-right: 0.25rem;">
-                                <label for="cor-laranja" style="font-size: 0.875rem; color:#333;">Laranja</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="roxo" id="cor-roxo" style="margin-right: 0.25rem;">
-                                <label for="cor-roxo" style="font-size: 0.875rem; color:#333;">Roxo</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="rosa" id="cor-rosa" style="margin-right: 0.25rem;">
-                                <label for="cor-rosa" style="font-size: 0.875rem; color:#333;">Rosa</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="cinza" id="cor-cinza" style="margin-right: 0.25rem;">
-                                <label for="cor-cinza" style="font-size: 0.875rem; color:#333;">Cinza</label>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="cores[]" value="castanho" id="cor-castanho" style="margin-right: 0.25rem;">
-                                <label for="cor-castanho" style="font-size: 0.875rem; color:#333;">Castanho</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Upload da Imagem -->
-                    <div style="margin-bottom: 1rem;">
-                        <label for="imagem" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                            Foto do Produto <span style="color: #e63946;">*</span>
-                        </label>
-                        <div id="dropzone" style="border: 2px dashed #ccc; border-radius: 8px; padding: 1.5rem; text-align: center;">
-                            <i class="bi bi-image" style="font-size: 2.5rem; color: #ccc;"></i>
-                            <div style="margin-top: 0.75rem;">
-                                <label for="imagem" style="cursor: pointer; color: rgb(36, 104, 250); font-weight: 600;">
-                                    Carregar imagem
-                                    <input type="file" id="imagem" name="imagem" style="display: none;" accept="image/*" onchange="previewImage(event)">
-                                </label>
-
-                                <span style="color: #6c757d; margin-left: 0.5rem;">ou arraste e solte</span>
-                            </div>
-                            <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem;">PNG, JPG, GIF até 10MB</p>
+                            </select>
                         </div>
 
-                        @error('imagem')
-                        <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
-                        @enderror
-                    </div>
 
-
-                    <!-- Medidas (opcional) -->
-                    <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
-                        <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
-                            <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
+                        <!-- Tipo de Sola -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="tipo_sola" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Sola</label>
+                            <select id="tipo_sola" name="tipo_sola"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                                <option value="">Seleciona o tipo de sola</option>
+                                @foreach(['Nenhum', 'Borracha', 'EVA', 'PU', 'TPU', 'Phylon', 'Espuma', 'Outros'] as $tipo)
+                                <option value="{{ $tipo }}" {{ old('tipo_sola') == $tipo ? 'selected' : '' }}>{{ $tipo }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div style="padding: 1rem;">
-                            <textarea name="medidas" id="medidas" rows="4"
-                                placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
-                            @error('medidas')
-                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+
+                        <!-- Tipo de Produto -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="tipo_produto" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Produto</label>
+                            <select id="tipo_produto" name="tipo_produto" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                                <option value="">Seleciona o tipo de produto</option>
+                                <option value="Sapatilhas" {{ old('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
+                                <option value="Roupas" {{ old('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
+                            </select>
+                        </div>
+
+
+                        <!-- Estado do Produto -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="estado" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Estado</label>
+                            <select id="estado" name="estado" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                                <option value="">Seleciona o estado</option>
+                                <option value="novo" {{ old('estado') == 'novo' ? 'selected' : '' }}>Novo</option>
+                                <option value="semi-novo" {{ old('estado') == 'semi-novo' ? 'selected' : '' }}>Semi-novo</option>
+                                <option value="usado" {{ old('estado') == 'usado' ? 'selected' : '' }}>Usado</option>
+                            </select>
+                            @error('estado')
+                            <div style="color: #d9534f; font-size: 0.875rem; margin-top: 0.5rem;">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Rodapé com Botões -->
-                    <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
-                        <button type="submit" 
-                                style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
-                            <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
-                        </button>
-                    </div>
+                        <!-- Cores -->
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">Cores</label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                @php
+                                $cores = ['preto', 'branco', 'azul', 'vermelho', 'verde', 'amarelo', 'laranja', 'roxo', 'rosa', 'cinza', 'castanho'];
+                                $oldCores = old('cores', []);
+                                @endphp
+
+                                @foreach($cores as $cor)
+                                <div class="flex items-center">
+                                    <input type="checkbox"
+                                        name="cores[]"
+                                        value="{{ $cor }}"
+                                        id="cor-{{ $cor }}"
+                                        {{ in_array($cor, $oldCores) ? 'checked' : '' }}
+                                        class="h-4 w-4 text-blue-600">
+                                    <label for="cor-{{ $cor }}" class="ml-2 text-sm text-gray-700">
+                                        {{ ucfirst($cor) }}
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                            @error('cores')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Upload da Imagem -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="imagem" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">
+                                Foto do Produto <span style="color: #e63946;">*</span>
+                            </label>
+                            <input type="file" name="imagem" id="imagem"accept="image/*" required value="{{ old('imagem') }}" style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                            @error('imagem')
+                            <div style="color: #d9534f; font-size: 0.875rem; margin-top: 0.5rem;">{{ $message }}</div>
+                            @enderror
+
+                            <!-- Medidas (opcional) -->
+                            <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
+                                <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
+                                    <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
+                                </div>
+                                <div style="padding: 1rem;">
+                                    <textarea name="medidas" id="medidas" rows="4"
+                                        placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
+                                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
+                                    @error('medidas')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Rodapé com Botões -->
+                            <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
+                                <button type="submit"
+                                    style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
+                                    <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
+                                </button>
+                            </div>
 
                 </form>
             </div>
@@ -332,7 +313,15 @@
                 }
             }
         });
-
+        function previewImage(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+        var preview = document.getElementById('preview');
+        preview.src = reader.result;
+        preview.style.display = "block";
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
         // Filter categorias based on genero
         function filterCategorias() {
             const generoSelect = document.getElementById('genero');
@@ -353,13 +342,6 @@
                 option.style.display = generoMatch ? '' : 'none';
             });
         }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (document.getElementById('genero').value) {
-                filterCategorias();
-            }
-        });
     </script>
     @endpush
 </x-kaira-layout>

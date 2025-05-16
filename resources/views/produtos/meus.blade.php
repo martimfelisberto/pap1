@@ -36,13 +36,7 @@
                                     </div>
                                 @endif
 
-                                <!-- Status Badge -->
-                                <div style="position: absolute; top: 8px; right: 8px;">
-                                    <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; background-color: {{ $produto->disponivel ? '#D1FAE5' : '#FEE2E2' }}; color: {{ $produto->disponivel ? '#065F46' : '#991B1B' }};">
-                                        {{ $produto->disponivel ? 'Disponível' : 'Vendido' }}
-                                    </span>
-                                </div>
-                            </div>
+                               
 
                             <!-- Informações do Produto -->
                             <div style="padding: 1rem;">
