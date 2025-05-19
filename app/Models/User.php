@@ -58,4 +58,11 @@ class User extends Authenticatable
     {
         return $this->is_admin;
     }
+
+    // No modelo User
+public function produtos()
+{
+    return $this->hasMany(Produto::class);
+}
+
 }

@@ -7,13 +7,14 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GeneroController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use Database\Seeders\AdminSeeder;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminMiddleware;
+
+
 
 
 Route::get('/', [ProdutoController::class, 'welcome'])->name('welcome');
@@ -65,24 +66,17 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes group
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard'); // Changed from admin.dashboard
 
     // Users management routes
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{id}', [AdminController::class, 'destroyUser'])->name('users.destroy');
 
     // Categories management
-    Route::resource('categorias', CategoriaController::class)->except(['show'])->names([
-        'index' => 'categorias.index',
-        'create' => 'categorias.create',
-        'store' => 'categorias.store',
-        'edit' => 'categorias.edit',
-        'update' => 'categorias.update',
-        'destroy' => 'categorias.destroy'
-
-    ]);
+    Route::resource('categorias', CategoriaController::class)->except(['show']);
 });
 Route::resource('categorias', CategoriaController::class)->except(['show']);
 
@@ -98,6 +92,8 @@ Route::post('/categorias', [CategoriaController::class, 'store'])->name('categor
 Route::get('/users', [AdminController::class, 'users'])->name('users.index');
 Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
 Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+
+
 // Products
 Route::delete('/produtos/{produto}', [AdminController::class, 'deleteProduto'])->name('produtos.delete');
 
@@ -105,6 +101,8 @@ Route::delete('/produtos/{produto}', [AdminController::class, 'deleteProduto'])-
 // Public category routes - keep these
 Route::get('/produtos/{genero}/{categoria}', [CategoriaController::class, 'show'])->name('categorias.show');
 Route::get('/api/categorias/{genero}', [CategoriaController::class, 'porGenero']);
+
+// contactos
 
 // Product routes
 Route::middleware(['auth'])->group(function () {
@@ -117,9 +115,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/produtos/{produto}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
 });
 
-// Admin user management routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
-});
+
 
 require __DIR__ . '/auth.php';

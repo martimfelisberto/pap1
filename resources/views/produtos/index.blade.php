@@ -40,14 +40,13 @@
 
                     <!-- Categoria -->
                     <div>
-
                         <label style="font-size: 0.875rem; color: #333;">Categoria</label>
                         <select name="categoria"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
                             <option value="">Todas as categorias</option>
                             @foreach($categorias as $categoria)
-                            <option value="{{ $categoria->nome }}" {{ request()->get('categoria') == $categoria->nome ? 'selected' : '' }}>
-                                {{ $categoria->nome }}
+                            <option value="{{ $categoria->id }}" {{ request()->get('categoria') == $categoria->id ? 'selected' : '' }}>
+                                {{ $categoria->titulo }}
                             </option>
                             @endforeach
                         </select>
@@ -58,9 +57,14 @@
                         <select name="genero"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
                             <option value="">Todos os géneros</option>
-                            <option value="homem" {{ request()->get('genero') == 'homem' ? 'selected' : '' }}>Homem</option>
-                            <option value="mulher" {{ request()->get('genero') == 'mulher' ? 'selected' : '' }}>Mulher</option>
-                            <option value="criança" {{ request()->get('genero') == 'criança' ? 'selected' : '' }}>Criança</option>
+                            @php
+                            $generos = App\Models\Categoria::select('genero')->distinct()->pluck('genero')->toArray();
+                            @endphp
+                            @foreach($generos as $genero)
+                            <option value="{{ $genero }}" {{ request()->get('genero') == $genero ? 'selected' : '' }}>
+                                {{ ucfirst($genero) }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
                     <!-- Estado -->

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Produto;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -143,6 +144,7 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+
     }
 
     /**
