@@ -1,5 +1,6 @@
 <?php
 
+// Importação dos controladores e outras classes necessárias para a aplicação
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactoController;
@@ -14,107 +15,104 @@ use Database\Seeders\AdminSeeder;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminMiddleware;
 
-
-
-
+// Rota principal da aplicação
 Route::get('/', [ProdutoController::class, 'welcome'])->name('welcome');
 
 
-// Products routes
+// Grupo de rotas para os produtos
 Route::prefix('produtos')->name('produtos.')->group(function () {
-    // Public routes
-    Route::get('/', [ProdutoController::class, 'index'])->name('index');
-    Route::get('/search', [ProdutoController::class, 'search'])->name('search');
-    Route::get('/categoria/{categoria}/{genero}', [ProdutoController::class, 'categoria'])->name('categoria'); // Add this line
-    Route::get('/detalhe/{produto}', [ProdutoController::class, 'show'])->name('show');
+    // Public routes (rotas públicas acessíveis a todos)
+    Route::get('/', [ProdutoController::class, 'index'])->name('index'); // Lista de todos os produtos
+    Route::get('/search', [ProdutoController::class, 'search'])->name('search'); // Pesquisa de produtos
+    Route::get('/categoria/{categoria}/{genero}', [ProdutoController::class, 'categoria'])->name('categoria'); // Add this line - Filtra produtos por categoria e género
+    Route::get('/detalhe/{produto}', [ProdutoController::class, 'show'])->name('show'); // Mostra detalhes de um produto
 
-    // Authenticated routes
+    // Authenticated routes (rotas acessíveis apenas a utilizadores autenticados)
     Route::middleware(['auth'])->group(function () {
-        Route::get('/meus', [ProdutoController::class, 'userProducts'])->name('meus');
-        Route::post('/', [ProdutoController::class, 'store'])->name('store');
-        Route::get('/{produto}/editar', [ProdutoController::class, 'edit'])->name('edit');
-        Route::put('/{produto}', [ProdutoController::class, 'update'])->name('update');
-        Route::delete('/{produto}', [ProdutoController::class, 'destroy'])->name('destroy');
-        Route::post('/{produto}/favorite', [ProdutoController::class, 'toggleFavorite'])->name('favorite');
-        Route::get('/meus-favoritos', [ProdutoController::class, 'favorites'])->name('favorites');
+        Route::get('/meus', [ProdutoController::class, 'userProducts'])->name('meus'); // Lista dos produtos do utilizador autenticado
+        Route::post('/', [ProdutoController::class, 'store'])->name('store'); // Cria um novo produto
+        Route::get('/{produto}/editar', [ProdutoController::class, 'edit'])->name('edit'); // Página para editar um produto
+        Route::put('/{produto}', [ProdutoController::class, 'update'])->name('update'); // Atualiza o produto
+        Route::delete('/{produto}', [ProdutoController::class, 'destroy'])->name('destroy'); // Apaga o produto
+        Route::post('/{produto}/favorite', [ProdutoController::class, 'toggleFavorite'])->name('favorite'); // Adiciona ou remove o produto dos favoritos
+        Route::get('/meus-favoritos', [ProdutoController::class, 'favorites'])->name('favorites'); // Lista de produtos favoritos do utilizador
     });
 });
 
-// Cart routes
+// Grupo de rotas para o carrinho (acessíveis apenas a utilizadores autenticados)
 Route::middleware(['auth'])->prefix('carrinho')->name('carrinho.')->group(function () {
-    Route::get('/', [CarrinhoController::class, 'index'])->name('index');
-    Route::post('/adicionar', [CarrinhoController::class, 'adicionar'])->name('adicionar');
-    Route::delete('/remover/{id}', [CarrinhoController::class, 'remover'])->name('remover');
-    Route::patch('/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('atualizar');
-    Route::delete('/limpar', [CarrinhoController::class, 'limpar'])->name('limpar');
+    Route::get('/', [CarrinhoController::class, 'index'])->name('index'); // Mostra o carrinho de compras
+    Route::post('/adicionar', [CarrinhoController::class, 'adicionar'])->name('adicionar'); // Adiciona um produto ao carrinho
+    Route::delete('/remover/{id}', [CarrinhoController::class, 'remover'])->name('remover'); // Remove um produto do carrinho
+    Route::patch('/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('atualizar'); // Atualiza a quantidade de um produto no carrinho
+    Route::delete('/limpar', [CarrinhoController::class, 'limpar'])->name('limpar'); // Limpa o carrinho
 });
 
-// Profile routes
+// Grupo de rotas para o perfil (apenas para utilizadores autenticados)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // Página de edição do perfil
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Atualização dos dados do perfil
+    Route::patch('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo'); // Atualiza a foto do perfil
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password'); // Altera a password do perfil
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Remove o perfil
 
     // Mover a rota show para depois das outras rotas do perfil
-    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show'); // Mostra o perfil de um utilizador
 
     // Outras rotas do perfil
-    Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
-    Route::get('/profile/produtos', [ProfileController::class, 'produtos'])->name('profile.products');
+    Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites'); // Lista dos produtos favoritos do utilizador
+    Route::get('/profile/produtos', [ProfileController::class, 'produtos'])->name('profile.products'); // Lista dos produtos criados pelo utilizador
 });
 
-// Admin routes group
+// Grupo de rotas administrativas (acessíveis apenas a utilizadores autenticados)
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard'); // Changed from admin.dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard'); // Painel administrativo (antigo 'admin.dashboard')
 
-    // Users management routes
-    Route::get('/users', [AdminController::class, 'users'])->name('users.index');
-    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-    Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
-    Route::delete('/users/{id}', [AdminController::class, 'destroyUser'])->name('users.destroy');
+    // Users management routes (rota para gestão de utilizadores)
+    Route::get('/users', [AdminController::class, 'users'])->name('users.index'); // Lista dos utilizadores
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit'); // Página para editar um utilizador
+    Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update'); // Atualiza os dados do utilizador
+    Route::delete('/users/{id}', [AdminController::class, 'destroyUser'])->name('users.destroy'); // Remove um utilizador
 
-    // Categories management
-    Route::resource('categorias', CategoriaController::class)->except(['show']);
+    // Categories management (gestão de categorias)
+    Route::resource('categorias', CategoriaController::class)->except(['show']); // Utiliza resource route para categorias, exceto a rota 'show'
 });
+// Recurso duplicado de categorias conforme o código original
 Route::resource('categorias', CategoriaController::class)->except(['show']);
 
-// Dashboard
+// Rota para o painel administrativo fora do grupo 'admin'
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
+// Rota para criação de categoria via POST
 Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');
 
-// Categories management - using resource route
+// (Comentário: Este comentário original não tem código associado)
 
+// Bloco de rotas para gestão de utilizadores fora do grupo 'admin' (mantido conforme o código original)
+Route::get('/users', [AdminController::class, 'users'])->name('users.index'); // Lista dos utilizadores
+Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit'); // Página para editar um utilizador
+Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update'); // Atualiza os dados do utilizador
 
-// Users
-Route::get('/users', [AdminController::class, 'users'])->name('users.index');
-Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
-
-
-// Products
+// Rota para remoção de produtos pelo administrador
 Route::delete('/produtos/{produto}', [AdminController::class, 'deleteProduto'])->name('produtos.delete');
 
-
-// Public category routes - keep these
+// Rotas públicas para visualização de categorias e produtos por género
 Route::get('/produtos/{genero}/{categoria}', [CategoriaController::class, 'show'])->name('categorias.show');
 Route::get('/api/categorias/{genero}', [CategoriaController::class, 'porGenero']);
 
-// contactos
+// (Comentário: Nenhuma rota específica para contactos foi definida aqui)
 
-// Product routes
+// Grupo de rotas para produtos que requerem autenticação (criação e edição de produtos)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/produtos/criar', [ProdutoController::class, 'create'])->name('produtos.create');
-    Route::post('/produtos', [ProdutoController::class, 'store'])->name('produtos.store');
-    Route::get('/produtos', [ProdutoController::class, 'index'])->name('produtos.index');
-    Route::get('/produtos/{produto}', [ProdutoController::class, 'show'])->name('produtos.show');
-    Route::get('/produtos/{produto}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit');
-    Route::put('/produtos/{produto}', [ProdutoController::class, 'update'])->name('produtos.update');
-    Route::delete('/produtos/{produto}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
+    Route::get('/produtos/criar', [ProdutoController::class, 'create'])->name('produtos.create'); // Página para criar um novo produto
+    Route::post('/produtos', [ProdutoController::class, 'store'])->name('produtos.store'); // Guarda o novo produto
+    Route::get('/produtos', [ProdutoController::class, 'index'])->name('produtos.index'); // Lista de produtos (possivelmente duplicado)
+    Route::get('/produtos/{produto}', [ProdutoController::class, 'show'])->name('produtos.show'); // Mostra os detalhes de um produto
+    Route::get('/produtos/{produto}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit'); // Página para editar um produto
+    Route::put('/produtos/{produto}', [ProdutoController::class, 'update'])->name('produtos.update'); // Atualiza o produto
+    Route::delete('/produtos/{produto}', [ProdutoController::class, 'destroy'])->name('produtos.destroy'); // Apaga o produto
 });
 
 
-
+// Inclusão das rotas de autenticação
 require __DIR__ . '/auth.php';

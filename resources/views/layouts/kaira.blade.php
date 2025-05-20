@@ -387,14 +387,11 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 
         <!-- Bloco 2: Atalhos -->
         <div style="flex: 1 1 250px;">
-          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Atalhos</h5>
           <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
             <li style="margin-bottom: 0.5rem;">
               <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
             </li>
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Sobre</a>
-            </li>
+          
             <li style="margin-bottom: 0.5rem;">
               <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
             </li>
@@ -406,19 +403,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
           <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
           <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
             <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Onde está a minha encomenda?</a>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Devoluções + Reembolsos</a>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Envio + Entrega</a>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
               <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-            </li>
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Faqs</a>
             </li>
           </ul>
         </div>
@@ -459,10 +444,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
       </div>
     </div>
   </footer>
-
-
-
-
+    <!-- Scripts -->
     <script src="{{ asset('kaira/js/jquery.min.js') }}"></script>
     <script src="{{ asset('kaira/js/plugins.js') }}"></script>
     <script src="{{ asset('kaira/js/SmoothScroll.js') }}"></script>
@@ -471,6 +453,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
     </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="{{ asset('kaira/js/script.min.js') }}"></script>
+    
 </body>
 
 </html>

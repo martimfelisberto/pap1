@@ -210,34 +210,35 @@
                             <label for="imagem" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">
                                 Foto do Produto <span style="color: #e63946;">*</span>
                             </label>
-                            <input type="file" name="imagem" id="imagem"accept="image/*" required value="{{ old('imagem') }}" style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                            <input type="file" name="imagem" id="imagem" accept="image/*" required value="{{ old('imagem') }}" style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
                             @error('imagem')
                             <div style="color: #d9534f; font-size: 0.875rem; margin-top: 0.5rem;">{{ $message }}</div>
                             @enderror
 
-                            <!-- Medidas (opcional) -->
-                            <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
-                                <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
-                                    <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
-                                </div>
-                                <div style="padding: 1rem;">
-                                    <textarea name="medidas" id="medidas" rows="4"
-                                        placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
-                                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
-                                    @error('medidas')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                        </div>
+                        <!-- Medidas (opcional) -->
+                        <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
+                            <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
+                                <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
                             </div>
-
-                            <!-- Rodapé com Botões -->
-                            <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
-                                <button type="submit"
-                                    style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
-                                    <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
-                                </button>
+                            <div style="padding: 1rem;">
+                                <textarea name="medidas" id="medidas" rows="4"
+                                    placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
+                                @error('medidas')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
+                        </div>
 
+                        <!-- Rodapé com Botões -->
+                        <div style="padding: 1rem; display: flex; justify-content: space-between; border-top: 1px solid #e0e0e0;">
+                            <button type="submit"
+                                style="padding: 0.5rem 1rem; background-color:rgb(36, 104, 250); border: none; border-radius: 5px; color: #FFF; font-size: 0.875rem; cursor: pointer;">
+                                <i class="bi bi-send" style="margin-right: 0.25rem;"></i> Publicar Produto
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -245,103 +246,5 @@
 
 
 
-    @push('scripts')
-    <script>
-        // Form Progress
-        function updateProgress() {
-            const form = document.getElementById('productForm');
-            const totalFields = form.querySelectorAll('input:required, select:required, textarea:required').length;
-            const filledFields = form.querySelectorAll('input:required:valid, select:required:valid, textarea:required:valid').length;
-            const progress = Math.round((filledFields / totalFields) * 100);
-
-            document.getElementById('formProgress').textContent = `${progress}%`;
-            document.getElementById('progressBar').style.width = `${progress}%`;
-        }
-
-        // Image Preview
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-image').src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgress();
-            document.getElementById('productForm').addEventListener('change', updateProgress);
-        });
-
-        // Update preview when inputs change
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = ['nome', 'descricao', 'tamanho', 'estado'];
-            inputs.forEach(field => {
-                document.getElementById(field)?.addEventListener('change', updatePreview);
-            });
-
-            function updatePreview() {
-                // Update title
-                const titleElement = document.getElementById('preview-title');
-                const nameInput = document.getElementById('nome');
-                if (titleElement && nameInput) {
-                    titleElement.textContent = nameInput.value || 'Nome do Produto';
-                }
-
-                // Update description
-                const descElement = document.getElementById('preview-description');
-                const descInput = document.getElementById('descricao');
-                if (descElement && descInput) {
-                    descElement.textContent = descInput.value || 'Descrição do produto...';
-                }
-
-                // Update size
-                const sizeElement = document.getElementById('preview-size');
-                const sizeInput = document.getElementById('tamanho');
-                if (sizeElement && sizeInput) {
-                    sizeElement.textContent = sizeInput.value || 'Tamanho';
-                }
-
-                // Update condition
-                const conditionElement = document.getElementById('preview-condition');
-                const conditionInput = document.getElementById('estado');
-                if (conditionElement && conditionInput) {
-                    conditionElement.textContent = conditionInput.value || 'Estado';
-                }
-            }
-        });
-        function previewImage(event) {
-    var reader = new FileReader();
-    reader.onload = function(){
-        var preview = document.getElementById('preview');
-        preview.src = reader.result;
-        preview.style.display = "block";
-    };
-    reader.readAsDataURL(event.target.files[0]);
-}
-        // Filter categorias based on genero
-        function filterCategorias() {
-            const generoSelect = document.getElementById('genero');
-            const categoriaSelect = document.getElementById('categoria');
-            const selectedGenero = generoSelect.value;
-
-            // Reset categoria selection
-            categoriaSelect.value = '';
-
-            // Show/hide categoria options based on selected género
-            Array.from(categoriaSelect.options).forEach(option => {
-                if (option.value === '') {
-                    option.style.display = ''; // Always show placeholder
-                    return;
-                }
-
-                const generoMatch = option.getAttribute('data-genero') === selectedGenero;
-                option.style.display = generoMatch ? '' : 'none';
-            });
-        }
-    </script>
-    @endpush
+   
 </x-kaira-layout>

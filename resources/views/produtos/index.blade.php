@@ -188,11 +188,19 @@
                             </div>
                             @if($produto->estado)
                             <div style="position: absolute; bottom: 0.5rem; left: 0.5rem;">
-                                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; 
-                                    @if($produto->estado == 'Novo') background-color: #DCFCE7; color: #16A34A;
-                                       @elseif($produto->estado == 'Semi-novo') background-color: #FEF3C7; color: #CA8A04;
-                                       @else background-color: #F3F4F6; color: #6B7280; @endif
-                                    border-radius: 999px;">
+                                @php
+                                    // Define badge styles based on estado
+                                    $badgeStyles = [
+                                        'Novo' => 'background-color: #DCFCE7; color: #16A34A;',
+                                        'Semi-novo' => 'background-color: #FEF3C7; color: #CA8A04;',
+                                        'Usado' => 'background-color: #F3F4F6; color: #6B7280;'
+                                    ];
+                                    
+                                    // Get the correct style or fallback to default
+                                    $style = $badgeStyles[$produto->estado] ?? 'background-color: #F3F4F6; color: #6B7280;';
+                                @endphp
+                                
+                                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px;">
                                     {{ $produto->estado }}
                                 </span>
                             </div>

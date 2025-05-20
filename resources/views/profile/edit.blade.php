@@ -47,7 +47,7 @@
                                                 </div>
                                                 @else
                                                 <div style="width: 96px; height: 96px; border-radius: 50%; 
-                                            background: linear-gradient(to right, #3b82f6, #1e40af); 
+                                            background: linear-gradient(to right, #3b82f6, rgb(4, 23, 85)); 
                                             border: 4px solid #cce5ff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
                                             display: flex; align-items: center; justify-content: center;">
                                                     <span style="font-size: 1.5rem; font-weight: bold; color: #FFF;">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
@@ -69,7 +69,7 @@
                                         <p style="color: #e63946; font-size: 0.875rem;">{{ $message }}</p>
                                         @enderror
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: #3b82f6; color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
                                                 Atualizar Foto
                                             </button>
                                         </div>
@@ -100,7 +100,7 @@
                                             @enderror
                                         </div>
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
                                                 Atualizar Informações
                                             </button>
                                         </div>
@@ -140,7 +140,7 @@
                                                 style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
                                         </div>
                                         <div style="display: flex; justify-content: flex-end;">
-                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
+                                            <button type="submit" style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
                                                 Atualizar Password
                                             </button>
                                         </div>
@@ -152,7 +152,7 @@
                                     <!-- Coluna 1: Produtos -->
                                     <div style="flex: 1; text-align: center; margin: 0 0.5rem;">
                                         <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-                                            <i class="bi bi-bag" style="color: rgb(36, 104, 250); font-size: 1.5rem;"></i>
+                                            <i class="bi bi-bag" style="color: rgb(4, 23, 85); font-size: 1.5rem;"></i>
                                             <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
                                                 {{ optional($user->produtos)->count() ?? 0 }}
                                             </div>
