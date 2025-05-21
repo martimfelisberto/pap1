@@ -47,11 +47,6 @@
                                         </div>
 
                                         <div class="flex justify-between items-center mt-4">
-                                            <a href="{{ route('produtos.show', $produto) }}"
-                                               class="inline-flex items-center px-3 py-1 text-xs text-white bg-warning rounded hover:bg-warning-dark transition-colors">
-                                                <i class="bi bi-eye mr-1"></i> Ver Detalhes
-                                            </a>
-
                                             <form action="{{ route('produtos.favorite', $produto) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">

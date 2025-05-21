@@ -202,4 +202,10 @@ class AdminController extends Controller
             return back()->with('error', 'Erro ao excluir usuário: ' . $e->getMessage());
         }
     }
+
+    public function gerirProdutos()
+    {
+        $produtos = \App\Models\Produto::with(['user', 'categoria'])->latest()->paginate(20);
+        return view('admin.produtos.index', compact('produtos'));
+    }
 }

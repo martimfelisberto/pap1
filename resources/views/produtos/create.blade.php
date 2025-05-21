@@ -14,7 +14,6 @@
                             Nome do Produto <span style="color: #e63946;">*</span>
                         </label>
                         <input type="text" id="nome" name="nome" required
-                            placeholder="Ex: Camisola Nike Vintage"
                             value="{{ old('nome') }}"
                             style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
                         @error('nome')
@@ -28,8 +27,7 @@
                             Descrição <span style="color: #e63946;">*</span>
                         </label>
                         <textarea id="descricao" name="descricao" rows="3" required
-                            placeholder="Descreva o estado, material, medidas e outros detalhes relevantes do produto..."
-                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('descricao') }}</textarea>
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('descricao') }}</textarea>
                         @error('descricao')
                         <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
@@ -39,7 +37,6 @@
                         <label for="marca" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Marca</label>
                         <select id="marca" name="marca" required
                             style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                            <option value="">Seleciona a marca</option>
                             <optgroup label="Marcas de Sapatilhas">
                                 @foreach(['Nike', 'Adidas', 'Puma', 'New Balance', 'Reebok'] as $marca)
                                 <option value="{{ $marca }}" {{ old('marca') == $marca ? 'selected' : '' }}>{{ $marca }}</option>
@@ -62,7 +59,7 @@
                             </label>
                             <select id="genero" name="genero" required onchange="filterCategorias()"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Seleciona o género</option>
+                               
                                 @php
                                 $generos = \App\Models\Categoria::select('genero')->distinct()->pluck('genero');
                                 @endphp
@@ -79,9 +76,8 @@
                             <label for="categoria" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Categoria</label>
                             <select id="categoria" name="categoria" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                                <option value="">Seleciona uma categoria</option>
                                 @foreach($categorias as $categoria)
-                                <option value="{{ $categoria->id }}" {{ old('categoria') == $categoria->id ? 'selected' : '' }}>
+                                <option value="{{ $categoria->titulo }}" {{ old('categoria') == $categoria->titulo ? 'selected' : '' }}>
                                     {{ $categoria->titulo }}
                                 </option>
                                 @endforeach
@@ -95,7 +91,7 @@
                             </label>
                             <select id="tamanho" name="tamanho" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Seleciona o tamanho do teu produto</option>
+                               
                                 <option value="XS" {{ old('tamanho') == 'XS' ? 'selected' : '' }}>XS</option>
                                 <option value="S" {{ old('tamanho') == 'S' ? 'selected' : '' }}>S</option>
                                 <option value="M" {{ old('tamanho') == 'M' ? 'selected' : '' }}>M</option>
@@ -119,7 +115,7 @@
                             </label>
                             <select id="tamanhosapatilhas" name="tamanhosapatilhas" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                                <option value="">Seleciona o tamanho das suas sapatilhas</option>
+                              
                                 <option value="nenhum" {{ old('tamanhosapatilhas') == 'nenhum' ? 'selected' : '' }}>Nenhum</option>
                                 <option value="35" {{ old('tamanhosapatilhas') == '35' ? 'selected' : '' }}>35</option>
                                 <option value="36" {{ old('tamanhosapatilhas') == '36' ? 'selected' : '' }}>36</option>
@@ -143,7 +139,7 @@
                             <label for="tipo_sola" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Sola</label>
                             <select id="tipo_sola" name="tipo_sola"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                                <option value="">Seleciona o tipo de sola</option>
+                              
                                 @foreach(['Nenhum', 'Borracha', 'EVA', 'PU', 'TPU', 'Phylon', 'Espuma', 'Outros'] as $tipo)
                                 <option value="{{ $tipo }}" {{ old('tipo_sola') == $tipo ? 'selected' : '' }}>{{ $tipo }}</option>
                                 @endforeach
@@ -155,7 +151,7 @@
                             <label for="tipo_produto" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Produto</label>
                             <select id="tipo_produto" name="tipo_produto" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                                <option value="">Seleciona o tipo de produto</option>
+                            
                                 <option value="Sapatilhas" {{ old('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
                                 <option value="Roupas" {{ old('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
                             </select>
@@ -167,7 +163,7 @@
                             <label for="estado" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Estado</label>
                             <select id="estado" name="estado" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                                <option value="">Seleciona o estado</option>
+                                
                                 <option value="novo" {{ old('estado') == 'novo' ? 'selected' : '' }}>Novo</option>
                                 <option value="semi-novo" {{ old('estado') == 'semi-novo' ? 'selected' : '' }}>Semi-novo</option>
                                 <option value="usado" {{ old('estado') == 'usado' ? 'selected' : '' }}>Usado</option>
@@ -222,13 +218,24 @@
                                 <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
                             </div>
                             <div style="padding: 1rem;">
-                                <textarea name="medidas" id="medidas" rows="4"
-                                    placeholder="Comprimento: 70cm&#10;Largura: 50cm&#10;Manga: 60cm"
-                                    style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
+                                <textarea name="medidas" id="medidas" rows="4"style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
                                 @error('medidas')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
+
+                        <!-- Preço -->
+                        <div style="margin-bottom: 1rem;">
+                            <label for="preco" style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
+                                Preço (€) <span style="color: #e63946;">*</span>
+                            </label>
+                            <input type="number" id="preco" name="preco" required step="0.01" min="0"
+                                value="{{ old('preco') }}"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
+                            @error('preco')
+                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <!-- Rodapé com Botões -->
@@ -246,5 +253,75 @@
 
 
 
-   
+
 </x-kaira-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('imagem');
+    const previewContainer = document.getElementById('preview-container');
+    const preview = document.getElementById('preview');
+    const form = document.getElementById('productForm');
+    
+    // Preview da imagem
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Validar tamanho (2MB máximo)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('A imagem não pode exceder 2MB.');
+                    this.value = '';
+                    previewContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Validar tipo
+                if (!file.type.match('image.*')) {
+                    alert('Por favor, selecione uma imagem válida.');
+                    this.value = '';
+                    previewContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Exibir preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    // Validação do formulário
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Verificar se pelo menos uma cor foi selecionada
+            const coresChecked = document.querySelectorAll('input[name="cores[]"]:checked');
+            if (coresChecked.length === 0) {
+                e.preventDefault();
+                alert('Por favor, selecione pelo menos uma cor.');
+                return false;
+            }
+            
+            // Indicador visual de envio
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Enviando...';
+                
+                // Timeout para evitar carregamento infinito
+                setTimeout(() => {
+                    if (submitBtn.disabled) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = 'Publicar Produto';
+                    }
+                }, 10000);
+            }
+        });
+    }
+});
+</script>

@@ -76,7 +76,7 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
     // Categories management (gestão de categorias)
     Route::resource('categorias', CategoriaController::class)->except(['show']); // Utiliza resource route para categorias, exceto a rota 'show'
-});
+ });
 // Recurso duplicado de categorias conforme o código original
 Route::resource('categorias', CategoriaController::class)->except(['show']);
 
@@ -94,10 +94,9 @@ Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('us
 Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update'); // Atualiza os dados do utilizador
 
 // Rota para remoção de produtos pelo administrador
-Route::delete('/produtos/{produto}', [AdminController::class, 'deleteProduto'])->name('produtos.delete');
 
 // Rotas públicas para visualização de categorias e produtos por género
-Route::get('/produtos/{genero}/{categoria}', [CategoriaController::class, 'show'])->name('categorias.show');
+Route::get('/produtos/{categoria}/{genero}', [CategoriaController::class, 'show'])->name('categorias.show'); // Mostra produtos por categoria e género
 Route::get('/api/categorias/{genero}', [CategoriaController::class, 'porGenero']);
 
 // (Comentário: Nenhuma rota específica para contactos foi definida aqui)
@@ -108,10 +107,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/produtos', [ProdutoController::class, 'store'])->name('produtos.store'); // Guarda o novo produto
     Route::get('/produtos', [ProdutoController::class, 'index'])->name('produtos.index'); // Lista de produtos (possivelmente duplicado)
     Route::get('/produtos/{produto}', [ProdutoController::class, 'show'])->name('produtos.show'); // Mostra os detalhes de um produto
-    Route::get('/produtos/{produto}/edit', [ProdutoController::class, 'edit'])->name('produtos.edit'); // Página para editar um produto
     Route::put('/produtos/{produto}', [ProdutoController::class, 'update'])->name('produtos.update'); // Atualiza o produto
-    Route::delete('/produtos/{produto}', [ProdutoController::class, 'destroy'])->name('produtos.destroy'); // Apaga o produto
-});
+ });
 
 
 // Inclusão das rotas de autenticação

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -50,13 +51,30 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is an 
+     * Check if the user is an admin
      *
      * @return bool
      */
-    public function isAdmin(): bool
+    public function is_admin()
     {
-        return $this->is_admin;
+        // Versão mais simples e robusta
+        return (bool)($this->attributes['is_admin'] ?? false);
+    }
+
+    /**
+     * Método alternativo para compatibilidade
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin();
+    }
+
+    /**
+     * Accessor para uso como propriedade
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->is_admin();
     }
 
     // No modelo User

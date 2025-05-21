@@ -40,10 +40,7 @@
                     <i class="bi bi-heart-fill" style="color: #d9534f;"></i>
                     <span style="color: #666;">{{ $produto->favoritos_count }}</span>
                   </div>
-                  <a href="{{ route('produtos.show', $produto) }}" 
-                     style="display: block; margin-top: 1rem; font-size: 0.875rem; color:rgb(4, 23, 85); text-decoration: none; text-transform: uppercase;">
-                    Ver Detalhes
-                  </a>
+                  
                 </div>
               </div>
             </div>

@@ -39,9 +39,13 @@ public function favorites()
     {
         return $this->hasMany(Favorite::class);
         
-
-
     }
+    public function favoritos()
+
+    {
+        return $this->hasMany(Favorite::class);
+    }
+    
     /**
      * Get the user that owns the product
      */
@@ -49,6 +53,10 @@ public function favorites()
     /**
      * Get the category of the product
      */
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
     /**
      * Get the product's image URL
      */

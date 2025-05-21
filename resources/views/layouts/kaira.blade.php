@@ -190,7 +190,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                         style="display: none; position: absolute; top: 2rem; left: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
                         @foreach($categoriasGenero as $categoria)
                             <li style="margin: 0.5rem 0;">
-                                <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->titulo]) }}"
+                                <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->id]) }}"
                                     style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
                                     {{ ucfirst($categoria->titulo) }}
                                 </a>
@@ -201,7 +201,8 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             @endforeach
             <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contactos</a>
 
-            @if(auth()->check() && auth()->user()->isAdmin())
+            @if(auth()->check() && auth()->user()->is_admin())
+
                 <div style="position: relative;">
                     <button onclick="toggleDropdown('dropdownadminCategorias')" 
                             style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
@@ -284,7 +285,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                                             Meus Produtos
                                         </a>
                                     </li>
-                                    @if(auth()->user()->isAdmin())
+                                    @if(auth()->user()->is_admin())
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center" href="{{ route('dashboard') }}">
                                             <i class="bi bi-speedometer2 me-2"></i>

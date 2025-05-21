@@ -102,10 +102,7 @@
                         </div>
 
                         <div class="flex items-center justify-between">
-                            <a href="{{ route('produtos.show', $produto->id) }}" 
-                               class="flex-1 px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 mr-2">
-                                Ver Detalhes
-                            </a>
+                           
                             <div class="relative" x-data="{ open: false }">
                                 <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-lg" @click="open = !open">
                                     <i class="bi bi-three-dots"></i>

@@ -55,11 +55,7 @@ class CategoriaController extends BaseController
 
     public function edit(Categoria $categoria)
     {
-        if (!Auth::check() || !Auth::user()->is_admin) {
-            abort(403, 'Acesso não autorizado.');
-        }
-
-        return view('categorias.edit', compact('categoria'));
+        
     }
 
     public function show($genero, $categoria)
