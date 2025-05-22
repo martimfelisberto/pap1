@@ -1,20 +1,7 @@
 <x-kaira-layout>
     <!-- Header de Perfil (Display) -->
-    <div style="padding: 2rem 0; background-color: #F9FAFB;">
-        <div style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;">
-            <!-- Card do Perfil -->
-            <div style="background-color: #FFF; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; position: relative;">
-                <div style="display: flex; align-items: center;">
-
-                    <div style="margin-left: 1.5rem;">
-                        <h1 style="font-size: 2rem; font-weight: bold; color: #333; margin: 0;">{{ $user->name }}</h1>
-                    </div>
-                </div>
-
-                <!-- "Membro desde" no canto inferior direito -->
-                <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.875rem; color: #666;">
-                    Membro desde {{ $user->created_at->format('d/m/Y') }}
-                </div>
+   
+                
 
                 <!-- Seções de Atualização do Perfil (sem repetir a função de alteração da foto) -->
                 <div style="padding: 2rem 0; background-color: #F9FAFB;">
@@ -26,11 +13,6 @@
                                 <!-- Profile Photo Section -->
                                 <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
                                     <!-- Member since text -->
-                                    <!-- Member since text -->
-                                    <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.875rem; color: #666;">
-                                        Membro desde {{ $user->created_at->format('d/m/Y') }}
-                                    </div>
-
 
                                     <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Foto de Perfil</h2>
                                     <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -184,99 +166,101 @@
                     </div>
 
 
-                    <!-- Script para preview da imagem (caso implemente atualização via outro componente) -->
-                    @push('scripts')
-                    <script>
-                        // Caso seja necessário prever a nova imagem de perfil (exemplo para outro input)
-                        document.getElementById('profile_photo')?.addEventListener('change', function(e) {
-                            if (e.target.files && e.target.files[0]) {
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    const img = document.querySelector('[style*="border-radius: 50%"] img');
-                                    if (img) {
-                                        img.src = e.target.result;
-                                    }
-                                }
-                                reader.readAsDataURL(e.target.files[0]);
+          
+
+    <!-- Script para preview da imagem (caso implemente atualização via outro componente) -->
+    @push('scripts')
+    <script>
+        // Caso seja necessário prever a nova imagem de perfil (exemplo para outro input)
+        document.getElementById('profile_photo')?.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.querySelector('[style*="border-radius: 50%"] img');
+                    if (img) {
+                        img.src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active classes
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.remove('text-warning');
+                        btn.classList.remove('border-warning');
+                        btn.classList.add('text-gray-500');
+                        btn.classList.add('border-transparent');
+                    });
+
+                    // Hide all tab contents
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    // Show active tab
+                    button.classList.add('active');
+                    button.classList.add('text-warning');
+                    button.classList.add('border-warning');
+                    button.classList.remove('text-gray-500');
+                    button.classList.remove('border-transparent');
+
+                    const targetId = button.dataset.target;
+                    document.getElementById(targetId).classList.remove('hidden');
+                });
+            });
+
+            // Profile photo preview
+            const photoInput = document.getElementById('profile_photo_upload');
+            const photoPreview = document.querySelector('.profile-photo-preview');
+
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            if (photoPreview) {
+                                photoPreview.style.backgroundImage = `url('${e.target.result}')`;
                             }
-                        });
+                        }
 
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Tab functionality
-                            const tabButtons = document.querySelectorAll('.tab-button');
-                            const tabContents = document.querySelectorAll('.tab-content');
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
+            }
 
-                            tabButtons.forEach(button => {
-                                button.addEventListener('click', () => {
-                                    // Remove active classes
-                                    tabButtons.forEach(btn => {
-                                        btn.classList.remove('active');
-                                        btn.classList.remove('text-warning');
-                                        btn.classList.remove('border-warning');
-                                        btn.classList.add('text-gray-500');
-                                        btn.classList.add('border-transparent');
-                                    });
+            // Animation for cards
+            const animateCards = () => {
+                const cards = document.querySelectorAll('.card-animate');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
 
-                                    // Hide all tab contents
-                                    tabContents.forEach(content => {
-                                        content.classList.add('hidden');
-                                    });
+                    if (isVisible) {
+                        card.classList.add('animate-fade-in');
+                    }
+                });
+            };
 
-                                    // Show active tab
-                                    button.classList.add('active');
-                                    button.classList.add('text-warning');
-                                    button.classList.add('border-warning');
-                                    button.classList.remove('text-gray-500');
-                                    button.classList.remove('border-transparent');
+            // Initial animation check
+            animateCards();
 
-                                    const targetId = button.dataset.target;
-                                    document.getElementById(targetId).classList.remove('hidden');
-                                });
-                            });
-
-                            // Profile photo preview
-                            const photoInput = document.getElementById('profile_photo_upload');
-                            const photoPreview = document.querySelector('.profile-photo-preview');
-
-                            if (photoInput) {
-                                photoInput.addEventListener('change', function(e) {
-                                    if (this.files && this.files[0]) {
-                                        const reader = new FileReader();
-
-                                        reader.onload = function(e) {
-                                            if (photoPreview) {
-                                                photoPreview.style.backgroundImage = `url('${e.target.result}')`;
-                                            }
-                                        }
-
-                                        reader.readAsDataURL(this.files[0]);
-                                    }
-                                });
-                            }
-
-                            // Animation for cards
-                            const animateCards = () => {
-                                const cards = document.querySelectorAll('.card-animate');
-                                cards.forEach(card => {
-                                    const rect = card.getBoundingClientRect();
-                                    const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
-
-                                    if (isVisible) {
-                                        card.classList.add('animate-fade-in');
-                                    }
-                                });
-                            };
-
-                            // Initial animation check
-                            animateCards();
-
-                            // Animate on scroll
-                            window.addEventListener('scroll', animateCards);
-                        });
-                    </script>
-                    @endpush
+            // Animate on scroll
+            window.addEventListener('scroll', animateCards);
+        });
+    </script>
+    @endpush
 
 
-                    <!-- Add this in the head section or in your layout file -->
-                    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Add this in the head section or in your layout file -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </x-kaira-layout>

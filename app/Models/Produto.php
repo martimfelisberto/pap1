@@ -24,10 +24,12 @@ class Produto extends Model
         'tipo_produto',
         'tipo_sola',
         'medidas',
-        'categoria',
+        'categoria_id',
         'genero',
         'created_at' ,
         'updated_at',
+        'user_id',
+        'disponivel',
     ];
 
     protected $casts = [

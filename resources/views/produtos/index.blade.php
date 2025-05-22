@@ -176,117 +176,138 @@
 
             <!-- Seção de Exibição dos Produtos -->
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;" id="products-container">
-                @forelse ($produtos as $produto)
-                <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;"
-                    class="{{ auth()->check() && auth()->user()->is_admin ? 'admin-product-card' : '' }}">
-                    <!-- Imagem e Marcas/Estado -->
-                    <div style="position: relative;">
-                        <img src="{{ asset('storage/' . $produto->imagem) }}"
-                            style="width: 100%; height: 12rem; object-fit: cover;"
-                            alt="{{ $produto->nome }}">
-                        <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
-                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #DBEAFE; color: #1D4ED8; border-radius: 999px;">
-                                <i class="bi bi-tag-fill" style="margin-right: 0.25rem;"></i>{{ $produto->marca }}
-                            </span>
-                        </div>
-                        @if($produto->estado)
-                        <div style="position: absolute; bottom: 0.5rem; left: 0.5rem;">
-                            @php
-                            // Define estilos de badge conforme o estado
-                            $badgeStyles = [
-                            'Novo' => 'background-color: #DCFCE7; color: #16A34A;',
-                            'Semi-novo' => 'background-color: #FEF3C7; color: #CA8A04;',
-                            'Usado' => 'background-color: #F3F4F6; color: #6B7280;'
-                            ];
-                            $style = $badgeStyles[$produto->estado] ?? 'background-color: #F3F4F6; color: #6B7280;';
-                            @endphp
-                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; ">
-                                {{ $produto->estado }}
-                            </span>
-                        </div>
-                        @endif
+    @forelse ($produtos as $produto)
+    <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;"
+        class="{{ auth()->check() && auth()->user()->is_admin ? 'admin-product-card' : '' }}">
+        <!-- Imagem e Marcas/Estado -->
+        <div style="position: relative;">
+            <img src="{{ asset('storage/' . $produto->imagem) }}"
+                style="width: 100%; height: 12rem; object-fit: cover;"
+                alt="{{ $produto->nome }}">
 
-
-                    </div>
-
-                    <!-- Informações do Produto -->
-                    <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
-                        <!-- Resto do código do produto igual ao original -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #F3F4F6; color: #374151; border-radius: 999px;">
-                                <i class="bi bi-collection-fill" style="margin-right: 0.25rem;"></i>{{ $produto->categoria->titulo ?? 'Sem categoria' }}
-                            </span>
-                            <span style="font-size: 0.875rem; color: #6B7280;">
-                                <i class="bi bi-gender-ambiguous" style="margin-right: 0.25rem;"></i>{{ ucfirst($produto->genero) }}
-                            </span>
-                        </div>
-                        <h3 style="font-size: 1.125rem; font-weight: bold; color: #333; margin: 0 0 0.5rem 0;">{{ $produto->nome }}</h3>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.875rem; color: #6B7280;">
-                                <i class="bi bi-person-fill" style="margin-right: 0.25rem;"></i>Vendedor:
-                                <strong>{{ $produto->user?->name ?? 'Utilizador desconhecido' }}</strong>
-                            </span>
-                        </div>
-                        <p style="font-size: 0.875rem; color: #6B7280; flex-grow: 1; margin-bottom: 1rem;">
-                            {{ Str::limit($produto->descricao, 100) }}
-                        </p>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            @if($produto->tamanho)
-                            <span style="font-size: 0.875rem; color: #6B7280;">
-                                <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho: {{ $produto->tamanho }}
-                            </span>
-                            @endif
-                            <span style="font-size: 1.25rem; font-weight: bold; color: #2563EB;">
-                                {{ number_format($produto->preco, 2) }}€
-                            </span>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button type="button"
-                                style="padding: 0.75rem; background-color: #F3F4F6; color: #374151; border: none; border-radius: 8px; transition: background-color 0.3s;">
-                                <i class="bi bi-heart"></i>
-                            </button>
-                            
-                            <!-- Admin buttons - somente visíveis para admins -->
-                            @if(auth()->check() && auth()->user()->is_admin)
-                                <div style="display: flex; gap: 0.5rem; margin-left: auto;">
-                                    <!-- Botão de Editar -->
-                                    <a href="{{ route('produtos.edit', $produto) }}"
-                                        style="padding: 0.75rem; background-color: #DBEAFE; color: #2563EB; border: none; border-radius: 8px; transition: background-color 0.3s; display: flex; align-items: center; text-decoration: none;"
-                                        title="Editar Produto">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    
-                                    <!-- Botão de Excluir -->
-                                    <form action="{{ route('produtos.destroy', $produto) }}" method="POST" 
-                                          onsubmit="return confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            style="padding: 0.75rem; background-color: #FEE2E2; color: #DC2626; border: none; border-radius: 8px; transition: background-color 0.3s; cursor: pointer;"
-                                            title="Excluir Produto">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                @empty
-                <div style="grid-column: 1 / -1;">
-                    <div style="background-color: #DBEAFE; text-align: center; padding: 2rem; border-radius: 16px;">
-                        <i class="bi bi-info-circle" style="font-size: 2.5rem; color: #2563EB;"></i>
-                        <h4 style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 1rem 0;">Nenhum produto encontrado</h4>
-                        <p style="font-size: 1rem; color: #374151; margin-bottom: 1rem;">Tente ajustar os filtros ou pesquise por outro termo.</p>
-                        <a href="{{ route('produtos.index') }}"
-                            style="display: inline-flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid #2563EB; color: #2563EB; border-radius: 8px; text-decoration: none;">
-                            <i class="bi bi-arrow-repeat" style="margin-right: 0.5rem;"></i>Ver todos os produtos
-                        </a>
-                    </div>
-                </div>
-                @endforelse
+            <!-- Se o produto estiver indisponível, exibe a barra "Vendido" -->
+            @if(!$produto->disponivel)
+            <div style="position: absolute; top: 0; left: 0; width: 100%; background-color: rgba(0,0,0,0.6); color: #FFF; text-align: center; padding: 0.5rem; z-index: 10;">
+                Vendido
             </div>
+            @endif
+
+            <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
+                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #DBEAFE; color: #1D4ED8; border-radius: 999px;">
+                    <i class="bi bi-tag-fill" style="margin-right: 0.25rem;"></i>{{ $produto->marca }}
+                </span>
+            </div>
+            @if($produto->estado)
+            <div style="position: absolute; bottom: 0.5rem; left: 0.5rem;">
+                @php
+                // Define estilos de badge conforme o estado
+                $badgeStyles = [
+                    'Novo' => 'background-color: #DCFCE7; color: #16A34A;',
+                    'Semi-novo' => 'background-color: #FEF3C7; color: #CA8A04;',
+                    'Usado' => 'background-color: #F3F4F6; color: #6B7280;'
+                ];
+                $style = $badgeStyles[$produto->estado] ?? 'background-color: #F3F4F6; color: #6B7280;';
+                @endphp
+                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; ">
+                    {{ $produto->estado }}
+                </span>
+            </div>
+            @endif
+        </div>
+
+        <!-- Informações do Produto -->
+        <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; background-color: #F3F4F6; color: #374151; border-radius: 999px;">
+                    <i class="bi bi-collection-fill" style="margin-right: 0.25rem;"></i>{{ $produto->categoria->titulo ?? 'Sem categoria' }}
+                </span>
+                <span style="font-size: 0.875rem; color: #6B7280;">
+                    <i class="bi bi-gender-ambiguous" style="margin-right: 0.25rem;"></i>{{ ucfirst($produto->genero) }}
+                </span>
+            </div>
+            <h3 style="font-size: 1.125rem; font-weight: bold; color: #333; margin: 0 0 0.5rem 0;">{{ $produto->nome }}</h3>
+            <div style="margin-bottom: 0.5rem;">
+                <span style="font-size: 0.875rem; color: #6B7280;">
+                    <i class="bi bi-person-fill" style="margin-right: 0.25rem;"></i>Vendedor:
+                    <strong>{{ $produto->user?->name ?? '' }}</strong>
+                </span>
+            </div>
+            <p style="font-size: 0.875rem; color: #6B7280; flex-grow: 1; margin-bottom: 1rem;">
+                {{ Str::limit($produto->descricao, 100) }}
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                @if($produto->tamanho)
+                <span style="font-size: 0.875rem; color: #6B7280;">
+                    <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho: {{ $produto->tamanho }}
+                </span>
+                @endif
+                <span style="font-size: 1.25rem; font-weight: bold; color: #2563EB;">
+                    {{ number_format($produto->preco, 2) }}€
+                </span>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <!-- Botão de Favoritos -->
+                <button type="button"
+                    style="padding: 0.75rem; background-color: #F3F4F6; color: #374151; border: none; border-radius: 8px; transition: background-color 0.3s;">
+                    <i class="bi bi-heart"></i>
+                </button>
+
+                <!-- Botão de Comprar ou desabilitado caso o produto já tenha sido adquirido -->
+                @if($produto->disponivel)
+                <a href="{{ route('checkout', ['produto' => $produto->id]) }}"
+                    style="padding: 0.75rem; background-color: #34D399; color: #FFF; border: none; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s;">
+                    Comprar
+                </a>
+                @else
+                <button type="button"
+                    style="padding: 0.75rem; background-color: #9CA3AF; color: #FFF; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: not-allowed;"
+                    disabled>
+                    Vendido
+                </button>
+                @endif
+
+                <!-- Botões de administrador -->
+                @if(auth()->check() && auth()->user()->is_admin)
+                    <div style="display: flex; gap: 0.5rem; margin-left: auto;">
+                        <!-- Botão de Editar -->
+                        <a href="{{ route('produtos.edit', $produto) }}"
+                            style="padding: 0.75rem; background-color: #DBEAFE; color: #2563EB; border: none; border-radius: 8px; transition: background-color 0.3s; display: flex; align-items: center; text-decoration: none;"
+                            title="Editar Produto">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        
+                        <!-- Botão de Excluir -->
+                        <form action="{{ route('produtos.destroy', $produto) }}" method="POST" 
+                              onsubmit="return confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                style="padding: 0.75rem; background-color: #FEE2E2; color: #DC2626; border: none; border-radius: 8px; transition: background-color 0.3s; cursor: pointer;"
+                                title="Excluir Produto">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    @empty
+    <div style="grid-column: 1 / -1;">
+        <div style="background-color: #DBEAFE; text-align: center; padding: 2rem; border-radius: 16px;">
+            <i class="bi bi-info-circle" style="font-size: 2.5rem; color: #2563EB;"></i>
+            <h4 style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 1rem 0;">Nenhum produto encontrado</h4>
+            <p style="font-size: 1rem; color: #374151; margin-bottom: 1rem;">Tente ajustar os filtros ou pesquise por outro termo.</p>
+            <a href="{{ route('produtos.index') }}"
+                style="display: inline-flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid #2563EB; color: #2563EB; border-radius: 8px; text-decoration: none;">
+                <i class="bi bi-arrow-repeat" style="margin-right: 0.5rem;"></i>Ver todos os produtos
+            </a>
+        </div>
+    </div>
+    @endforelse
+</div>
+
         </div>
 
         <!-- Paginação -->

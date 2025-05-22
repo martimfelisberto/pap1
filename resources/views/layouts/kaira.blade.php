@@ -36,6 +36,12 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 </head>
 
 <body class="homepage">
+    
+@if(session('error'))
+    <div style="background-color: #FEE2E2; color: #B91C1C; padding: 1rem; border-radius: 8px; margin: 1rem 0; text-align: center;">
+        {{ session('error') }}
+    </div>
+@endif
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
@@ -163,52 +169,52 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             </symbol>
         </defs>
     </svg>
-    
-    <nav style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
-    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-        <!-- Logo e Título -->
-        <div style="display: flex; align-items: center;">
-            <a href="/" style="display: flex; align-items: center; text-decoration: none;">
-                <img src="{{ asset('kaira/images/logo.png') }}" alt="Reshopping" 
-                     style="width: 80px; height: auto; margin-right: 1rem;">
-                <h2 style="font-size: 1.75rem; font-weight: bold; color: #333; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
-                    Reshopping
-                </h2>
-            </a>
-        </div>
 
-        <!-- Links Centrais da Navbar -->
-        <div style="display: flex; gap: 1.5rem; align-items: center;">
-            <a href="/" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Home</a>
-            @foreach($categorias as $genero => $categoriasGenero)
+    <nav style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+        <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <!-- Logo e Título -->
+            <div style="display: flex; align-items: center;">
+                <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="{{ asset('kaira/images/logo.png') }}" alt="Reshopping"
+                        style="width: 80px; height: auto; margin-right: 1rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: bold; color: #333; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                        Reshopping
+                    </h2>
+                </a>
+            </div>
+
+            <!-- Links Centrais da Navbar -->
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <a href="/" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Home</a>
+                @foreach($categorias as $genero => $categoriasGenero)
                 <div style="position: relative;">
-                    <button onclick="toggleDropdown('dropdown{{ ucfirst($genero) }}')" 
-                            style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
+                    <button onclick="toggleDropdown('dropdown{{ ucfirst($genero) }}')"
+                        style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
                         {{ ucfirst($genero) }} <i class="bi bi-chevron-down" style="margin-left: 0.5rem;"></i>
                     </button>
-                    <ul id="dropdown{{ ucfirst($genero) }}" 
+                    <ul id="dropdown{{ ucfirst($genero) }}"
                         style="display: none; position: absolute; top: 2rem; left: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
                         @foreach($categoriasGenero as $categoria)
-                            <li style="margin: 0.5rem 0;">
-                                <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->id]) }}"
-                                    style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
-                                    {{ ucfirst($categoria->titulo) }}
-                                </a>
-                            </li>
+                        <li style="margin: 0.5rem 0;">
+                            <a href="{{ route('produtos.index', ['genero' => $genero, 'categoria' => $categoria->id]) }}"
+                                style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500;">
+                                {{ ucfirst($categoria->titulo) }}
+                            </a>
+                        </li>
                         @endforeach
                     </ul>
                 </div>
-            @endforeach
-            <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contactos</a>
+                @endforeach
+                <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contactos</a>
 
-            @if(auth()->check() && auth()->user()->is_admin())
+                @if(auth()->check() && auth()->user()->is_admin())
 
                 <div style="position: relative;">
-                    <button onclick="toggleDropdown('dropdownadminCategorias')" 
-                            style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
+                    <button onclick="toggleDropdown('dropdownadminCategorias')"
+                        style="background: none; border: none; color: #374151; font-size: 1rem; font-weight: 500; cursor: pointer;">
                         <i class="bi bi-tags" style="margin-right: 0.5rem;"></i>Categorias
                     </button>
-                    <ul id="dropdownadminCategorias" 
+                    <ul id="dropdownadminCategorias"
                         style="display: none; position: absolute; top: 2rem; left: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
                         <li style="margin: 0.5rem 0;">
                             <a href="{{ route('categorias.create') }}"
@@ -224,227 +230,230 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                         </li>
                     </ul>
                 </div>
-            @endif
-        </div>
+                @endif
+            </div>
 
-        <!-- Seção de Autenticação, Busca e Carrinho -->
-        <div style="display: flex; gap: 1rem; align-items: center;">
-            @guest
+            <!-- Seção de Autenticação, Busca e Carrinho -->
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                @guest
                 <div style="position: relative;">
-                    <button onclick="toggleDropdown('dropdownauthOptions')" 
-                            style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
+                    <button onclick="toggleDropdown('dropdownauthOptions')"
+                        style="padding: 0.5rem 1rem; background-color: rgb(36, 104, 250); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
                         <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>Entra ou Regista te já
                     </button>
-                    <ul id="dropdownauthOptions" 
+                    <ul id="dropdownauthOptions"
                         style="display: none; position: absolute; top: 2.5rem; right: 0; background: #FFF; border-radius: 8px; padding: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; z-index: 10;">
                         <li style="margin: 0.5rem 0;">
-                            <a href="{{ route('login') }}" 
-                               style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
+                            <a href="{{ route('login') }}"
+                                style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
                                 <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>Entrar
                             </a>
                         </li>
                         <li style="margin: 0.5rem 0;">
-                            <a href="{{ route('register') }}" 
-                               style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
+                            <a href="{{ route('register') }}"
+                                style="color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 500; display: flex; align-items: center;">
                                 <i class="bi bi-person-plus" style="margin-right: 0.5rem;"></i>Registrar
                             </a>
                         </li>
                     </ul>
                 </div>
-            @else
-                <a href="{{ route('produtos.create') }}" 
-                   style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; text-decoration: none; cursor: pointer;">
+                @else
+                <a href="{{ route('produtos.create') }}"
+                    style="padding: 0.5rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; border: none; border-radius: 8px; font-size: 0.875rem; text-decoration: none; cursor: pointer;">
                     <i class="bi bi-plus-lg" style="margin-right: 0.5rem;"></i>Anunciar um Produto
                 </a>
-                 <!-- User Profile Dropdown -->
-                 <div class="dropdown">
-                                <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    @if(Auth::user()->profile_photo)
-                                    <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}"
-                                        alt="Profile"
-                                        class="rounded-circle me-2"
-                                        style="width: 32px; height: 32px; object-fit: cover;">
-                                    @else
-                                    <i class="bi bi-person-circle me-2 fs-5"></i>
-                                    @endif
-                                    <span>{{ Auth::user()->name }}</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
-                                            <i class="bi bi-person me-2"></i>
-                                            Perfil
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('produtos.meus') }}">
-                                            <i class="bi bi-bag me-2"></i>
-                                            Meus Produtos
-                                        </a>
-                                    </li>
-                                    @if(auth()->user()->is_admin())
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center" href="{{ route('dashboard') }}">
-                                            <i class="bi bi-speedometer2 me-2"></i>
-                                            Painel Admin
-                                        </a>
-                                    </li>
-                                    @endif
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <form method="POST" action="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
-                                            @csrf
-                                            <button type="submit" class="btn btn-link text-danger p-0 d-flex align-items-center w-100">
-                                                <i class="bi bi-box-arrow-right me-2"></i>
-                                                Sair
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                            @endguest
-            <!-- Search Icon -->
-            <div>
-                <a href="#search" style="color: #374151; text-decoration: none;">
-                    <i class="bi bi-search" style="font-size: 1.25rem;"></i>
-                </a>
-            </div>
 
+                <!-- Search Icon -->
+                <div>
+                    <form action="{{ route('produtos.index') }}" method="GET" style="display: flex; align-items: center;">
+                        <input type="text" name="search" placeholder="Pesquisar produtos..."
+                            value="{{ request('search') }}"
+                            style="padding: 0.5rem; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 0.875rem; width: 200px;">
+                        <button type="submit" style="background: none; border: none; color: #374151; cursor: pointer;">
+                            <i class="bi bi-search" style="font-size: 1.25rem;"></i>
+                        </button>
+                    </form>
+                </div>
+
+                
+                <!-- User Profile Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        @if(Auth::user()->profile_photo)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}"
+                            alt="Profile"
+                            class="rounded-circle me-2"
+                            style="width: 32px; height: 32px; object-fit: cover;">
+                        @else
+                        <i class="bi bi-person-circle me-2 fs-5"></i>
+                        @endif
+                        <span>{{ Auth::user()->name }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('profile.edit') }}">
+                                <i class="bi bi-person me-2"></i>
+                                Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('produtos.myproducts') }}">
+                                <i class="bi bi-bag me-2"></i>
+                                Meus Produtos
+                            </a>
+                        </li>
+                        @if(auth()->user()->is_admin())
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Painel Admin
+                            </a>
+                        </li>
+                        @endif
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}" class="dropdown-item d-flex align-items-center">
+                                @csrf
+                                <button type="submit" class="btn btn-link text-danger p-0 d-flex align-items-center w-100">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    Sair
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                @endguest
+            </div>
             <!-- Cart Icon -->
             <div>
-                <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
-                    <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
-                    <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
-                </a>
-            </div>
+                    <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
+                        <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
+                        <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
+                    </a>
+                </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Faz com que os dropdowns se escondamao clicar fora deles -->
-<script>
-    
+    <!-- Faz com que os dropdowns se escondamao clicar fora deles -->
+    <script>
+        // Fecha dropdowns quando clicar fora
+        document.addEventListener('click', function(event) {
+            const isDropdownButton = event.target.closest('[onclick^="toggleDropdown"]');
+            const isDropdownContent = event.target.closest('[id^="dropdown"]');
 
-    // Fecha dropdowns quando clicar fora
-    document.addEventListener('click', function(event) {
-        const isDropdownButton = event.target.closest('[onclick^="toggleDropdown"]');
-        const isDropdownContent = event.target.closest('[id^="dropdown"]');
-        
-        if (!isDropdownButton && !isDropdownContent) {
-            const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
-            allDropdowns.forEach(dropdown => {
-                dropdown.style.display = "none";
-            });
+            if (!isDropdownButton && !isDropdownContent) {
+                const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
+                allDropdowns.forEach(dropdown => {
+                    dropdown.style.display = "none";
+                });
+            }
+        });
+
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
         }
-    });
-
-   
-  function toggleDropdown(id) {
-      var dropdown = document.getElementById(id);
-      dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
-  }
-
-
-</script>
+    </script>
 
 
     {{ $slot }}
 
-   
-  <footer id="footer" style="background-color: #FFF; margin-top: 2rem;">
-    <!-- Primeira Parte – Conteúdo do Footer -->
-    <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-        <!-- Bloco 1: Introdução -->
-        <div style="flex: 1 1 250px;">
-          <div style="margin-bottom: 1rem;">
-            <a href="#">
-              <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
-            </a>
-          </div>
-          <p style="font-size: 0.875rem; color: #666; line-height: 1.5;">
-            Na Reshopping.pt, acreditamos que a moda pode ser sustentável, acessível e solidária.
-            Ao escolher roupas em segunda mão, não só encontra peças únicas e cheias de história,
-            como também contribui para um planeta mais verde, reduzindo o desperdício e promovendo o consumo consciente.
-          </p>
-          <div style="margin-top: 1rem;">
-            <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
-              <li>
-                <a href="#" style="color: #666; text-decoration: none;">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#instagram"></use>
-                  </svg>
-                </a>
-              </li>
-              <!-- Insira outros ícones sociais, se necessário -->
-            </ul>
-          </div>
+
+    <footer id="footer" style="background-color: #FFF; margin-top: 2rem;">
+        <!-- Primeira Parte – Conteúdo do Footer -->
+        <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+                <!-- Bloco 1: Introdução -->
+                <div style="flex: 1 1 250px;">
+                    <div style="margin-bottom: 1rem;">
+                        <a href="#">
+                            <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
+                        </a>
+                    </div>
+                    <p style="font-size: 0.875rem; color: #666; line-height: 1.5;">
+                        Na Reshopping.pt, acreditamos que a moda pode ser sustentável, acessível e solidária.
+                        Ao escolher roupas em segunda mão, não só encontra peças únicas e cheias de história,
+                        como também contribui para um planeta mais verde, reduzindo o desperdício e promovendo o consumo consciente.
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
+                            <li>
+                                <a href="#" style="color: #666; text-decoration: none;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24">
+                                        <use xlink:href="#instagram"></use>
+                                    </svg>
+                                </a>
+                            </li>
+                            <!-- Insira outros ícones sociais, se necessário -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Bloco 2: Atalhos -->
+                <div style="flex: 1 1 250px;">
+                    <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
+                        </li>
+
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bloco 3: Ajuda & Informações -->
+                <div style="flex: 1 1 250px;">
+                    <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
+                    <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bloco 4: Contacte-nos -->
+                <div style="flex: 1 1 250px;">
+                    <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Contacte-nos</h5>
+                    <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">
+                        <a href="mailto:ajuda@reshopping.pt" style="color: rgb(4, 23, 85); text-decoration: none;">ajuda@reshopping.pt</a>
+                    </p>
+                    <p style="font-size: 0.875rem;">
+                        <a href="tel:+351965221732" style="color: rgb(4, 23, 85); text-decoration: none;">+351 965 221 732</a>
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- Bloco 2: Atalhos -->
-        <div style="flex: 1 1 250px;">
-          <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
-            <li style="margin-bottom: 0.5rem;">
-              <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
-            </li>
-          
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-            </li>
-          </ul>
+        <!-- Segunda Parte – Rodapé Inferior -->
+        <div style="padding: 1rem; border-top: 1px solid #E5E7EB; background-color: #FFF;">
+            <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+                <!-- Opções de Pagamento -->
+                <div style="flex: 1 1 300px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #666;">
+                    <span>Payment Option:</span>
+                    <img src="{{ asset('kaira/images/visa-card.png') }}" alt="Visa" style="height: 24px;">
+                    <img src="{{ asset('kaira/images/paypal-card.png') }}" alt="Paypal" style="height: 24px;">
+                    <img src="{{ asset('kaira/images/master-card.png') }}" alt="MasterCard" style="height: 24px;">
+                </div>
+                <!-- Copyright -->
+                <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
+                    <p style="margin: 0;">
+                        © Copyright 2022 Kaira. All rights reserved.
+                        Design by
+                        <a href="https://templatesjungle.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">TemplatesJungle</a>
+                        Distribution By
+                        <a href="https://themewagon.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">ThemeWagon</a>
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <!-- Bloco 3: Ajuda & Informações -->
-        <div style="flex: 1 1 250px;">
-          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
-          <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
-            <li style="margin-bottom: 0.5rem;">
-              <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Bloco 4: Contacte-nos -->
-        <div style="flex: 1 1 250px;">
-          <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Contacte-nos</h5>
-          <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">
-            <a href="mailto:ajuda@reshopping.pt" style="color: rgb(4, 23, 85); text-decoration: none;">ajuda@reshopping.pt</a>
-          </p>
-          <p style="font-size: 0.875rem;">
-            <a href="tel:+351965221732" style="color: rgb(4, 23, 85); text-decoration: none;">+351 965 221 732</a>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Segunda Parte – Rodapé Inferior -->
-    <div style="padding: 1rem; border-top: 1px solid #E5E7EB; background-color: #FFF;">
-      <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-        <!-- Opções de Pagamento -->
-        <div style="flex: 1 1 300px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #666;">
-          <span>Payment Option:</span>
-          <img src="{{ asset('kaira/images/visa-card.png') }}" alt="Visa" style="height: 24px;">
-          <img src="{{ asset('kaira/images/paypal-card.png') }}" alt="Paypal" style="height: 24px;">
-          <img src="{{ asset('kaira/images/master-card.png') }}" alt="MasterCard" style="height: 24px;">
-        </div>
-        <!-- Copyright -->
-        <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
-          <p style="margin: 0;">
-            © Copyright 2022 Kaira. All rights reserved.
-            Design by 
-            <a href="https://templatesjungle.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">TemplatesJungle</a>
-            Distribution By 
-            <a href="https://themewagon.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">ThemeWagon</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
     <!-- Scripts -->
     <script src="{{ asset('kaira/js/jquery.min.js') }}"></script>
     <script src="{{ asset('kaira/js/plugins.js') }}"></script>
@@ -454,7 +463,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
     </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="{{ asset('kaira/js/script.min.js') }}"></script>
-    
+
 </body>
 
 </html>

@@ -14,6 +14,7 @@ use App\Http\Controllers\HomeController;
 use Database\Seeders\AdminSeeder;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminMiddleware;
+use App\Http\Controllers\CheckoutController;
 
 // Rota principal da aplicação
 Route::get('/', [ProdutoController::class, 'welcome'])->name('welcome');
@@ -34,9 +35,7 @@ Route::prefix('produtos')->name('produtos.')->group(function () {
         Route::get('/{produto}/editar', [ProdutoController::class, 'edit'])->name('edit'); // Página para editar um produto
         Route::put('/{produto}', [ProdutoController::class, 'update'])->name('update'); // Atualiza o produto
         Route::delete('/{produto}', [ProdutoController::class, 'destroy'])->name('destroy'); // Apaga o produto
-        Route::post('/{produto}/favorite', [ProdutoController::class, 'toggleFavorite'])->name('favorite'); // Adiciona ou remove o produto dos favoritos
-        Route::get('/meus-favoritos', [ProdutoController::class, 'favorites'])->name('favorites'); // Lista de produtos favoritos do utilizador
-    });
+      });
 });
 
 // Grupo de rotas para o carrinho (acessíveis apenas a utilizadores autenticados)
@@ -60,7 +59,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show'); // Mostra o perfil de um utilizador
 
     // Outras rotas do perfil
-    Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites'); // Lista dos produtos favoritos do utilizador
     Route::get('/profile/produtos', [ProfileController::class, 'produtos'])->name('profile.products'); // Lista dos produtos criados pelo utilizador
 });
 
@@ -109,6 +107,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/produtos/{produto}', [ProdutoController::class, 'show'])->name('produtos.show'); // Mostra os detalhes de um produto
     Route::put('/produtos/{produto}', [ProdutoController::class, 'update'])->name('produtos.update'); // Atualiza o produto
  });
+
+Route::get('/checkout/{produto}', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/{produto}', [CheckoutController::class, 'process'])->name('checkout.process');
+
+Route::get('/meus-produtos', [ProdutoController::class, 'myProducts'])->name('produtos.myproducts');
 
 
 // Inclusão das rotas de autenticação

@@ -73,15 +73,19 @@
 
                         <!-- Categoria -->
                         <div style="margin-bottom: 1.5rem;">
-                            <label for="categoria" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Categoria</label>
-                            <select id="categoria" name="categoria" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                            <label for="categoria_id" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Categoria</label>
+                            <select id="categoria_id" name="categoria_id" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                                <option value="">Selecione uma categoria</option>
                                 @foreach($categorias as $categoria)
-                                <option value="{{ $categoria->titulo }}" {{ old('categoria') == $categoria->titulo ? 'selected' : '' }}>
-                                    {{ $categoria->titulo }}
-                                </option>
+                                    <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
+                                        {{ $categoria->titulo }}
+                                    </option>
                                 @endforeach
                             </select>
+                            @error('categoria_id')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Tamanho -->
@@ -201,17 +205,21 @@
                             @enderror
                         </div>
 
-                        <!-- Upload da Imagem -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label for="imagem" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">
-                                Foto do Produto <span style="color: #e63946;">*</span>
-                            </label>
-                            <input type="file" name="imagem" id="imagem" accept="image/*" required value="{{ old('imagem') }}" style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                            @error('imagem')
-                            <div style="color: #d9534f; font-size: 0.875rem; margin-top: 0.5rem;">{{ $message }}</div>
-                            @enderror
+                      
+                <!-- Imagem -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="imagem" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Imagem</label>
+                    <input type="file" id="imagem" name="imagem"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                    <!-- Preview da imagem carregada -->
+                    <div id="preview-container" style="display: none; margin-top: 0.5rem;">
+                        <img id="preview" src="" alt="Preview da Imagem"
+                            style="width: 100px; height: auto; border-radius: 8px;">
+                    </div>
+                </div>
 
-                        </div>
+
+                        
                         <!-- Medidas (opcional) -->
                         <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
                             <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">

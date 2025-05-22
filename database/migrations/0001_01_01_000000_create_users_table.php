@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->rememberToken();
             $table->timestamps();
             $table->boolean('is_admin')->default(false);
+            $table->foreignId('user_id')->nullable()->index();
         
         });
 
@@ -46,6 +47,7 @@ return new class () extends Migration {
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
+
 
     }
 };

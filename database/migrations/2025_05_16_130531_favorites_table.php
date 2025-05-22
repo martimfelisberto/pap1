@@ -10,15 +10,15 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                  ->constrained()
-                  ->onDelete('cascade');
-            $table->foreignId('produto_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+            $table->unsignedBigInteger('user_id'); // Relaciona com o usuário
+            $table->unsignedBigInteger('produto_id'); // Relaciona com o produto
             $table->timestamps();
-
-            // Add unique constraint to prevent duplicate favorites
+    
+            // Chaves estrangeiras
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('produto_id')->references('id')->on('produtos')->onDelete('cascade');
+    
+            // Evitar duplicados
             $table->unique(['user_id', 'produto_id']);
         });
     }

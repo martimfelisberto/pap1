@@ -49,6 +49,8 @@ return new class extends Migration {
              $table->json('cores');                // 'cores' será um JSON
              $table->string('imagem')->nullable();
              $table->text('medidas')->nullable();
+             $table->boolean('disponivel')->default(true); // Produto disponível por padrão
+   
  
              // Índices para melhor performance
              $table->index('estado');
@@ -61,7 +63,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-
         Schema::dropIfExists('produtos');
         
     }

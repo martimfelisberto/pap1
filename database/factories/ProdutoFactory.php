@@ -37,12 +37,15 @@ class ProdutoFactory extends Factory
                 $this->faker->numberBetween(40, 60),
                 $this->faker->numberBetween(50, 70)
             ),
+
+            'disponivel' => $this->faker->boolean(80),
             'categoria_id' => $categoria->id,
             'genero' => $categoria->genero,
             'user_id' => User::factory(),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
             'updated_at' => function (array $attributes) {
                 return $this->faker->dateTimeBetween($attributes['created_at'], 'now');
+               
             },
             
         ];

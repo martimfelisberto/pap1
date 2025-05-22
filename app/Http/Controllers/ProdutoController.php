@@ -38,91 +38,61 @@ class ProdutoController extends Controller
 
     public function create()
     {
-        $categorias = Categoria::orderBy('titulo')->get();
+        // Verifica se existem categorias disponíveis
+        $categorias = Categoria::count();
+
+        if ($categorias === 0) {
+            // Redireciona para a página inicial com uma mensagem de erro
+            return redirect('/')->with('error', 'Não é possível anunciar um produto porque não existem categorias disponíveis.');
+        }
+
+        // Caso existam categorias, exibe o formulário de criação
         return view('produtos.create', compact('categorias'));
     }
 
     public function store(Request $request)
     {
-        // Log para debug
-        Log::info('Recebendo requisição para criar produto');
-        
-        $validated = $request->validate([
+        $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',
-            'marca' => 'required|string',
             'preco' => 'required|numeric|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'marca' => 'required|string',
             'tamanho' => 'required|string',
-            'tipo_produto' => 'required|string|in:Sapatilhas,Roupas',
-            'categoria' => 'required|exists:categorias,id',
+            'estado' => 'required|string|in:novo,semi-novo,usado',
+            'imagem' => 'required|image|max:2048',
+            'cores' => 'required|array|min:1',
+            'tamanhosapatilhas' => 'nullable|string',
+            'tipo_produto' => 'required|string',
             'genero' => 'required|string',
-            'estado' => 'required|string|in:novo,usado,semi-novo',
-            'cores' => 'required|array',
-            'imagem' => 'required|image|max:2048', // Alterado para obrigatório
-            // Condicionais
-            'tamanhosapatilhas' => 'nullable|required_if:tipo_produto,Sapatilhas|string',
-            'tipo_sola' => 'nullable|string',
-            'medidas' => 'nullable|string',
         ]);
-        
-        try {
-            $produto = new Produto();
-            $produto->nome = $request->nome;
-            $produto->descricao = $request->descricao;
-            $produto->marca = $request->marca;
-            $produto->preco = $request->preco;
-            $produto->tamanho = $request->tamanho;
-            $produto->tipo_produto = $request->tipo_produto;
-            $produto->categoria_id = $request->categoria;
-            $produto->genero = $request->genero;
-            $produto->estado = $request->estado;
-            $produto->user_id = Auth::id();
-            
-            // Processamento de campos condicionais
-            if ($request->filled('tamanhosapatilhas')) {
-                $produto->tamanhosapatilhas = $request->tamanhosapatilhas;
-            }
-            
-            if ($request->filled('tipo_sola')) {
-                $produto->tipo_sola = $request->tipo_sola;
-            }
-            
-            if ($request->filled('medidas')) {
-                $produto->medidas = $request->medidas;
-            }
-            
-            // Converter cores de array para JSON
-            if ($request->has('cores')) {
-                $produto->cores = json_encode($request->cores);
-            }
-            
-            // Processamento da imagem
-            if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-                $imagePath = 'produtos'; // Pasta de destino
-                $imageName = time() . '_' . $request->file('imagem')->getClientOriginalName();
-                
-                // Armazenar imagem
-                $path = $request->file('imagem')->storeAs($imagePath, $imageName, 'public');
-                $produto->imagem = $imageName;
-                Log::info('Imagem salva: ' . $path);
-            } else {
-                Log::error('Problema com a imagem do produto');
-                return back()->withInput()->withErrors(['imagem' => 'A imagem é obrigatória e deve ser válida.']);
-            }
-            
-            // Salvar produto
-            $produto->save();
-            Log::info('Produto salvo com sucesso. ID: ' . $produto->id);
-            
-            return redirect()->route('produtos.index')
-                ->with('success', 'Produto anunciado com sucesso!');
-        } catch (\Exception $e) {
-            Log::error('Erro ao salvar produto: ' . $e->getMessage());
-            return back()->withInput()->withErrors(['error' => 'Ocorreu um erro: ' . $e->getMessage()]);
+
+        // Salvar a imagem
+        $path = null;
+        if ($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('produtos', 'public');
         }
 
+        // Criar o produto
+        Produto::create([
+            'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'preco' => $request->preco,
+            'categoria_id' => $request->categoria_id,
+            'marca' => $request->marca,
+            'tamanho' => $request->tamanho,
+            'estado' => $request->estado,
+            'imagem' => $path,
+            'cores' => json_encode($request->cores),
+            'tamanhosapatilhas' => $request->tamanhosapatilhas ?? null,
+            'tipo_produto' => $request->tipo_produto,
+            'genero' => $request->genero,
+            'disponivel' => true, // Certifique-se de definir como disponível
+   
+            'user_id' => Auth::id(), // Adicione o ID do usuário autenticado
+        ]);
 
-
+        return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
     }
     public function show(Produto $produto)
     {
@@ -168,6 +138,7 @@ class ProdutoController extends Controller
         'tamanho' => 'nullable|string|max:255',
         'estado' => 'nullable|string|in:Novo,Semi-novo,Usado',
         'imagem' => 'nullable|image|max:2048',
+        
     ]);
 
     try {
@@ -218,7 +189,7 @@ class ProdutoController extends Controller
             ->latest()
             ->paginate(12);
 
-        return view('produtos.meus', compact('produtos'));
+        return view('produtos.myproducts', compact('produtos'));
     }
     public function welcome()
     {
@@ -230,4 +201,12 @@ class ProdutoController extends Controller
 
         return view('welcome', compact('produtosDestaque'));
     }
+    public function myProducts()
+{
+    // Obtenha os produtos do usuário autenticado
+    $produtos = Produto::where('user_id', Auth::id())->get();
+
+    // Retorne a view com os produtos
+    return view('produtos.myproducts', compact('produtos'));
+}
 }
