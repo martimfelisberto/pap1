@@ -16,7 +16,7 @@ class ProdutoController extends Controller
     
     public function index(Request $request)
     {
-        $query = Produto::query()->with('categoria');
+        $query = Produto::query()->where('disponivel', true);
 
         // Apply filters if they exist
         if ($request->filled('genero')) {
@@ -29,8 +29,8 @@ class ProdutoController extends Controller
             $query->where('estado', $request->estado);
         }
 
-        $produtos = $query->latest()->paginate(12);
-        $categorias = Categoria::orderBy('titulo')->get();
+        $produtos = $query->paginate(12);
+        $categorias = Categoria::all();
 
         return view('produtos.index', compact('produtos', 'categorias'));
         
@@ -39,12 +39,9 @@ class ProdutoController extends Controller
     public function create()
     {
         // Verifica se existem categorias disponíveis
-        $categorias = Categoria::count();
+        $categorias = Categoria::all();
 
-        if ($categorias === 0) {
-            // Redireciona para a página inicial com uma mensagem de erro
-            return redirect('/')->with('error', 'Não é possível anunciar um produto porque não existem categorias disponíveis.');
-        }
+        
 
         // Caso existam categorias, exibe o formulário de criação
         return view('produtos.create', compact('categorias'));

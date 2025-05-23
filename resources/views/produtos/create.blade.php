@@ -50,12 +50,12 @@
                         </select>
                     </div>
 
-                    <!-- Gênero e Categoria -->
+                    <!-- Género e Categoria -->
                     <div style="margin-bottom: 1rem;">
-                        <!-- Gênero -->
+                        <!-- Género -->
                         <div style="margin-bottom: 1rem;">
                             <label for="genero" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Gênero <span style="color: #e63946;">*</span>
+                                Género <span style="color: #e63946;">*</span>
                             </label>
                             <select id="genero" name="genero" required onchange="filterCategorias()"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
@@ -88,39 +88,36 @@
                             @enderror
                         </div>
 
+                        <!-- Tipo de Produto -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="tipo_produto" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Produto</label>
+                            <select id="tipo_produto" name="tipo_produto" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
+                                <option value="">Selecione o tipo de produto</option>
+                                <option value="Sapatilhas" {{ old('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
+                                <option value="Roupas" {{ old('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
+                            </select>
+                        </div>
+
                         <!-- Tamanho -->
-                        <div style="margin-bottom: 1rem;">
-                            <label for="tamanho" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Tamanho do produto<span style="color: #e63946;">*</span>
-                            </label>
-                            <select id="tamanho" name="tamanho" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                               
+                        <div id="tamanhoContainer" style="margin-bottom: 1.5rem;">
+                            <label for="tamanho" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Tamanho</label>
+                            <select id="tamanho" name="tamanho"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                                <option value="nenhum" {{ old('tamanho') == 'nenhum' ? 'selected' : '' }}>Nenhum</option>
                                 <option value="XS" {{ old('tamanho') == 'XS' ? 'selected' : '' }}>XS</option>
                                 <option value="S" {{ old('tamanho') == 'S' ? 'selected' : '' }}>S</option>
                                 <option value="M" {{ old('tamanho') == 'M' ? 'selected' : '' }}>M</option>
                                 <option value="L" {{ old('tamanho') == 'L' ? 'selected' : '' }}>L</option>
                                 <option value="XL" {{ old('tamanho') == 'XL' ? 'selected' : '' }}>XL</option>
-                                <option value="2XL" {{ old('tamanho') == '2XL' ? 'selected' : '' }}>2XL</option>
-                                <option value="3XL" {{ old('tamanho') == '3XL' ? 'selected' : '' }}>3XL</option>
                             </select>
-                            @error('tamanho')
-                            <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
-                            @enderror
                         </div>
 
-
-
-                        <!-- Tamanho se for sapatilhas-->
-
-                        <div style="margin-bottom: 1rem;">
-                            <label for="tamanhosapatilhas" style="display: block; font-size: 1rem; color:#333; margin-bottom: 0.5rem;">
-                                Tamanho das sapatilhas
-                            </label>
-                            <select id="tamanhosapatilhas" name="tamanhosapatilhas" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                              
-                                <option value="nenhum" {{ old('tamanhosapatilhas') == 'nenhum' ? 'selected' : '' }}>Nenhum</option>
+                        <!-- Tamanho das Sapatilhas -->
+                        <div id="tamanhosapatilhasContainer" style="margin-bottom: 1.5rem; display: none;">
+                            <label for="tamanhosapatilhas" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Tamanho das Sapatilhas</label>
+                            <select id="tamanhosapatilhas" name="tamanhosapatilhas"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
                                 <option value="35" {{ old('tamanhosapatilhas') == '35' ? 'selected' : '' }}>35</option>
                                 <option value="36" {{ old('tamanhosapatilhas') == '36' ? 'selected' : '' }}>36</option>
                                 <option value="37" {{ old('tamanhosapatilhas') == '37' ? 'selected' : '' }}>37</option>
@@ -133,34 +130,19 @@
                                 <option value="44" {{ old('tamanhosapatilhas') == '44' ? 'selected' : '' }}>44</option>
                                 <option value="45" {{ old('tamanhosapatilhas') == '45' ? 'selected' : '' }}>45</option>
                                 <option value="46" {{ old('tamanhosapatilhas') == '46' ? 'selected' : '' }}>46</option>
-
-                            </select>
+                             </select>
                         </div>
 
-
                         <!-- Tipo de Sola -->
-                        <div style="margin-bottom: 1.5rem;">
+                        <div id="tipoSolaContainer" style="margin-bottom: 1.5rem; display: none;">
                             <label for="tipo_sola" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Sola</label>
                             <select id="tipo_sola" name="tipo_sola"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                              
                                 @foreach(['Nenhum', 'Borracha', 'EVA', 'PU', 'TPU', 'Phylon', 'Espuma', 'Outros'] as $tipo)
                                 <option value="{{ $tipo }}" {{ old('tipo_sola') == $tipo ? 'selected' : '' }}>{{ $tipo }}</option>
                                 @endforeach
                             </select>
                         </div>
-
-                        <!-- Tipo de Produto -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label for="tipo_produto" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Tipo de Produto</label>
-                            <select id="tipo_produto" name="tipo_produto" required
-                                style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                            
-                                <option value="Sapatilhas" {{ old('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
-                                <option value="Roupas" {{ old('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
-                            </select>
-                        </div>
-
 
                         <!-- Estado do Produto -->
                         <div style="margin-bottom: 1.5rem;">
@@ -332,4 +314,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+</script>
+
+<!-- Script para Gerenciar os Campos -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tipoProdutoSelect = document.getElementById('tipo_produto');
+        const tamanhoContainer = document.getElementById('tamanhoContainer');
+        const tamanhosapatilhasContainer = document.getElementById('tamanhosapatilhasContainer');
+        const tipoSolaContainer = document.getElementById('tipoSolaContainer');
+
+        // Função para alternar a exibição dos campos
+        function toggleFields() {
+            if (tipoProdutoSelect.value === 'Sapatilhas') {
+                tamanhoContainer.style.display = 'none';
+                tamanhosapatilhasContainer.style.display = 'block';
+                tipoSolaContainer.style.display = 'block';
+            } else if (tipoProdutoSelect.value === 'Roupas') {
+                tamanhoContainer.style.display = 'block';
+                tamanhosapatilhasContainer.style.display = 'none';
+                tipoSolaContainer.style.display = 'none';
+            } else {
+                tamanhoContainer.style.display = 'none';
+                tamanhosapatilhasContainer.style.display = 'none';
+                tipoSolaContainer.style.display = 'none';
+            }
+        }
+
+        // Verifica o valor inicial ao carregar a página
+        toggleFields();
+
+        // Adiciona um evento para monitorar alterações no campo tipo_produto
+        tipoProdutoSelect.addEventListener('change', toggleFields);
+    });
 </script>

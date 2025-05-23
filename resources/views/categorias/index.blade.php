@@ -34,7 +34,7 @@
             <thead style="background-color: #F3F4F6; text-align: left;">
               <tr>
                 <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;">Título</th>
-                <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;">Gênero</th>
+                <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;">Género</th>
                 <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;"></th>
                 <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;">Produtos</th>
                 <th style="padding: 0.75rem; border-bottom: 2px solid #E5E7EB;">Ações</th>

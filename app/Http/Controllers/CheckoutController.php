@@ -10,11 +10,15 @@ class CheckoutController extends Controller
 {
     public function index(Produto $produto)
     {
-        return view('checkout.index', compact('produto'));
-        
+        $carrinho = session()->get('carrinho', []);
+        $total = array_reduce($carrinho, function ($carry, $item) {
+            return $carry + ($item['preco'] * $item['quantidade']);
+        }, 0);
+
+        return view('checkout.index', compact('carrinho', 'total'));
     }
 
-    public function process(Request $request, Produto $produto)
+    public function process(Request $request)
     {
         $request->validate([
             'nome_completo' => 'required|string|max:255',
@@ -26,24 +30,31 @@ class CheckoutController extends Controller
             'metodo_pagamento' => 'required|string|max:50',
         ]);
 
-        // Salvar os dados do checkout
-        \App\Models\Checkout::create([
-            'produto_id' => $produto->id,
-            'nome_completo' => $request->nome_completo,
-            'morada' => $request->morada,
-            'localidade' => $request->localidade,
-            'cidade' => $request->cidade,
-            'codigo_postal' => $request->codigo_postal,
-            'telefone' => $request->telefone,
-            'pais' => 'Portugal',
-            'email' => $request->email ?? 'sem-email@example.com',
-            'metodo_pagamento' => $request->metodo_pagamento,
-            'preco' => $produto->preco,
-            'user_id' => Auth::id(),
-        ]);
+        $carrinho = session()->get('carrinho', []);
 
-        // Marcar o produto como indisponível
-        $produto->update(['disponivel' => false]);
+        if (empty($carrinho)) {
+            return redirect()->route('carrinho.index')->with('error', 'O carrinho está vazio.');
+        }
+
+        foreach ($carrinho as $produtoId => $item) {
+            \App\Models\Checkout::create([
+                'produto_id' => $produtoId,
+                'nome_completo' => $request->input('nome_completo'),
+                'morada' => $request->input('morada'),
+                'localidade' => $request->input('localidade'),
+                'cidade' => $request->input('cidade'),
+                'codigo_postal' => $request->input('codigo_postal'),
+                'telefone' => $request->input('telefone'),
+                'pais' => 'Portugal', // Ajuste conforme necessário
+                'email' => 'sem-email@example.com', // Ajuste conforme necessário
+                'metodo_pagamento' => $request->input('metodo_pagamento'),
+                'preco' => $item['preco'] * $item['quantidade'],
+                'user_id' => Auth::id(),
+            ]);
+        }
+
+        // Limpa o carrinho após a compra
+        session()->forget('carrinho');
 
         return redirect()->route('produtos.index')->with('success', 'Compra realizada com sucesso!');
     }

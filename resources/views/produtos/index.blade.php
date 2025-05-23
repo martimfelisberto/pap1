@@ -51,9 +51,9 @@
                             @endforeach
                         </select>
                     </div>
-                    <!-- Gênero -->
+                    <!-- Género -->
                     <div>
-                        <label style="font-size: 0.875rem; color: #333;">Gênero</label>
+                        <label style="font-size: 0.875rem; color: #333;">Género</label>
                         <select name="genero"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
                             <option value="">Todos os géneros</option>
@@ -236,14 +236,32 @@
                 {{ Str::limit($produto->descricao, 100) }}
             </p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                @if($produto->tamanho)
-                <span style="font-size: 0.875rem; color: #6B7280;">
-                    <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho: {{ $produto->tamanho }}
-                </span>
+                <!-- Exibição Condicional do Tamanho -->
+                @if($produto->tipo_produto === 'Sapatilhas' && $produto->tamanhosapatilhas)
+                    <span style="font-size: 0.875rem; color: #6B7280;">
+                        <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho das Sapatilhas: {{ $produto->tamanhosapatilhas }}
+                    </span>
+                @elseif($produto->tipo_produto === 'Roupas' && $produto->tamanho)
+                    <span style="font-size: 0.875rem; color: #6B7280;">
+                        <i class="bi bi-rulers" style="margin-right: 0.25rem;"></i>Tamanho: {{ $produto->tamanho }}
+                    </span>
                 @endif
-                <span style="font-size: 1.25rem; font-weight: bold; color: #2563EB;">
-                    {{ number_format($produto->preco, 2) }}€
-                </span>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                    <!-- Botão de Adicionar ao Carrinho -->
+                    <form action="{{ route('carrinho.adicionar') }}" method="POST">
+    @csrf
+    <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+    <button type="submit" style="padding: 0.5rem 1rem; background-color: #DBEAFE; color: #2563EB; border: none; border-radius: 6px; font-size: 0.875rem; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none;" class="btn btn-primary">
+        Adicionar
+    </button>
+</form>
+
+                    <!-- Preço -->
+                    <span style="font-size: 1.25rem; font-weight: bold; color: #2563EB;">
+                        {{ number_format($produto->preco, 2) }}€
+                    </span>
+                </div>
             </div>
             <div style="display: flex; gap: 0.5rem;">
                 <!-- Botão de Favoritos -->
@@ -252,19 +270,7 @@
                     <i class="bi bi-heart"></i>
                 </button>
 
-                <!-- Botão de Comprar ou desabilitado caso o produto já tenha sido adquirido -->
-                @if($produto->disponivel)
-                <a href="{{ route('checkout', ['produto' => $produto->id]) }}"
-                    style="padding: 0.75rem; background-color: #34D399; color: #FFF; border: none; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s;">
-                    Comprar
-                </a>
-                @else
-                <button type="button"
-                    style="padding: 0.75rem; background-color: #9CA3AF; color: #FFF; border: none; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: not-allowed;"
-                    disabled>
-                    Vendido
-                </button>
-                @endif
+                
 
                 <!-- Botões de administrador -->
                 @if(auth()->check() && auth()->user()->is_admin)

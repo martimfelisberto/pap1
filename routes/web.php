@@ -40,10 +40,10 @@ Route::prefix('produtos')->name('produtos.')->group(function () {
 
 // Grupo de rotas para o carrinho (acessíveis apenas a utilizadores autenticados)
 Route::middleware(['auth'])->prefix('carrinho')->name('carrinho.')->group(function () {
-    Route::get('/', [CarrinhoController::class, 'index'])->name('index'); // Mostra o carrinho de compras
     Route::post('/adicionar', [CarrinhoController::class, 'adicionar'])->name('adicionar'); // Adiciona um produto ao carrinho
-    Route::delete('/remover/{id}', [CarrinhoController::class, 'remover'])->name('remover'); // Remove um produto do carrinho
-    Route::patch('/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('atualizar'); // Atualiza a quantidade de um produto no carrinho
+    Route::get('/', [CarrinhoController::class, 'index'])->name('index'); // Mostra o carrinho de compras
+    Route::patch('/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('atualizar'); // Atualiza um item do carrinho
+    Route::delete('/remover/{id}', [CarrinhoController::class, 'remover'])->name('remover'); // Remove um item do carrinho
     Route::delete('/limpar', [CarrinhoController::class, 'limpar'])->name('limpar'); // Limpa o carrinho
 });
 
@@ -108,8 +108,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/produtos/{produto}', [ProdutoController::class, 'update'])->name('produtos.update'); // Atualiza o produto
  });
 
-Route::get('/checkout/{produto}', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout/{produto}', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+});
 
 Route::get('/meus-produtos', [ProdutoController::class, 'myProducts'])->name('produtos.myproducts');
 

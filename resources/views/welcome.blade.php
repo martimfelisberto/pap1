@@ -98,8 +98,8 @@
               escolher roupas em segunda mão, você encontra peças únicas e cheias de história, além de contribuir
               para um planeta mais verde, promovendo o consumo consciente.
             </p>
-            <a href="#" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; text-transform: uppercase; text-decoration: none; border-radius: 4px; font-size: 0.875rem;">
-              Descubra as categorias em destaque!
+            <a href="https://www.instagram.com/reshopping.pt/" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1rem; background-color: rgb(4, 23, 85); color: #FFF; text-transform: uppercase; text-decoration: none; border-radius: 4px; font-size: 0.875rem;">
+            Segue-nos no Instagram!
             </a>
           </div>
         </div>
@@ -107,13 +107,4 @@
     </div>
   </section>
 
-  <!-- Instagram Section -->
-  <section id="instagram" style="position: relative; padding: 2rem 0; background-color: #FFF;">
-    <div style="max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; text-align: center;">
-      <a href="https://www.instagram.com/reshopping.pt/" 
-         style="display: inline-block; padding: 1rem 2rem; background-color:rgb(4, 23, 85); color: #FFF; text-transform: uppercase; text-decoration: none; border-radius: 4px;">
-        Segue-nos no Instagram!
-      </a>
-    </div>
-  </section>
 </x-kaira-layout>

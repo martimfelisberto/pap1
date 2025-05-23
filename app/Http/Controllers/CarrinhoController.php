@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produto;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CarrinhoController extends Controller
-
 {
     public function index()
     {
@@ -31,50 +31,40 @@ class CarrinhoController extends Controller
 
     public function adicionar(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:produtos,id',
-            'quantidade' => 'nullable|integer|min:1'
-        ]);
+        $produtoId = $request->input('produto_id');
 
-        $produto = Produto::findOrFail($request->id);
-    $quantidade = $request->quantidade ?? 1;
+        // Verifica se o produto existe
+        $produto = Produto::find($produtoId);
+        if (!$produto) {
+            return redirect()->back()->with('error', 'Produto não encontrado.');
+        }
 
-    $carrinho = session()->get('carrinho', []);
+        // Adiciona o produto ao carrinho na base de dados
+        $carrinho = session()->get('carrinho', []);
 
-    if (isset($carrinho[$produto->id])) {
-        $carrinho[$produto->id]['quantidade'] += $quantidade;
-    } else {
-        $carrinho[$produto->id] = [
-            "id" => $produto->id,
-            "nome" => $produto->nome,
-            "quantidade" => $quantidade,
-            "preco" => $produto->preco,
-            "imagem" => $produto->imagem,
-            "marca" => $produto->marca
-        ];
+        if (isset($carrinho[$produtoId])) {
+            // Incrementa a quantidade se o produto já estiver no carrinho
+            $carrinho[$produtoId]['quantidade']++;
+        } else {
+            // Adiciona o produto ao carrinho
+            $carrinho[$produtoId] = [
+                'nome' => $produto->nome,
+                'preco' => $produto->preco,
+                'imagem' => $produto->imagem,
+                'marca' => $produto->marca,
+                'quantidade' => 1,
+            ];
         }
 
         session()->put('carrinho', $carrinho);
+        // Salva no banco de dados (opcional)
+        DB::table('carrinhos')->updateOrInsert(
+            ['user_id' => Auth::check() ? Auth::id() : null, 'produto_id' => $produtoId],
+            ['quantidade' => $carrinho[$produtoId]['quantidade']]
+        );
+        
 
-        // Calcula o total
-        $total = 0;
-        foreach ($carrinho as $item) {
-            $total += $item['preco'] * $item['quantidade'];
-        }
-    
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => "{$produto->nome} adicionado ao carrinho!",
-                'cart' => [
-                    'items' => $carrinho,
-                    'total' => $total
-                ]
-            ]);
-        }
-
-        return redirect()->back()
-            ->with('success', "{$produto->nome} adicionado ao carrinho!");
+        return redirect()->route('carrinho.index')->with('success', 'Produto adicionado ao carrinho!');
     }
 
     public function remover($id)
@@ -96,22 +86,14 @@ class CarrinhoController extends Controller
 
     public function atualizar(Request $request, $id)
     {
-        $request->validate([
-            'quantidade' => 'required|integer|min:1'
-        ]);
-
         $carrinho = session()->get('carrinho', []);
 
         if (isset($carrinho[$id])) {
             $carrinho[$id]['quantidade'] = $request->quantidade;
             session()->put('carrinho', $carrinho);
-            
-            return redirect()->back()
-                ->with('success', 'Quantidade atualizada!');
         }
 
-        return redirect()->back()
-            ->with('error', 'Produto não encontrado no carrinho!');
+        return redirect()->back()->with('success', 'Quantidade atualizada com sucesso!');
     }
 
     public function limpar()
@@ -123,14 +105,14 @@ class CarrinhoController extends Controller
     }
 
     public function count()
-{
-    $count = 0;
-    $carrinho = session()->get('carrinho', []);
-    
-    foreach ($carrinho as $item) {
-        $count += $item['quantidade'];
-    }
+    {
+        $count = 0;
+        $carrinho = session()->get('carrinho', []);
+        
+        foreach ($carrinho as $item) {
+            $count += $item['quantidade'];
+        }
 
-    return response()->json(['count' => $count]);
-}
+        return response()->json(['count' => $count]);
+    }
 }

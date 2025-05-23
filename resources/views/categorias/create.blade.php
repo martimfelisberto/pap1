@@ -28,9 +28,9 @@
                     @enderror
                 </div>
 
-                <!-- Campo Gênero -->
+                <!-- Campo Género -->
                 <div style="margin-bottom: 1.5rem;">
-                    <label for="genero" style="display: block; font-size: 1rem; font-weight: 500; color: #333; margin-bottom: 0.5rem;">Gênero</label>
+                    <label for="genero" style="display: block; font-size: 1rem; font-weight: 500; color: #333; margin-bottom: 0.5rem;">Género</label>
                     <div style="display: flex; gap: 1rem;">
                         <input type="text" id="genero" name="genero"
                             style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px; font-size: 1rem;"

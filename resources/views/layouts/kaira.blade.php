@@ -36,12 +36,12 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 </head>
 
 <body class="homepage">
-    
-@if(session('error'))
+
+    @if(session('error'))
     <div style="background-color: #FEE2E2; color: #B91C1C; padding: 1rem; border-radius: 8px; margin: 1rem 0; text-align: center;">
         {{ session('error') }}
     </div>
-@endif
+    @endif
 
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <defs>
@@ -170,8 +170,8 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
         </defs>
     </svg>
 
-    <nav style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
-        <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+    <nav style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB; width: 100%; margin: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <!-- Logo e Título -->
             <div style="display: flex; align-items: center;">
                 <a href="/" style="display: flex; align-items: center; text-decoration: none;">
@@ -275,7 +275,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                     </form>
                 </div>
 
-                
+
                 <!-- User Profile Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none"
@@ -331,11 +331,11 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             </div>
             <!-- Cart Icon -->
             <div>
-                    <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
-                        <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
-                        <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
-                    </a>
-                </div>
+                <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
+                    <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
+                    <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -364,96 +364,74 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 
     {{ $slot }}
 
-
-    <footer id="footer" style="background-color: #FFF; margin-top: 2rem;">
-        <!-- Primeira Parte – Conteúdo do Footer -->
-        <div style="max-width: 1280px; margin: 0 auto; padding: 2rem 1rem;">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
-                <!-- Bloco 1: Introdução -->
-                <div style="flex: 1 1 250px;">
-                    <div style="margin-bottom: 1rem;">
-                        <a href="#">
-                            <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
-                        </a>
+    <div class="container">
+        <footer id="footer" style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB; width: 100%; margin: 0;">
+            <!-- Primeira Parte – Conteúdo do Footer -->
+            <div style="padding: 2rem 1rem;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+                    <!-- Bloco 1: Introdução -->
+                    <div style="flex: 1 1 250px;">
+                        <div style="margin-bottom: 1rem;">
+                            <a href="#">
+                                <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
+                            </a>
+                        </div>
                     </div>
-                    <p style="font-size: 0.875rem; color: #666; line-height: 1.5;">
-                        Na Reshopping.pt, acreditamos que a moda pode ser sustentável, acessível e solidária.
-                        Ao escolher roupas em segunda mão, não só encontra peças únicas e cheias de história,
-                        como também contribui para um planeta mais verde, reduzindo o desperdício e promovendo o consumo consciente.
-                    </p>
-                    <div style="margin-top: 1rem;">
-                        <ul style="display: flex; gap: 1rem; list-style: none; padding: 0; margin: 0;">
-                            <li>
-                                <a href="#" style="color: #666; text-decoration: none;">
-                                    <svg width="24" height="24" viewBox="0 0 24 24">
-                                        <use xlink:href="#instagram"></use>
-                                    </svg>
-                                </a>
+
+                    <!-- Bloco 2: Atalhos -->
+                    <div style="flex: 1 1 250px;">
+                        <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+                            <li style="margin-bottom: 0.5rem;">
+                                <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
                             </li>
-                            <!-- Insira outros ícones sociais, se necessário -->
+
+                            <li style="margin-bottom: 0.5rem;">
+                                <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+                            </li>
                         </ul>
                     </div>
-                </div>
 
-                <!-- Bloco 2: Atalhos -->
-                <div style="flex: 1 1 250px;">
-                    <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
-                        </li>
+                    <!-- Bloco 3: Ajuda & Informações -->
+                    <div style="flex: 1 1 250px;">
+                        <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
+                        <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
+                            <li style="margin-bottom: 0.5rem;">
+                                <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+                            </li>
+                        </ul>
+                    </div>
 
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Bloco 3: Ajuda & Informações -->
-                <div style="flex: 1 1 250px;">
-                    <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
-                    <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
-                        <li style="margin-bottom: 0.5rem;">
-                            <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Bloco 4: Contacte-nos -->
-                <div style="flex: 1 1 250px;">
-                    <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Contacte-nos</h5>
-                    <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">
-                        <a href="mailto:ajuda@reshopping.pt" style="color: rgb(4, 23, 85); text-decoration: none;">ajuda@reshopping.pt</a>
-                    </p>
-                    <p style="font-size: 0.875rem;">
-                        <a href="tel:+351965221732" style="color: rgb(4, 23, 85); text-decoration: none;">+351 965 221 732</a>
-                    </p>
+                    <!-- Bloco 4: Contacte-nos -->
+                    <div style="flex: 1 1 250px;">
+                        <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Contacte-nos</h5>
+                        <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">
+                            <a href="mailto:ajuda@reshopping.pt" style="color: rgb(4, 23, 85); text-decoration: none;">ajuda@reshopping.pt</a>
+                        </p>
+                        <p style="font-size: 0.875rem;">
+                            <a href="tel:+351965221732" style="color: rgb(4, 23, 85); text-decoration: none;">+351 965 221 732</a>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Segunda Parte – Rodapé Inferior -->
-        <div style="padding: 1rem; border-top: 1px solid #E5E7EB; background-color: #FFF;">
-            <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-                <!-- Opções de Pagamento -->
-                <div style="flex: 1 1 300px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #666;">
-                    <span>Payment Option:</span>
-                    <img src="{{ asset('kaira/images/visa-card.png') }}" alt="Visa" style="height: 24px;">
-                    <img src="{{ asset('kaira/images/paypal-card.png') }}" alt="Paypal" style="height: 24px;">
-                    <img src="{{ asset('kaira/images/master-card.png') }}" alt="MasterCard" style="height: 24px;">
-                </div>
-                <!-- Copyright -->
-                <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
-                    <p style="margin: 0;">
-                        © Copyright 2022 Kaira. All rights reserved.
-                        Design by
-                        <a href="https://templatesjungle.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">TemplatesJungle</a>
-                        Distribution By
-                        <a href="https://themewagon.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">ThemeWagon</a>
-                    </p>
+            <!-- Segunda Parte – Rodapé Inferior -->
+            <div style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB; width: 100%; margin: 0;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+
+                    <!-- Copyright -->
+                    <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
+                        <p style="margin: 0;">
+                            © Copyright 2022 Kaira. All rights reserved.
+                            Design by
+                            <a href="https://templatesjungle.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">TemplatesJungle</a>
+                            Distribution By
+                            <a href="https://themewagon.com" target="_blank" style="color: rgb(4, 23, 85); text-decoration: none;">ThemeWagon</a>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
     <!-- Scripts -->
     <script src="{{ asset('kaira/js/jquery.min.js') }}"></script>
     <script src="{{ asset('kaira/js/plugins.js') }}"></script>
