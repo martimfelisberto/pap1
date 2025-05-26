@@ -8,19 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('favorites', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id'); // Relaciona com o usuário
-            $table->unsignedBigInteger('produto_id'); // Relaciona com o produto
-            $table->timestamps();
-    
-            // Chaves estrangeiras
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('produto_id')->references('id')->on('produtos')->onDelete('cascade');
-    
-            // Evitar duplicados
-            $table->unique(['user_id', 'produto_id']);
-        });
+       
+   
+        {
+            Schema::create('favoritos', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id');
+                $table->unsignedBigInteger('produto_id');
+                $table->timestamps();
+                
+                $table->unique(['user_id', 'produto_id']);
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('produto_id')->references('id')->on('produtos')->onDelete('cascade');
+            });
+        }
     }
 
     public function down()

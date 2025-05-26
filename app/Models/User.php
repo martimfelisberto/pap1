@@ -82,5 +82,8 @@ public function produtos()
 {
     return $this->hasMany(Produto::class);
 }
-
+public function favoritedProducts()
+{
+    return $this->belongsToMany(Produto::class, 'favoritos', 'user_id', 'produto_id')->withTimestamps();
+}
 }

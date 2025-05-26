@@ -42,12 +42,7 @@ public function favorites()
         return $this->hasMany(Favorite::class);
         
     }
-    public function favoritos()
-
-    {
-        return $this->hasMany(Favorite::class);
-    }
-    
+   
     /**
      * Get the user that owns the product
      */

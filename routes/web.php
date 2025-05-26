@@ -15,6 +15,7 @@ use Database\Seeders\AdminSeeder;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminMiddleware;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FavoriteController;
 
 // Rota principal da aplicação
 Route::get('/', [ProdutoController::class, 'welcome'])->name('welcome');
@@ -114,6 +115,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/meus-produtos', [ProdutoController::class, 'myProducts'])->name('produtos.myproducts');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/favoritos', [FavoriteController::class, 'index'])->name('favoritos.index');
+    Route::post('/favoritos/toggle', [FavoriteController::class, 'toggle'])->name('favoritos.toggle');
+});
 
 
 // Inclusão das rotas de autenticação
