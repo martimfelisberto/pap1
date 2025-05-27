@@ -46,7 +46,10 @@ public function favorites()
     /**
      * Get the user that owns the product
      */
-  
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /**
      * Get the category of the product
      */

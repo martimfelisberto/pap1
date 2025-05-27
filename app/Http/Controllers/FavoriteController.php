@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorito;
+use App\Models\Favorite;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +12,7 @@ class FavoriteController extends BaseController
 {
     public function __construct()
     {
+        $this->middleware('auth');
     }
     
     /**
@@ -19,8 +20,8 @@ class FavoriteController extends BaseController
      */
     public function index()
     {
-        $favoritos = Auth::user()->favoritedProducts()->paginate(12);
-        return view('favoritos.index', compact('favoritos'));
+        $favorites = Auth::user()->favorites()->with('produto')->paginate(12);
+        return view('favoritos.index', compact('favorites'));
     }
     
     /**
@@ -45,7 +46,7 @@ class FavoriteController extends BaseController
             $favorito->delete();
             $message = 'Produto removido dos favoritos';
         } else {
-            // Not favorited, so add
+          // Not favorited, so add
             Favorite::create([
                 'user_id' => $user->id,
                 'produto_id' => $produtoId

@@ -82,8 +82,19 @@ public function produtos()
 {
     return $this->hasMany(Produto::class);
 }
-public function favoritedProducts()
+/**
+ * Get the user's favorite products
+ */
+public function favorites()
 {
-    return $this->belongsToMany(Produto::class, 'favoritos', 'user_id', 'produto_id')->withTimestamps();
+    return $this->hasMany(Favorite::class);
+}
+
+/**
+ * Check if a product is favorited by this user
+ */
+public function hasFavorited($productId)
+{
+    return $this->favorites()->where('produto_id', $productId)->exists();
 }
 }

@@ -286,9 +286,26 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             </div>
             <!-- Cart Icon -->
             <div>
-                <a href="{{ route('carrinho.index') }}" style="position: relative; text-decoration: none; color: #374151; display: flex; align-items: center;">
-                    <i class="bi bi-cart3" style="font-size: 1.25rem;"></i>
-                    <span style="position: absolute; top: -4px; right: -8px; background-color: rgb(4, 23, 85); color: #FFF; font-size: 0.75rem; padding: 0 0.4rem; border-radius: 999px;">0</span>
+                <a href="{{ route('carrinho.index') }}" class="position-relative" style="text-decoration: none; color: #041755;">
+                    <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
+                    @php
+                        if (auth()->check()) {
+                            // For logged in users with database cart
+                            $cartCount = \App\Models\CarrinhoItem::where('user_id', auth()->id())->sum('quantidade');
+                        } else {
+                            // For guests with session cart
+                            $carrinho = session()->get('carrinho', []);
+                            $cartCount = 0;
+                            foreach ($carrinho as $item) {
+                                $cartCount += $item['quantidade'] ?? 1;
+                            }
+                        }
+                    @endphp
+                    @if($cartCount > 0)
+                        <span style="position: absolute; top: -8px; right: -10px; background-color: #DC2626; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            {{ $cartCount }}
+                        </span>
+                    @endif
                 </a>
             </div>
         </div>

@@ -16,7 +16,7 @@ class ProdutoController extends Controller
     
     public function index(Request $request)
     {
-        $query = Produto::query()->where('disponivel', true);
+        $query = Produto::query()->with('user', 'categoria');
 
         // Apply filters if they exist
         if ($request->filled('genero')) {

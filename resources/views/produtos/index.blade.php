@@ -208,7 +208,7 @@
                 ];
                 $style = $badgeStyles[$produto->estado] ?? 'background-color: #F3F4F6; color: #6B7280;';
                 @endphp
-                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; ">
+                <span style="padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 999px; {{ $style }}">
                     {{ $produto->estado }}
                 </span>
             </div>
@@ -229,7 +229,7 @@
             <div style="margin-bottom: 0.5rem;">
                 <span style="font-size: 0.875rem; color: #6B7280;">
                     <i class="bi bi-person-fill" style="margin-right: 0.25rem;"></i>Vendedor:
-                    <strong>{{ $produto->user?->name ?? '' }}</strong>
+                    <strong>{{ $produto->user ? $produto->user->name : 'Desconhecido' }}</strong>
                 </span>
             </div>
             <p style="font-size: 0.875rem; color: #6B7280; flex-grow: 1; margin-bottom: 1rem;">
@@ -265,10 +265,14 @@
             </div>
             <div style="display: flex; gap: 0.5rem;">
                 <!-- Botão de Favoritos -->
-                <button type="button"
-                    style="padding: 0.75rem; background-color: #F3F4F6; color: #374151; border: none; border-radius: 8px; transition: background-color 0.3s;">
-                    <i class="bi bi-heart"></i>
-                </button>
+                <form action="{{ route('favoritos.toggle') }}" method="POST" class="d-inline">
+                    @csrf
+                    <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+                    <button type="submit" 
+                        style="padding: 0.75rem; background-color: #F3F4F6; color: {{ auth()->check() && auth()->user()->hasFavorited($produto->id) ? '#DC2626' : '#374151' }}; border: none; border-radius: 8px; transition: background-color 0.3s; cursor: pointer;">
+                        <i class="bi {{ auth()->check() && auth()->user()->hasFavorited($produto->id) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
+                    </button>
+                </form>
 
                 
 

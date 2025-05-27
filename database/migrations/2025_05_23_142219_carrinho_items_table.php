@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {Schema::create('carrinhos', function (Blueprint $table) {
+    {Schema::create('carrinho_items', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('user_id');
         $table->unsignedBigInteger('produto_id');
@@ -26,6 +26,6 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {  Schema::dropIfExists('carrinhos');
+    {  Schema::dropIfExists('carrinho_items');
     }
 };

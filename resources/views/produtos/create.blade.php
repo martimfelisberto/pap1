@@ -27,7 +27,7 @@
                             Descrição <span style="color: #e63946;">*</span>
                         </label>
                         <textarea id="descricao" name="descricao" rows="3" required
-                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('descricao') }}</textarea>
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('descricao') }}</textarea>
                         @error('descricao')
                         <div style="color: #e63946; font-size: 0.875rem;">{{ $message }}</div>
                         @enderror
@@ -59,7 +59,7 @@
                             </label>
                             <select id="genero" name="genero" required onchange="filterCategorias()"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">
-                               
+
                                 @php
                                 $generos = \App\Models\Categoria::select('genero')->distinct()->pluck('genero');
                                 @endphp
@@ -74,17 +74,20 @@
                         <!-- Categoria -->
                         <div style="margin-bottom: 1.5rem;">
                             <label for="categoria_id" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Categoria</label>
+
                             <select id="categoria_id" name="categoria_id" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
                                 <option value="">Selecione uma categoria</option>
                                 @foreach($categorias as $categoria)
-                                    <option value="{{ $categoria->id }}" {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
-                                        {{ $categoria->titulo }}
-                                    </option>
+                                <option value="{{ $categoria->id }}"
+                                    data-genero="{{ $categoria->genero }}"
+                                    {{ old('categoria_id') == $categoria->id ? 'selected' : '' }}>
+                                    {{ $categoria->titulo }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('categoria_id')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -130,7 +133,7 @@
                                 <option value="44" {{ old('tamanhosapatilhas') == '44' ? 'selected' : '' }}>44</option>
                                 <option value="45" {{ old('tamanhosapatilhas') == '45' ? 'selected' : '' }}>45</option>
                                 <option value="46" {{ old('tamanhosapatilhas') == '46' ? 'selected' : '' }}>46</option>
-                             </select>
+                            </select>
                         </div>
 
                         <!-- Tipo de Sola -->
@@ -149,7 +152,7 @@
                             <label for="estado" style="display: block; font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem;">Estado</label>
                             <select id="estado" name="estado" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
-                                
+
                                 <option value="novo" {{ old('estado') == 'novo' ? 'selected' : '' }}>Novo</option>
                                 <option value="semi-novo" {{ old('estado') == 'semi-novo' ? 'selected' : '' }}>Semi-novo</option>
                                 <option value="usado" {{ old('estado') == 'usado' ? 'selected' : '' }}>Usado</option>
@@ -187,28 +190,28 @@
                             @enderror
                         </div>
 
-                      
-                <!-- Imagem -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="imagem" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Imagem</label>
-                    <input type="file" id="imagem" name="imagem"
-                        style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
-                    <!-- Preview da imagem carregada -->
-                    <div id="preview-container" style="display: none; margin-top: 0.5rem;">
-                        <img id="preview" src="" alt="Preview da Imagem"
-                            style="width: 100px; height: auto; border-radius: 8px;">
-                    </div>
-                </div>
+
+                        <!-- Imagem -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label for="imagem" style="font-size: 0.875rem; color: #333; display: block; margin-bottom: 0.5rem;">Imagem</label>
+                            <input type="file" id="imagem" name="imagem"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px;">
+                            <!-- Preview da imagem carregada -->
+                            <div id="preview-container" style="display: none; margin-top: 0.5rem;">
+                                <img id="preview" src="" alt="Preview da Imagem"
+                                    style="width: 100px; height: auto; border-radius: 8px;">
+                            </div>
+                        </div>
 
 
-                        
+
                         <!-- Medidas (opcional) -->
                         <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
                             <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
                                 <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
                             </div>
                             <div style="padding: 1rem;">
-                                <textarea name="medidas" id="medidas" rows="4"style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
+                                <textarea name="medidas" id="medidas" rows="4" style="width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 5px;">{{ old('medidas') }}</textarea>
                                 @error('medidas')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -247,78 +250,78 @@
 </x-kaira-layout>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('imagem');
-    const previewContainer = document.getElementById('preview-container');
-    const preview = document.getElementById('preview');
-    const form = document.getElementById('productForm');
-    
-    // Preview da imagem
-    if (fileInput) {
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                
-                // Validar tamanho (2MB máximo)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('A imagem não pode exceder 2MB.');
-                    this.value = '';
-                    previewContainer.style.display = 'none';
-                    return;
-                }
-                
-                // Validar tipo
-                if (!file.type.match('image.*')) {
-                    alert('Por favor, selecione uma imagem válida.');
-                    this.value = '';
-                    previewContainer.style.display = 'none';
-                    return;
-                }
-                
-                // Exibir preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-    
-    // Validação do formulário
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            // Verificar se pelo menos uma cor foi selecionada
-            const coresChecked = document.querySelectorAll('input[name="cores[]"]:checked');
-            if (coresChecked.length === 0) {
-                e.preventDefault();
-                alert('Por favor, selecione pelo menos uma cor.');
-                return false;
-            }
-            
-            // Indicador visual de envio
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Enviando...';
-                
-                // Timeout para evitar carregamento infinito
-                setTimeout(() => {
-                    if (submitBtn.disabled) {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'Publicar Produto';
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('imagem');
+        const previewContainer = document.getElementById('preview-container');
+        const preview = document.getElementById('preview');
+        const form = document.getElementById('productForm');
+
+        // Preview da imagem
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+
+                    // Validar tamanho (2MB máximo)
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('A imagem não pode exceder 2MB.');
+                        this.value = '';
+                        previewContainer.style.display = 'none';
+                        return;
                     }
-                }, 10000);
-            }
-        });
-    }
-});
+
+                    // Validar tipo
+                    if (!file.type.match('image.*')) {
+                        alert('Por favor, selecione uma imagem válida.');
+                        this.value = '';
+                        previewContainer.style.display = 'none';
+                        return;
+                    }
+
+                    // Exibir preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Validação do formulário
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Verificar se pelo menos uma cor foi selecionada
+                const coresChecked = document.querySelectorAll('input[name="cores[]"]:checked');
+                if (coresChecked.length === 0) {
+                    e.preventDefault();
+                    alert('Por favor, selecione pelo menos uma cor.');
+                    return false;
+                }
+
+                // Indicador visual de envio
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'Enviando...';
+
+                    // Timeout para evitar carregamento infinito
+                    setTimeout(() => {
+                        if (submitBtn.disabled) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = 'Publicar Produto';
+                        }
+                    }, 10000);
+                }
+            });
+        }
+    });
 </script>
 
 <!-- Script para Gerenciar os Campos -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const tipoProdutoSelect = document.getElementById('tipo_produto');
         const tamanhoContainer = document.getElementById('tamanhoContainer');
         const tamanhosapatilhasContainer = document.getElementById('tamanhosapatilhasContainer');
@@ -347,4 +350,42 @@ document.addEventListener('DOMContentLoaded', function() {
         // Adiciona um evento para monitorar alterações no campo tipo_produto
         tipoProdutoSelect.addEventListener('change', toggleFields);
     });
+</script>
+
+<script>
+// Função para filtrar categorias por gênero
+function filterCategorias() {
+    // Obter o gênero selecionado
+    const generoSelect = document.getElementById('genero');
+    const generoSelecionado = generoSelect.value;
+    
+    // Obter todas as opções de categoria
+    const categoriaSelect = document.getElementById('categoria_id');
+    const categoriaOptions = categoriaSelect.querySelectorAll('option');
+    
+    // Resetar para a opção padrão
+    categoriaSelect.selectedIndex = 0;
+    
+    // Mostrar/esconder opções com base no gênero
+    categoriaOptions.forEach(option => {
+        if (option.value === '') {
+            // Sempre mostra a opção "Selecione uma categoria"
+            option.style.display = '';
+        } else {
+            const categoriaGenero = option.getAttribute('data-genero');
+            if (categoriaGenero === generoSelecionado) {
+                option.style.display = '';
+                option.disabled = false;
+            } else {
+                option.style.display = 'none';
+                option.disabled = true;
+            }
+        }
+    });
+}
+
+// Executar o filtro quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    filterCategorias();
+});
 </script>
