@@ -41,11 +41,13 @@
                     <!-- Categoria -->
                     <div>
                         <label style="font-size: 0.875rem; color: #333;">Categoria</label>
-                        <select name="categoria"
+                        <select name="categoria" id="categoria-select"
                             style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 8px;">
                             <option value="">Todas as categorias</option>
                             @foreach($categorias as $categoria)
-                            <option value="{{ $categoria->id }}" {{ request()->get('categoria') == $categoria->id ? 'selected' : '' }}>
+                            <option value="{{ $categoria->id }}" 
+                                    data-genero="{{ $categoria->genero }}" 
+                                    {{ request()->get('categoria') == $categoria->id ? 'selected' : '' }}>
                                 {{ $categoria->titulo }}
                             </option>
                             @endforeach
@@ -248,12 +250,14 @@
                 @endif
 
                 <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
-                    <!-- Botão de Adicionar ao Carrinho -->
-                    <form action="{{ route('carrinho.adicionar') }}" method="POST">
+<!-- Botão de Adicionar ao Carrinho -->
+<form action="{{ route('carrinho.adicionar') }}" method="POST">
     @csrf
     <input type="hidden" name="produto_id" value="{{ $produto->id }}">
-    <button type="submit" style="padding: 0.5rem 1rem; background-color: #DBEAFE; color: #2563EB; border: none; border-radius: 6px; font-size: 0.875rem; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none;" class="btn btn-primary">
-        Adicionar
+    <button type="submit" 
+            style="padding: 0.5rem 1rem; background-color: #DBEAFE; color: #2563EB; border: none; border-radius: 6px; font-size: 0.875rem; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none;" 
+            class="btn btn-primary">
+        <i class="bi bi-cart-plus"></i> Adicionar
     </button>
 </form>
 
@@ -269,7 +273,7 @@
                     @csrf
                     <input type="hidden" name="produto_id" value="{{ $produto->id }}">
                     <button type="submit" 
-                        style="padding: 0.75rem; background-color: #F3F4F6; color: {{ auth()->check() && auth()->user()->hasFavorited($produto->id) ? '#DC2626' : '#374151' }}; border: none; border-radius: 8px; transition: background-color 0.3s; cursor: pointer;">
+                        style="padding: 0.75rem; background-color: #F3F4F6; color:  '#374151'; border: none; border-radius: 8px; transition: background-color 0.3s; cursor: pointer;">
                         <i class="bi {{ auth()->check() && auth()->user()->hasFavorited($produto->id) ? 'bi-heart-fill' : 'bi-heart' }}"></i>
                     </button>
                 </form>
@@ -440,6 +444,119 @@
                     placeholder.classList.remove('hidden');
                 }
             }
+
+            // Função para filtrar categorias com base no género selecionado
+            function filtrarCategoriasPorGenero() {
+                // Obter o valor do género selecionado
+                const generoSelecionado = document.querySelector('select[name="genero"]').value;
+                
+                // Obter o dropdown de categorias
+                const categoriaSelect = document.querySelector('select[name="categoria"]');
+                const categoriaOptions = categoriaSelect.querySelectorAll('option');
+                
+                // Se não houver género selecionado, mostrar todas as categorias
+                if (!generoSelecionado) {
+                    categoriaOptions.forEach(option => {
+                        option.style.display = '';
+                    });
+                    return;
+                }
+                
+                // Filtrar as opções de categoria com base no género
+                categoriaOptions.forEach(option => {
+                    // Sempre mostrar a opção "Todas as categorias"
+                    if (option.value === '') {
+                        option.style.display = '';
+                    } else {
+                        // Obter o género da categoria a partir do data-genero
+                        const categoriaGenero = option.getAttribute('data-genero');
+                        
+                        // Mostrar apenas as categorias do género selecionado
+                        if (categoriaGenero === generoSelecionado) {
+                            option.style.display = '';
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Resetar para "Todas as categorias" se a categoria atual não estiver visível
+                if (categoriaSelect.selectedOptions[0].style.display === 'none') {
+                    categoriaSelect.value = '';
+                }
+            }
+
+            // Adicionar listener para o evento de mudança no select de género
+            document.querySelector('select[name="genero"]').addEventListener('change', filtrarCategoriasPorGenero);
+            
+            // Executa o filtro quando a página carrega para respeitar o género já selecionado
+            document.addEventListener('DOMContentLoaded', function() {
+                filtrarCategoriasPorGenero();
+            });
+
+            // Corrigir problema com navegação bloqueada
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Tornar o seletor mais específico na função de filtro
+    const originalFilterFunction = filtrarCategoriasPorGenero;
+    filtrarCategoriasPorGenero = function() {
+        // Certifique-se de que estamos apenas afetando o dropdown de categorias nos filtros
+        const generoSelecionado = document.querySelector('#filtersPanel select[name="genero"]').value;
+        const categoriaSelect = document.querySelector('#filtersPanel select[name="categoria"]');
+        
+        if (!categoriaSelect) return; // Sair se não encontrar o elemento
+        
+        const categoriaOptions = categoriaSelect.querySelectorAll('option');
+        
+        // Resto da função permanece igual...
+        if (!generoSelecionado) {
+            categoriaOptions.forEach(option => {
+                option.style.display = '';
+            });
+            return;
+        }
+        
+        categoriaOptions.forEach(option => {
+            if (option.value === '') {
+                option.style.display = '';
+            } else {
+                const categoriaGenero = option.getAttribute('data-genero');
+                option.style.display = (categoriaGenero === generoSelecionado) ? '' : 'none';
+            }
+        });
+        
+        if (categoriaSelect.selectedOptions[0].style.display === 'none') {
+            categoriaSelect.value = '';
+        }
+    };
+    
+    // 2. Garantir que os dropdowns de navegação estejam sempre clicáveis
+    const navLinks = document.querySelectorAll('.navbar a.dropdown-toggle, header a.dropdown-toggle');
+    navLinks.forEach(link => {
+        link.style.pointerEvents = 'auto';
+        link.style.cursor = 'pointer';
+    });
+    
+    // 3. Reativar qualquer dropdown que possa ter sido desativado
+    const reativateNavigation = function() {
+        document.querySelectorAll('.navbar .dropdown-menu, header .dropdown-menu')
+            .forEach(menu => {
+                menu.querySelectorAll('a, button').forEach(item => {
+                    item.style.pointerEvents = 'auto';
+                    item.style.display = '';
+                    item.disabled = false;
+                });
+            });
+    };
+    
+    // Executar a reativação quando necessário
+    reativateNavigation();
+    
+    // Executar novamente após filtrar
+    document.querySelector('#filtersPanel select[name="genero"]')
+        .addEventListener('change', function() {
+            setTimeout(reativateNavigation, 100);
+        });
+});
         </script>
         </body>
 
