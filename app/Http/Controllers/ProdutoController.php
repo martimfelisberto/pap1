@@ -28,6 +28,23 @@ class ProdutoController extends Controller
         if ($request->filled('estado')) {
             $query->where('estado', $request->estado);
         }
+        
+        // Add search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                // Search in product name
+                $q->where('nome', 'LIKE', "%{$search}%")
+                  // Search in product description
+                  ->orWhere('descricao', 'LIKE', "%{$search}%")
+                  // Search in product type
+                  ->orWhere('tipo_produto', 'LIKE', "%{$search}%")
+                  // Search in related category
+                  ->orWhereHas('categoria', function($query) use ($search) {
+                      $query->where('titulo', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
 
         $produtos = $query->paginate(12);
         $categorias = Categoria::all();
@@ -205,5 +222,24 @@ class ProdutoController extends Controller
 
     // Retorne a view com os produtos
     return view('produtos.myproducts', compact('produtos'));
+}
+public function categoria(Request $request, $categoria, $genero)
+{
+    // Find category by 'titulo' field instead of 'nome'
+    $categoriaObj = Categoria::where('titulo', $categoria)->first();
+    
+    if (!$categoriaObj) {
+        return redirect()->route('produtos.index')->with('error', 'Categoria não encontrada.');
+    }
+    
+    $query = Produto::query()
+        ->with('user', 'categoria')
+        ->where('genero', $genero)
+        ->where('categoria_id', $categoriaObj->id);
+    
+    $produtos = $query->paginate(12);
+    $categorias = Categoria::all();
+    
+    return view('produtos.index', compact('produtos', 'categorias'));
 }
 }

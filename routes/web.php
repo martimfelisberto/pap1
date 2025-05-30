@@ -121,6 +121,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/favoritos/toggle', [FavoriteController::class, 'toggle'])->name('favoritos.toggle');
 });
 
+// Rota para contactos
+Route::get('/contactos', [ContactoController::class, 'index'])->name('contactos.index');
+
+// Add this route for submitting the contact form
+Route::post('/contactos', [App\Http\Controllers\ContactoController::class, 'store'])->name('contactos.store');
+
 
 // Inclusão das rotas de autenticação
 require __DIR__ . '/auth.php';

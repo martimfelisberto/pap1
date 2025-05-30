@@ -154,7 +154,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                     </ul>
                 </div>
                 @endforeach
-                <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contactos</a>
+                <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contacta-nos</a>
 
                 @if(auth()->check() && auth()->user()->is_admin())
 

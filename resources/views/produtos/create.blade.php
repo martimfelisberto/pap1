@@ -97,7 +97,7 @@
                             <select id="tipo_produto" name="tipo_produto" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #CCC; border-radius: 4px;">
                                 <option value="">Selecione o tipo de produto</option>
-                                <option value="Sapatilhas" {{ old('tipo_produto') == 'Sapatilhas' ? 'selected' : '' }}>Sapatilhas</option>
+                                <option value="Sapatilhas" {{ old('tipo_produto') == 'Calçado' ? 'selected' : '' }}>Calçado</option>
                                 <option value="Roupas" {{ old('tipo_produto') == 'Roupas' ? 'selected' : '' }}>Roupas</option>
                             </select>
                         </div>
