@@ -154,7 +154,11 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                     </ul>
                 </div>
                 @endforeach
+                @auth
                 <a href="/contactos" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contacta-nos</a>
+                @else
+                <a href="{{ route('login', ['redirect' => 'contactos']) }}" style="color: #374151; text-decoration: none; font-size: 1rem; font-weight: 500;">Contacta-nos</a>
+                @endauth
 
                 @if(auth()->check() && auth()->user()->is_admin())
 
