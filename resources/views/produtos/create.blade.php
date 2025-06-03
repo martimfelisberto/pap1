@@ -1,7 +1,7 @@
 <x-kaira-layout>
     <div style="padding: 1.5rem 0; background-color: #F9FAFB;">
         <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
-            <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;">
                 <h2 style="font-size: 1.75rem; font-weight: 600; text-align: center; margin-bottom: 1rem; color: #333;">
                     Novo Produto
                 </h2>
@@ -206,7 +206,7 @@
 
 
                         <!-- Medidas (opcional) -->
-                        <div style="background-color: #FFF; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="background-color: #F9FAFB; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 1.5rem;">
                             <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e0e0e0;">
                                 <h5 style="margin: 0; font-size: 1rem; font-weight: 600; color: #333;">Medidas (opcional)</h5>
                             </div>

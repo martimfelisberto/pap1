@@ -23,7 +23,7 @@
     @endif
 
     <!-- Tabela de Utilizadores -->
-    <div style="background-color: #FFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+    <div style="background-color: #F9FAFB; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
       <div style="padding: 1rem;">
         <div style="overflow-x: auto;">
           <table style="width: 100%; border-collapse: collapse;">

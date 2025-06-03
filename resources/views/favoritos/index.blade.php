@@ -4,7 +4,7 @@
         
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
             @forelse ($favorites as $favorite)
-                <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;">
+                <div style="background-color: #F9FAFB; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;">
                     <div style="position: relative;">
                         @if($favorite->produto->imagem)
                             <img src="{{ asset('storage/' . $favorite->produto->imagem) }}" alt="{{ $favorite->produto->titulo }}" 

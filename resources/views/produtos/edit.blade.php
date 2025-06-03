@@ -10,7 +10,7 @@
 
             <!-- Formulário de Edição -->
             <form action="{{ route('produtos.update', $produto) }}" method="POST" enctype="multipart/form-data"
-                style="background-color: #FFF; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                style="background-color: #F9FAFB; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 @csrf
                 @method('PUT')
 

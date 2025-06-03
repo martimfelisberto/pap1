@@ -14,7 +14,7 @@
                 
                 <!-- Cartão de Utilizadores -->
                 <div style="flex: 1 1 300px;">
-                    <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
                         <h5 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">
                             Utilizadores
                         </h5>
@@ -30,7 +30,7 @@
 
                 <!-- Cartão de Categorias -->
                 <div style="flex: 1 1 300px;">
-                    <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
                         <h5 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">
                             Categorias
                         </h5>
@@ -46,7 +46,7 @@
 
                 <!-- Cartão de Produtos -->
                 <div style="flex: 1 1 300px;">
-                    <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
+                    <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem;">
                         <h5 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">
                             Produtos
                         </h5>

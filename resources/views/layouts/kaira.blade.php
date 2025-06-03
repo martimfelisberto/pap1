@@ -290,23 +290,21 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
             </div>
             <!-- Cart Icon -->
             <div>
-                <a href="{{ route('carrinho.index') }}" class="position-relative" style="text-decoration: none; color: #041755;">
+                <a href="{{ route('carrinho.index', [], false) }}" class="position-relative d-inline-block" style="text-decoration: none; color: #374151; margin-left: 15px;">
                     <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
+                    
                     @php
-                        if (auth()->check()) {
-                            // For logged in users with database cart
-                            $cartCount = \App\Models\CarrinhoItem::where('user_id', auth()->id())->sum('quantidade');
-                        } else {
-                            // For guests with session cart
-                            $carrinho = session()->get('carrinho', []);
-                            $cartCount = 0;
-                            foreach ($carrinho as $item) {
-                                $cartCount += $item['quantidade'] ?? 1;
-                            }
+                        $cartCount = 0;
+                        // Get cart count from session for simplicity
+                        if (session()->has('carrinho')) {
+                            $carrinho = session('carrinho');
+                            // Count items (assuming simple array structure)
+                            $cartCount = count($carrinho);
                         }
                     @endphp
+                    
                     @if($cartCount > 0)
-                        <span style="position: absolute; top: -8px; right: -10px; background-color: #DC2626; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        <span style="position: absolute; top: -8px; right: -8px; background-color:rgb(84, 228, 253); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
                             {{ $cartCount }}
                         </span>
                     @endif
@@ -317,24 +315,47 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 
     <!-- Faz com que os dropdowns se escondamao clicar fora deles -->
     <script>
-        // Fecha dropdowns quando clicar fora
-        document.addEventListener('click', function(event) {
-            const isDropdownButton = event.target.closest('[onclick^="toggleDropdown"]');
-            const isDropdownContent = event.target.closest('[id^="dropdown"]');
+        // Improved dropdown handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fecha dropdowns quando clicar fora
+            document.addEventListener('click', function(event) {
+                const isDropdownButton = event.target.closest('[onclick^="toggleDropdown"]');
+                const isDropdownContent = event.target.closest('[id^="dropdown"]');
 
-            if (!isDropdownButton && !isDropdownContent) {
+                if (!isDropdownButton && !isDropdownContent) {
+                    const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
+                    allDropdowns.forEach(dropdown => {
+                        dropdown.style.display = "none";
+                    });
+                }
+            });
+
+            // Improved toggleDropdown function
+            window.toggleDropdown = function(id) {
+                const dropdown = document.getElementById(id);
+                
+                // First close all other dropdowns
                 const allDropdowns = document.querySelectorAll('[id^="dropdown"]');
-                allDropdowns.forEach(dropdown => {
-                    dropdown.style.display = "none";
+                allDropdowns.forEach(item => {
+                    if(item.id !== id) {
+                        item.style.display = "none";
+                    }
                 });
-            }
+                
+                // Then toggle the clicked dropdown
+                dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
+                
+                // Prevent event from bubbling up
+                event.stopPropagation();
+            };
+            
+            // Make sure all dropdown buttons have proper styles and events
+            const dropdownButtons = document.querySelectorAll('[onclick^="toggleDropdown"]');
+            dropdownButtons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+                button.style.cursor = 'pointer';
+            });
         });
-
-
-        function toggleDropdown(id) {
-            var dropdown = document.getElementById(id);
-            dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
-        }
     </script>
 
 

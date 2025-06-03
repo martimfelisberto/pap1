@@ -11,7 +11,7 @@
                         <div style="padding: 3rem 0; background-color: #F9FAFB;">
                             <div style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
                                 <!-- Profile Photo Section -->
-                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                                <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
                                     <!-- Member since text -->
 
                                     <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Foto de Perfil</h2>
@@ -60,7 +60,7 @@
 
 
                                 <!-- Informações do Perfil -->
-                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
                                     <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Informações do Perfil</h2>
                                     <form action="{{ route('profile.update') }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
                                         @csrf
@@ -89,7 +89,7 @@
                                     </form>
                                 </div>
                                 <!-- Alterar Password -->
-                                <div style="background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                                <div style="background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
                                     <h2 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Alterar Password</h2>
                                     <form action="{{ route('profile.password') }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
                                         @csrf
@@ -133,7 +133,7 @@
                                 <div style="display: flex; justify-content: space-between;">
                                     <!-- Coluna 1: Produtos -->
                                     <div style="flex: 1; text-align: center; margin: 0 0.5rem;">
-                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                        <div style="padding: 1rem; background-color: #F9FAFB; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
                                             <i class="bi bi-bag" style="color: rgb(4, 23, 85); font-size: 1.5rem;"></i>
                                             <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
                                                 {{ optional($user->produtos)->count() ?? 0 }}
@@ -143,7 +143,7 @@
                                     </div>
                                     <!-- Coluna 2: Favoritos -->
                                     <div style="flex: 1; text-align: center; margin: 0 0.5rem;">
-                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                        <div style="padding: 1rem; background-color: #F9FAFB; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
                                             <i class="bi bi-heart-fill" style="color: #d9534f; font-size: 1.5rem;"></i>
                                             <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
                                                 {{ optional($user->favoriteProdutos)->count() ?? 0 }}
@@ -153,7 +153,7 @@
                                     </div>
                                     <!-- Coluna 3: Vendas -->
                                     <di style="flex: 1; text-align: center; margin: 0 0.5rem;">
-                                        <div style="padding: 1rem; background-color: #FFF; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+                                        <div style="padding: 1rem; background-color: #F9FAFB; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
                                             <i class="bi bi-cart-check" style="color: #5cb85c; font-size: 1.5rem;"></i>
                                             <div style="font-size: 1.25rem; font-weight: bold; margin-top: 0.5rem;">
                                                 {{ optional($user->vendas)->count() ?? 0 }}

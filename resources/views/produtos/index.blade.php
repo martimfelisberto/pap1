@@ -15,7 +15,7 @@
 
             <!-- Painel de Filtros Oculto -->
             <div id="filtersPanel"
-                style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background-color: #FFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; background-color: #F9FAFB; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 <form method="GET" action="{{ route('produtos.index') }}" style="display: flex; flex-direction: column; gap: 1rem;">
                     <!-- Pesquisar -->
                     <div>
@@ -165,11 +165,11 @@
                 <div style="margin-top: 1rem;">
                     <div style="display: inline-flex; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" role="group">
                         <button type="button" id="grid-view"
-                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #FFF; border: 1px solid #ccc; border-right: 0; border-top-left-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer;">
+                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #F9FAFB; border: 1px solid #ccc; border-right: 0; border-top-left-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer;">
                             <i class="bi bi-grid-3x3-gap-fill"></i>
                         </button>
                         <button type="button" id="list-view"
-                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #FFF; border: 1px solid #ccc; border-top-right-radius: 4px; border-bottom-right-radius: 4px; cursor: pointer;">
+                            style="padding: 0.5rem 1rem; font-size: 0.875rem; color: #333; background-color: #F9FAFB; border: 1px solid #ccc; border-top-right-radius: 4px; border-bottom-right-radius: 4px; cursor: pointer;">
                             <i class="bi bi-list"></i>
                         </button>
                     </div>
@@ -179,7 +179,7 @@
             <!-- Seção de Exibição dos Produtos -->
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;" id="products-container">
     @forelse ($produtos as $produto)
-    <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;"
+    <div style="background-color: #F9FAFB; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 100%;"
         class="{{ auth()->check() && auth()->user()->is_admin ? 'admin-product-card' : '' }}">
         <!-- Imagem e Marcas/Estado -->
         <div style="position: relative;">
@@ -346,7 +346,7 @@
             listBtn.addEventListener('click', () => {
                 productsContainer.style.display = 'block';
                 // Exemplo: alterar cada card para layout em linha
-                const cards = productsContainer.querySelectorAll('div[style*="background-color: #FFF"]');
+                const cards = productsContainer.querySelectorAll('div[style*="background-color: #F9FAFB"]');
                 cards.forEach(card => {
                     card.style.display = 'flex';
                     card.style.flexDirection = 'row';

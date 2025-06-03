@@ -5,7 +5,7 @@
             <h1 style="font-size: 1.5rem; font-weight: bold; color: #333; margin-bottom: 1rem;">Meus Produtos</h1>
 
             @forelse ($produtos as $produto)
-                <div style="background-color: #FFF; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <div style="background-color: #F9FAFB; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; margin-bottom: 1rem;">
                     <!-- Imagem do Produto -->
                     <div style="position: relative;">
                         <img src="{{ asset('storage/' . $produto->imagem) }}"

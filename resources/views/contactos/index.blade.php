@@ -3,7 +3,7 @@
   <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #F9FAFB; padding: 0.5rem 2rem;">
     
     <!-- Card central: fundo branco, sombra suave e bordas arredondadas -->
-    <div style="max-width: 800px; width: 100%; background-color: #FFF; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin: 1rem;">
+    <div style="max-width: 800px; width: 100%; background-color: #F9FAFB; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; margin: 1rem;">
       
       <!-- Cabeçalho -->
       <div style="text-align: center; margin-bottom: 1rem;">

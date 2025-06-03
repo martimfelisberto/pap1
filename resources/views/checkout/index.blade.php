@@ -2,7 +2,7 @@
     <div class="container py-5" style="max-width: 1280px; margin: 0 auto;">
         <h4 class="mb-4" style="font-size: 1.75rem; font-weight: 600; color: #333;">Finalizar Compra</h4>
 
-        <div class="table-responsive" style="background-color: #FFF; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+        <div class="table-responsive" style="background-color: #F9FAFB; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
             <table class="table table-hover" style="width: 100%; border-collapse: collapse;">
                 <thead class="table-light" style="background-color: #F3F4F6; text-align: left;">
                     <tr>
