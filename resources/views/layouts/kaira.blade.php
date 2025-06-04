@@ -361,7 +361,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
 
     {{ $slot }}
 
-    <div class="container">
+   
         <footer id="footer" style="padding: 1rem; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB; width: 100%; margin: 0;">
             <!-- Primeira Parte – Conteúdo do Footer -->
             <div style="padding: 2rem 1rem;">
@@ -369,9 +369,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                     <!-- Bloco 1: Introdução -->
                     <div style="flex: 1 1 250px;">
                         <div style="margin-bottom: 1rem;">
-                            <a href="#">
-                                <img src="{{ asset('kaira/images/main-logo.png') }}" alt="logo" style="max-width: 100%; height: auto;">
-                            </a>
+                            
                         </div>
                     </div>
 
@@ -382,18 +380,16 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                                 <a href="http://reshoppingpap.test/" style="color: #333; text-decoration: none;">Página inicial</a>
                             </li>
 
-                            <li style="margin-bottom: 0.5rem;">
-                                <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
-                            </li>
+                          
                         </ul>
                     </div>
 
                     <!-- Bloco 3: Ajuda & Informações -->
                     <div style="flex: 1 1 250px;">
-                        <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Ajuda & informações</h5>
+                        <h5 style="font-size: 1rem; text-transform: uppercase; color: #333; margin-bottom: 1rem;">Precisas de ajuda?</h5>
                         <ul style="list-style: none; padding: 0; margin: 0; text-transform: uppercase; font-size: 0.875rem; color: #666;">
                             <li style="margin-bottom: 0.5rem;">
-                                <a href="#" style="color: #333; text-decoration: none;">Contacte-nos</a>
+                                <a href="/contactos" style="color: #333; text-decoration: none;">Contacte-nos</a>
                             </li>
                         </ul>
                     </div>
@@ -416,7 +412,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
 
                     <!-- Copyright -->
-                    <div style="flex: 1 1 300px; text-align: right; font-size: 0.875rem; color: #666;">
+                    <div style="flex: 1 1 300px; text-align: center; font-size: 0.875rem; color: #666;">
                         <p style="margin: 0;">
                             © Copyright 2022 Kaira. All rights reserved.
                             Design by
@@ -428,7 +424,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                 </div>
             </div>
         </footer>
-    </div>
+   
     <!-- Scripts -->
     <script src="{{ asset('kaira/js/jquery.min.js') }}"></script>
     <script src="{{ asset('kaira/js/plugins.js') }}"></script>

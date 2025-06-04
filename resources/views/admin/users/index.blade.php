@@ -42,22 +42,24 @@
                   <td style="padding: 0.75rem;">{{ $user->email }}</td>
                   <td style="padding: 0.75rem;">{{ $user->is_admin ? 'Sim' : 'Não' }}</td>
                   <td style="padding: 0.75rem; text-align: right;">
-                    <a href="{{ route('users.edit', $user) }}" 
-                       style="padding: 0.4rem 0.8rem; background-color: #2563EB; color: #FFF; border-radius: 4px; text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center;">
-                      <i class="bi bi-pencil-square" style="margin-right: 0.5rem;"></i> Editar
-                    </a>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                      <a href="{{ route('users.edit', $user) }}" 
+                         style="padding: 0.4rem 0.8rem; background-color: #2563EB; color: #FFF; border-radius: 4px; text-decoration: none; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; width: 100px;">
+                        <i class="bi bi-pencil-square" style="margin-right: 0.5rem;"></i> Editar
+                      </a>
 
-                    <form action="{{ route('admin.users.destroy', $user) }}" 
-                          method="POST" 
-                          style="display: inline;" 
-                          onsubmit="return confirm('Tem certeza que deseja excluir este utilizador?')">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" 
-                              style="padding: 0.4rem 0.8rem; background-color: #991B1B; color: #FFF; border-radius: 4px; border: none; font-size: 0.875rem; cursor: pointer;">
-                        <i class="bi bi-trash"></i> Eliminar
-                      </button>
-                    </form>
+                      <form action="{{ route('admin.users.destroy', $user) }}" 
+                            method="POST" 
+                            style="display: block;" 
+                            onsubmit="return confirm('Tem certeza que deseja excluir este utilizador?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                style="padding: 0.4rem 0.8rem; background-color: #991B1B; color: #FFF; border-radius: 4px; border: none; font-size: 0.875rem; cursor: pointer; width: 100px; display: flex; align-items: center; justify-content: center;">
+                          <i class="bi bi-trash" style="margin-right: 0.5rem;"></i> Eliminar
+                        </button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               @empty
