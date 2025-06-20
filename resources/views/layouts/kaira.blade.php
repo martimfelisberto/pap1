@@ -266,7 +266,7 @@ $categorias = App\Models\Categoria::all()->groupBy('genero');
                         </li>
                         @if(auth()->user()->is_admin())
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="{{ route('dashboard') }}">
+                            <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}">
                                 <i class="bi bi-speedometer2 me-2"></i>
                                 Painel Admin
                             </a>
