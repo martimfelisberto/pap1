@@ -16,11 +16,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminMiddleware;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 // Rota principal da aplicação
 Route::get('/', [ProdutoController::class, 'welcome'])->name('welcome');
 
-
+ 
 // Grupo de rotas para os produtos
 Route::prefix('produtos')->name('produtos.')->group(function () {
     // Public routes (rotas públicas acessíveis a todos)
@@ -65,7 +66,8 @@ Route::middleware('auth')->group(function () {
 
 // Grupo de rotas administrativas (acessíveis apenas a utilizadores autenticados)
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard'); // Painel administrativo (antigo 'admin.dashboard')
+
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // Users management routes (rota para gestão de utilizadores)
     Route::get('/users', [AdminController::class, 'users'])->name('users.index'); // Lista dos utilizadores
@@ -79,8 +81,6 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 // Recurso duplicado de categorias conforme o código original
 Route::resource('categorias', CategoriaController::class)->except(['show']);
 
-// Rota para o painel administrativo fora do grupo 'admin'
-Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
 // Rota para criação de categoria via POST
 Route::post('/categorias', [CategoriaController::class, 'store'])->name('categorias.store');

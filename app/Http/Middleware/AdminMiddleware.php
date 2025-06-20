@@ -8,11 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        if (!Auth::user() || !Auth::user()->is_admin) {
-            return redirect('/');
+        // Se não estiver autenticado, redireciona para login
+        if (!Auth::check()) {
+            return redirect()->route('login');
         }
+
+        // Se estiver autenticado mas não for admin, aborta
+        if (!Auth::user()->is_admin) {
+            abort(403, 'Acesso negado. Apenas administradores.');
+        }
+
         return $next($request);
     }
 }
