@@ -11,8 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
-    
-    
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -22,8 +20,7 @@
             color: #1f2937;
             height: 100vh;
             margin: 0;
-           
-            background-image:  url("texture.jpg"), linear-gradient(135deg, #30c4ff,hsl(224, 80%, 53%));
+            background-image: url("texture.jpg"), linear-gradient(135deg, #30c4ff,hsl(224, 80%, 53%));
             animation: gradientAnimation 5s ease infinite;
             background-size: 400% 400%;
             display: flex;
@@ -45,18 +42,17 @@
             border-radius: 10px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        
+
         .logo-container {
             text-align: center;
             margin-bottom: 2rem;
-           
         }
-        
+
         .form-control {
             padding: 12px 15px;
             margin-bottom: 1rem;
         }
-        
+
         .btn-login {
             background-color: hsl(224, 80%, 53%);
             border: none;
@@ -64,19 +60,26 @@
             width: 100%;
             font-weight: 600;
         }
-        
+
         .btn-login:hover {
             background-color: hsl(224, 80%, 53%);
         }
-        
+
         .forgot-password {
             text-align: right;
             margin-top: -10px;
             margin-bottom: 20px;
         }
-        
-        .remember-me {
-            margin-bottom: 1.5rem;
+
+        .register-link {
+            font-size: 0.875rem;
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            color: #343a40;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -85,9 +88,7 @@
     <div class="login-container">
         <div class="logo-container">
             <a href="/">
-                <img src="{{ asset('kaira/images/logo.png') }}" alt="Logo" style="height: 80px; display: block;
-            margin-left: auto;
-            margin-right: auto;">
+                <img src="{{ asset('kaira/images/logo.png') }}" alt="Logo" style="height: 80px; display: block; margin-left: auto; margin-right: auto;">
             </a>
         </div>
 
@@ -118,14 +119,23 @@
                 @enderror
             </div>
 
-            <!-- Remember Me Checkbox -->
-            <div class="mb-3 remember-me">
+            <!-- Remember Me + Register Link -->
+            <div class="mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember"
+                           {{ old('remember') ? 'checked' : '' }}>
                     <label class="form-check-label" for="remember">
                         Remember me
                     </label>
                 </div>
+
+                @if (Route::has('register'))
+                    <div class="mt-1 ms-4">
+                        <a href="{{ route('register') }}" class="register-link">
+                            Ainda não criou conta? Crie uma agora!
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <!-- Forgot Password Link -->
@@ -143,7 +153,5 @@
             </button>
         </form>
     </div>
-
-   
 </body>
 </html>
